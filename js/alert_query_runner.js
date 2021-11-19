@@ -1,0 +1,70 @@
+// args
+var QUERY_NAME, FROM_TIME_SQL, TO_TIME_SQL, OFFSET;
+
+OFFSET = OFFSET || "90 minutes";
+FROM_TIME_SQL = FROM_TIME_SQL || `CURRENT_TIMESTAMP - INTERVAL '${OFFSET}'`;
+TO_TIME_SQL = TO_TIME_SQL || "CURRENT_TIMESTAMP";
+
+// library
+function exec(sqlText, binds = []) {
+  let retval = [];
+  const stmnt = snowflake.createStatement({ sqlText, binds });
+  const result = stmnt.execute();
+  const columnCount = stmnt.getColumnCount();
+  const columnNames = [];
+  for (let i = 1; i < columnCount + 1; i++) {
+    columnNames.push(stmnt.getColumnName(i));
+  }
+
+  while (result.next()) {
+    let o = {};
+    for (let c of columnNames) {
+      o[c] = result.getColumnValue(c);
+    }
+    retval.push(o);
+  }
+  return retval;
+}
+
+function fillArray(value, len) {
+  const arr = [];
+  for (var i = 0; i < len; i++) {
+    arr.push(value);
+  }
+  return arr;
+}
+
+const RUN_ID = Math.random().toString(36).substring(2).toUpperCase();
+const RAW_ALERTS_TABLE = `results.raw_alerts`;
+
+const CREATE_ALERTS_SQL = `INSERT INTO ${RAW_ALERTS_TABLE}
+SELECT '${RUN_ID}' run_id
+     , OBJECT_CONSTRUCT(
+         'ALERT_ID', UUID_STRING(),
+         'QUERY_NAME', '${QUERY_NAME}',
+         'QUERY_ID', IFNULL(QUERY_ID::VARIANT, PARSE_JSON('null')),
+         'ENVIRONMENT', IFNULL(ENVIRONMENT::VARIANT, PARSE_JSON('null')),
+         'SOURCES', IFNULL(SOURCES::VARIANT, PARSE_JSON('null')),
+         'ACTOR', IFNULL(ACTOR::VARIANT, PARSE_JSON('null')),
+         'OBJECT', IFNULL(OBJECT::VARIANT, PARSE_JSON('null')),
+         'ACTION', IFNULL(ACTION::VARIANT, PARSE_JSON('null')),
+         'TITLE', IFNULL(TITLE::VARIANT, PARSE_JSON('null')),
+         'EVENT_TIME', IFNULL(EVENT_TIME::VARIANT, PARSE_JSON('null')),
+         'ALERT_TIME', IFNULL(ALERT_TIME::VARIANT, PARSE_JSON('null')),
+         'DESCRIPTION', IFNULL(DESCRIPTION::VARIANT, PARSE_JSON('null')),
+         'DETECTOR', IFNULL(DETECTOR::VARIANT, PARSE_JSON('null')),
+         'EVENT_DATA', IFNULL(EVENT_DATA::VARIANT, PARSE_JSON('null')),
+         'SEVERITY', IFNULL(SEVERITY::VARIANT, PARSE_JSON('null')),
+         'HANDLERS', IFNULL(OBJECT_CONSTRUCT(*):HANDLERS::VARIANT, PARSE_JSON('null'))
+       ) AS alert
+     , alert_time
+     , event_time
+     , 1 AS counter
+FROM rules.${QUERY_NAME}
+WHERE event_time BETWEEN ${FROM_TIME_SQL} AND ${TO_TIME_SQL}
+;`;
+
+return {
+  run_id: RUN_ID,
+  create_alerts_result: exec(CREATE_ALERTS_SQL)[0],
+};
