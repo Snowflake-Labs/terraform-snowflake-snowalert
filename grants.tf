@@ -2,9 +2,14 @@
 # GRANT ALL PRIVILEGES ON DATABASE {database} TO ROLE {role};
 # GRANT ALL PRIVILEGES ON WAREHOUSE {warehouse} TO ROLE {role};
 
-
-# # account
+# Account
 # GRANT EXECUTE TASK ON ACCOUNT TO ROLE {role};
+
+resource "snowflake_account_grant" "account_grant" {
+  roles             = [var.role]
+  privilege         = "EXECUTE TASK"
+  with_grant_option = false
+}
 
 # # data
 # GRANT ALL PRIVILEGES

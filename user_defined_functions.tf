@@ -85,3 +85,14 @@
 # return ret.join("&")
 # $$
 # ;
+
+
+# CREATE OR REPLACE FUNCTION rules.has_no_violations(qid VARCHAR)
+# RETURNS BOOLEAN
+# AS '
+# (
+#   SELECT COUNT(*) AS c FROM data.violations
+#   WHERE created_time > DATEADD(day, -1, CURRENT_TIMESTAMP())
+#     AND query_id = qid
+# ) = 0
+# ';
