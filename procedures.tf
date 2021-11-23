@@ -7,6 +7,16 @@
 # EXECUTE AS CALLER
 # USING TEMPLATE 'results-alert-dispatcher.js'
 # ;
+resource "snowflake_procedure" "alert_dispatcher" {
+  name     = "alert_dispatcher"
+  database = snowflake_database.db.name
+  schema   = snowflake_schema.results.name
+
+  return_type = "VARIANT"
+  execute_as  = "CALLER"
+  language    = "JAVASCRIPT"
+  statement   = templatefile("${path.module}/procedures_js/alert_dispatcher.js", {})
+}
 
 # -------------------------
 # 2. deduplicator or merger
@@ -17,6 +27,22 @@
 # EXECUTE AS CALLER
 # USING TEMPLATE 'results-alert-merge.js'
 # ;
+resource "snowflake_procedure" "alert_merge" {
+  name     = "alert_merge"
+  database = snowflake_database.db.name
+  schema   = snowflake_schema.results.name
+
+  arg {
+    name = "deduplication_offset"
+    type = "STRING"
+  }
+
+  return_type = "VARIANT"
+  execute_as  = "CALLER"
+  language    = "JAVASCRIPT"
+  statement   = templatefile("${path.module}/procedures_js/alert_merge.js", {})
+}
+
 
 # -------------------------
 # 3. processor
@@ -27,6 +53,18 @@
 # EXECUTE AS CALLER
 # USING TEMPLATE 'results-alert-processor.js'
 # ;
+resource "snowflake_procedure" "alert_processor" {
+  name     = "alert_processor"
+  database = snowflake_database.db.name
+  schema   = snowflake_schema.results.name
+
+  return_type = "VARIANT"
+  execute_as  = "CALLER"
+  language    = "JAVASCRIPT"
+  statement   = templatefile("${path.module}/procedures_js/alert_processor.js", {})
+}
+
+
 
 # -------------------------
 # 4. Alert Query Runner
@@ -37,6 +75,31 @@
 # EXECUTE AS CALLER
 # USING TEMPLATE 'results-alert-queries-runner.js'
 # ;
+resource "snowflake_procedure" "alert_queries_runner" {
+  name     = "alert_queries_runner"
+  database = snowflake_database.db.name
+  schema   = snowflake_schema.results.name
+
+  arg {
+    name = "query_name"
+    type = "STRING"
+  }
+
+  arg {
+    name = "from_time_sql"
+    type = "STRING"
+  }
+
+  arg {
+    name = "to_time_sql"
+    type = "STRING"
+  }
+
+  return_type = "VARIANT"
+  execute_as  = "CALLER"
+  language    = "JAVASCRIPT"
+  statement   = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {})
+}
 
 # CREATE OR REPLACE PROCEDURE results.alert_queries_runner(query_name STRING, offset STRING)
 # RETURNS VARIANT
