@@ -5,17 +5,102 @@
 # Account
 # GRANT EXECUTE TASK ON ACCOUNT TO ROLE {role};
 
+# Account
 resource "snowflake_account_grant" "account_grant" {
-  roles             = [var.role]
+  roles             = [var.snowalert_role_name]
   privilege         = "EXECUTE TASK"
   with_grant_option = false
 }
 
-# # data
-# GRANT ALL PRIVILEGES
-# ON ALL SCHEMAS
-# IN DATABASE {database}
-# TO ROLE {role};
+# Database Level
+resource "snowflake_database_grant" "db_grant" {
+  database_name = snowflake_database.snowalert.name
+
+  privilege = "USAGE"
+  roles     = [snowflake_role.snowalert.name]
+
+  with_grant_option = false
+}
+
+# Schema Level
+resource "snowflake_schema_grant" "schema_grant" {
+  database_name = snowflake_database.snowalert.name
+
+  privilege = "USAGE"
+  roles     = [snowflake_role.snowalert.name]
+
+  on_future         = true
+  with_grant_option = false
+}
+
+# View Level - Select
+resource "snowflake_view_grant" "view_grant_select" {
+  database_name = snowflake_database.snowalert.name
+
+  privilege = "SELECT"
+  roles     = [snowflake_role.snowalert.name]
+
+  on_future         = true
+  with_grant_option = false
+}
+
+# View Level - Insert
+resource "snowflake_view_grant" "view_grant_insert" {
+  database_name = snowflake_database.snowalert.name
+
+  privilege = "INSERT"
+  roles     = [snowflake_role.snowalert.name]
+
+  on_future         = true
+  with_grant_option = false
+}
+
+# Table Level - Select
+resource "snowflake_table_grant" "table_grant_select" {
+  database_name = snowflake_database.snowalert.name
+
+  privilege = "SELECT"
+  roles     = [snowflake_role.snowalert.name]
+
+  on_future         = true
+  with_grant_option = false
+}
+
+# Table Level - Insert
+resource "snowflake_table_grant" "table_grant_insert" {
+  database_name = snowflake_database.snowalert.name
+
+  privilege = "INSERT"
+  roles     = [snowflake_role.snowalert.name]
+
+  on_future         = true
+  with_grant_option = false
+}
+
+# Procedure Level - Select
+resource "snowflake_procedure_grant" "procedure_grant_select" {
+  database_name = snowflake_database.snowalert.name
+
+  privilege = "SELECT"
+  roles     = [snowflake_role.snowalert.name]
+
+  on_future         = true
+  with_grant_option = false
+}
+
+
+# Procedure Level - Usage
+resource "snowflake_procedure_grant" "procedure_grant_usage" {
+  database_name = snowflake_database.snowalert.name
+
+  privilege = "USAGE"
+  roles     = [snowflake_role.snowalert.name]
+
+  on_future         = true
+  with_grant_option = false
+}
+
+
 
 # GRANT ALL PRIVILEGES
 # ON ALL VIEWS
@@ -53,3 +138,4 @@ resource "snowflake_account_grant" "account_grant" {
 # ON ALL PROCEDURES
 # IN SCHEMA results
 # TO ROLE {role};
+

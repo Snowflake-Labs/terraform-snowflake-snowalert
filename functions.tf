@@ -28,7 +28,6 @@ resource "snowflake_function" "time_slices" {
     type = "TIMESTAMP_NTZ"
   }
 
-
   language        = "SQL"
   return_type     = "TABLE (slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)" # TODO: I don't think this type is supported
   return_behavior = "IMMUTABLE"
@@ -73,7 +72,6 @@ resource "snowflake_function" "time_slices_before_t" {
     type = "TIMESTAMP_NTZ"
   }
 
-
   language    = "SQL"
   return_type = "TABLE (slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)" # TODO: I don't think this type is supported
   statement   = <<SQL
@@ -104,9 +102,9 @@ SQL
 # $$
 # ;
 resource "snowflake_function" "time_slices_before_t" {
-  name     = "time_slices_before_t"
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
+  name     = "time_slices_before_t"
 
   arguments {
     name = "num_slices"
@@ -141,9 +139,9 @@ SQL
 # $$
 # ;
 resource "snowflake_function" "object_assign" {
-  name     = "object_assign"
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
+  name     = "object_assign"
 
   arguments {
     name = "o1"
@@ -176,9 +174,9 @@ JAVASCRIPT
 # $$
 # ;
 resource "snowflake_function" "urlencode" {
-  name     = "urlencode"
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
+  name     = "urlencode"
 
   arguments {
     name = "obj"
@@ -209,9 +207,9 @@ JAVASCRIPT
 # ) = 0
 # ';
 resource "snowflake_function" "has_no_violations" {
-  name     = "has_no_violations"
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.rules.name
+  name     = "has_no_violations"
 
   arguments {
     name = "qid"

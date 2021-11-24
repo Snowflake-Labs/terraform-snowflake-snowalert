@@ -7,7 +7,7 @@ resource "snowflake_stream" "stream" {
   name     = "raw_alerts_stream"
 
   on_table = snowflake_table.raw_alerts.name
-  owner    = var.role
+  owner    = var.snowalert_role_name
 
   comment = "A stream to track the diffs on raw_alerts table."
 }

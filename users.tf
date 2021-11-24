@@ -1,17 +1,16 @@
 # CREATE USER IF NOT EXISTS {user} {user_defaults};
 
 resource "snowflake_user" "user" {
-  name         = "Snowflake User"
-  login_name   = "snowflake_user"
-  comment      = "A user of snowflake."
-  disabled     = false
-  display_name = "Snowflake User"
-  email        = "user@snowflake.example"
-  first_name   = "Snowflake"
+  name       = "Snowalert User"
+  login_name = "app_snowalert"
+
+  display_name = "Snowalert User"
+  email        = "snowalert@snowflake.com"
+  first_name   = "Snowalert"
   last_name    = "User"
 
-  default_warehouse = "warehouse"
-  default_role      = "role1"
-
+  default_warehouse    = snowflake_warehouse.snowalert.name
+  default_role         = snowflake_role.snowalert.name
   must_change_password = false
+  disabled             = false
 }

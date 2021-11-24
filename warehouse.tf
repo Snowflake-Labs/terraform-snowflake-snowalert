@@ -5,7 +5,7 @@
 # AUTO_RESUME=TRUE
 # INITIALLY_SUSPENDED=TRUE
 # ;
-resource "snowflake_warehouse" "w" {
+resource "snowflake_warehouse" "snowalert" {
   name           = var.warehouse
   type           = "STANDARD"
   comment        = "foo"
