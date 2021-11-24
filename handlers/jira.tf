@@ -17,308 +17,101 @@
 # )
 # AS 'https://{aws_api_gateway_id}.execute-api.{aws_api_gateway_region}.amazonaws.com/prod/https'
 # ;
+resource "snowflake_external_function" "snowalert_jira_api" {
+  name     = "snowalert_jira_api"
+  database = snowalert.snowalert.name
+  schema   = snowalert.results.name
 
+  arg {
+    name = "method"
+    type = "STRING"
+  }
+
+  arg {
+    name = "path"
+    type = "STRING"
+  }
+
+  arg {
+    name = "body"
+    type = "STRING"
+  }
+
+  arg {
+    name = "querystring"
+    type = "STRING"
+  }
+
+  header {
+    name  = "method"
+    value = "{0}"
+  }
+
+  header {
+    name  = "base-url"
+    value = "https://snowflakecomputing.atlassian.net"
+  }
+
+  header {
+    name  = "url"
+    value = "{1}"
+  }
+
+  header {
+    name  = "params"
+    value = "{3}"
+  }
+
+  header {
+    name  = "data"
+    value = "{2}"
+  }
+
+  header {
+    name  = "headers"
+    value = "content-type=application%2Fjson&accept=application%2Fjson"
+  }
+
+  header {
+    name  = "auth"
+    value = var.sa_jira_auth_secrets_arn
+  }
+
+  return_null_allowed       = true
+  return_type               = "VARIANT"
+  return_behavior           = "VOLATILE"
+  api_integration           = local.geff_api_integration_name
+  url_of_proxy_and_resource = "${local.geff_api_gateway_invoke_url}/${var.env}/https"
+
+  comment = <<COMMENT
+jira_api: (method, path, body) -> api_response
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/
+COMMENT
+}
 
 # CREATE OR REPLACE FUNCTION results.jira_handler(alert VARIANT, payload VARIANT)
 # RETURNS VARIANT
 # AS $$
-#   snowalert_jira_api(
-#     'POST',
-#     '/rest/api/3/issue',
-#     TO_JSON(OBJECT_CONSTRUCT(
-#       'fields', OBJECT_CONSTRUCT(
-#         'project', OBJECT_CONSTRUCT(
-#           'key', COALESCE(payload['project'], '{sa_jira_project}')
-#         ),
-#         'issuetype', OBJECT_CONSTRUCT(
-#           'name', COALESCE(payload['issue_type'], '{sa_jira_issue_type}')
-#         ),
-#         'summary', alert['TITLE']::STRING,
-#         'description', OBJECT_CONSTRUCT(
-#           'version', 1,
-#           'type', 'doc',
-#           'content', ARRAY_CONSTRUCT(
-#             OBJECT_CONSTRUCT(
-#               'type', 'paragraph',
-#               'content', ARRAY_CONSTRUCT(
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Alert ID: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['ID']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Query ID: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['QUERY_ID']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Query Name: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['QUERY_NAME']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Environment: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['ENVIRONMENT']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Sources: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['SOURCES']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Categories: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', COALESCE(alert['CATEGORIES']::STRING, '-')
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Actor: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['ACTOR']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Object: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['OBJECT']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Action: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['ACTION']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Title: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['TITLE']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Event Time: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['EVENT_TIME']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Alert Time: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['ALERT_TIME']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Detector: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['DETECTOR']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Severity: ',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['SEVERITY']::STRING
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'hardBreak'
-#                 ),
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Description:',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 )
-#               )
-#             ),
-#             OBJECT_CONSTRUCT(
-#               'type', 'blockquote',
-#               'content', ARRAY_CONSTRUCT(
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'paragraph',
-#                   'content', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'text',
-#                       'text', alert['DESCRIPTION']::STRING
-#                     )
-#                   )
-#                 )
-#               )
-#             ),
-#             OBJECT_CONSTRUCT(
-#               'type', 'paragraph',
-#               'content', ARRAY_CONSTRUCT(
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', 'Event Data:',
-#                   'marks', ARRAY_CONSTRUCT(
-#                     OBJECT_CONSTRUCT(
-#                       'type', 'strong'
-#                     )
-#                   )
-#                 )
-#               )
-#             ),
-#             OBJECT_CONSTRUCT(
-#               'type', 'codeBlock',
-#               'attrs', OBJECT_CONSTRUCT(),
-#               'content', ARRAY_CONSTRUCT(
-#                 OBJECT_CONSTRUCT(
-#                   'type', 'text',
-#                   'text', alert['EVENT_DATA']::STRING
-#                 )
-#               )
-#             )
-#           )
-#         )
-#       )
-#     )),
-#     ''
-# )
+#   get from jira_handler.sql
 # $$
 # ;
+resource "snowflake_function" "jira_handler" {
+  name     = "jira_handler"
+  database = snowflake_database.snowalert.name
+  schema   = snowflake_schema.results.name
+
+  arguments {
+    name = "alert"
+    type = "VARIANT"
+  }
+
+  arguments {
+    name = "payload"
+    type = "VARIANT"
+  }
+
+  language        = "SQL"
+  return_type     = "VARIANT"
+  return_behavior = "IMMUTABLE"
+  statement       = templatefile("${path.module}/handlers/user_defined_functions_sql/jira_handler.sql", {})
+}

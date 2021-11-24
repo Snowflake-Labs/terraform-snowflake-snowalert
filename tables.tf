@@ -14,9 +14,7 @@ resource "snowflake_table" "raw_alerts" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
 
-  name    = "raw_alerts"
-  comment = "A table."
-
+  name            = "raw_alerts"
   change_tracking = true
 
   column {
@@ -70,6 +68,8 @@ resource "snowflake_table" "raw_alerts" {
     name = "HANDLED"
     type = "VARIANT"
   }
+
+  comment = "A raw alerts table."
 }
 
 # CREATE TABLE IF NOT EXISTS results.alerts(
