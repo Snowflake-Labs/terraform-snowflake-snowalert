@@ -53,7 +53,6 @@ SQL
 # )
 # $$
 # ;
-
 resource "snowflake_function" "time_slices_before_t" {
   name     = "time_slices_before_t"
   database = snowflake_database.snowalert.name
@@ -162,7 +161,6 @@ resource "snowflake_function" "object_assign" {
 return Object.assign(O1, O2)
 JAVASCRIPT
 }
-
 
 # CREATE OR REPLACE FUNCTION urlencode("obj" VARIANT) RETURNS STRING
 # LANGUAGE JAVASCRIPT
