@@ -75,7 +75,7 @@
 # }
 
 # # CREATE OR REPLACE FUNCTION results.urlencode("obj" VARIANT) RETURNS STRING
-# # LANGUAGE JAVASCRIPT
+# # LANGUAGE javascript
 # # AS $$
 # # var ret = [];
 # # for (var p in obj)
@@ -97,9 +97,9 @@
 #     type = "VARIANT"
 #   }
 
-#   language    = "JAVASCRIPT"
+#   language    = "javascript"
 #   return_type = "STRING"
-#   statement   = <<JAVASCRIPT
+#   statement   = <<javascript
 # var ret = [];
 # for (var p in obj)
 # if (obj.hasOwnProperty(p)) {
@@ -108,7 +108,7 @@
 #   ret.push(encodeURIComponent(p) + "=" + encodeURIComponent(v));
 # }
 # return ret.join("&");
-# JAVASCRIPT
+# javascript
 # }
 
 # # CREATE OR REPLACE FUNCTION results.slack_snowflake_chat_post_message(channel STRING, text STRING) RETURNS VARIANT

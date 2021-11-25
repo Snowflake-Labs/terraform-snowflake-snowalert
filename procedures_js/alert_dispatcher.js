@@ -2,28 +2,28 @@
 
 // library
 function exec(sqlText, binds = []) {
-  let retval = [];
-  const stmnt = snowflake.createStatement({ sqlText, binds });
-  const result = stmnt.execute();
-  const columnCount = stmnt.getColumnCount();
-  const columnNames = [];
-  for (let i = 1; i < columnCount + 1; i++) {
-    columnNames.push(stmnt.getColumnName(i));
-  }
-
-  while (result.next()) {
-    let o = {};
-    for (let c of columnNames) {
-      o[c] = result.getColumnValue(c);
+    let retval = []
+    const stmnt = snowflake.createStatement({ sqlText, binds })
+    const result = stmnt.execute()
+    const columnCount = stmnt.getColumnCount()
+    const columnNames = []
+    for (let i = 1; i < columnCount + 1; i++) {
+        columnNames.push(stmnt.getColumnName(i))
     }
-    retval.push(o);
-  }
-  return retval;
+
+    while (result.next()) {
+        let o = {}
+        for (let c of columnNames) {
+            o[c] = result.getColumnValue(c)
+        }
+        retval.push(o)
+    }
+    return retval
 }
 
 // business logic
 
-RUN_TABLE = "results.handled_alerts";
+RUN_TABLE = 'results.handled_alerts'
 
 HANDLE_ALERTS = `
   CREATE TEMP TABLE results.handled_alerts AS
@@ -70,22 +70,22 @@ HANDLE_ALERTS = `
     'ef-smtp'
   )
   GROUP BY id
-`;
+`
 
-COUNT_HANDLED = `SELECT COUNT(*) n FROM ${RUN_TABLE}`;
+COUNT_HANDLED = `SELECT COUNT(*) n FROM $${RUN_TABLE}`
 
 HANDLE_ALL = `
   MERGE INTO results.alerts d
-  USING ${RUN_TABLE} s
+  USING $${RUN_TABLE} s
   ON (d.alert_id = s.alert_id)
   WHEN MATCHED THEN UPDATE SET d.handled=s.handled
-`;
+`
 
 return {
-  handle_alerts: exec(HANDLE_ALERTS),
-  handled:
-    exec(COUNT_HANDLED)[0]["N"] > 0
-      ? exec(HANDLE_ALL)
-      : { "number of rows updated": 0, "number of rows inserted": 0 },
-  dropped: exec("DROP TABLE results.handled_alerts"),
-};
+    handle_alerts: exec(HANDLE_ALERTS),
+    handled:
+        exec(COUNT_HANDLED)[0]['N'] > 0
+            ? exec(HANDLE_ALL)
+            : { 'number of rows updated': 0, 'number of rows inserted': 0 },
+    dropped: exec('DROP TABLE results.handled_alerts'),
+}

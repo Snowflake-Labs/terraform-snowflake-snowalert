@@ -1,27 +1,27 @@
 // args
-var CORRELATION_PERIOD_MINUTES;
+var CORRELATION_PERIOD_MINUTES
 
-CORRELATION_PERIOD_MINUTES = CORRELATION_PERIOD_MINUTES || 60;
+CORRELATION_PERIOD_MINUTES = CORRELATION_PERIOD_MINUTES || 60
 
 // library
 function exec(sqlText, binds = []) {
-  let retval = [];
-  const stmnt = snowflake.createStatement({ sqlText, binds });
-  const result = stmnt.execute();
-  const columnCount = stmnt.getColumnCount();
-  const columnNames = [];
-  for (let i = 1; i < columnCount + 1; i++) {
-    columnNames.push(stmnt.getColumnName(i));
-  }
-
-  while (result.next()) {
-    let o = {};
-    for (let c of columnNames) {
-      o[c] = result.getColumnValue(c);
+    let retval = []
+    const stmnt = snowflake.createStatement({ sqlText, binds })
+    const result = stmnt.execute()
+    const columnCount = stmnt.getColumnCount()
+    const columnNames = []
+    for (let i = 1; i < columnCount + 1; i++) {
+        columnNames.push(stmnt.getColumnName(i))
     }
-    retval.push(o);
-  }
-  return retval;
+
+    while (result.next()) {
+        let o = {}
+        for (let c of columnNames) {
+            o[c] = result.getColumnValue(c)
+        }
+        retval.push(o)
+    }
+    return retval
 }
 
 CORRELATE = `
@@ -54,7 +54,7 @@ USING (
     )
   )
   WHERE d.suppressed = FALSE
-    AND d.alert_time > CURRENT_TIMESTAMP - INTERVAL '${CORRELATION_PERIOD_MINUTES} minutes'
+    AND d.alert_time > CURRENT_TIMESTAMP - INTERVAL '$${CORRELATION_PERIOD_MINUTES} minutes'
   QUALIFY 1=ROW_NUMBER() OVER (
       PARTITION BY d.id  -- one update per destination id
       ORDER BY -- most recent wins
@@ -70,14 +70,14 @@ ON (
 )
 WHEN MATCHED THEN UPDATE SET
   correlation_id = src.correlation_id
-`;
+`
 var n,
-  results = [];
+    results = []
 do {
-  n = exec(CORRELATE)[0]["number of rows updated"];
-  results.push(n);
-} while (n != 0);
+    n = exec(CORRELATE)[0]['number of rows updated']
+    results.push(n)
+} while (n != 0)
 
 return {
-  ROWS_UPDATED: results,
-};
+    ROWS_UPDATED: results,
+}

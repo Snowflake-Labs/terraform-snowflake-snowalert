@@ -11,10 +11,9 @@
 #   handled VARIANT
 # );
 resource "snowflake_table" "raw_alerts" {
-  database = snowflake_database.snowalert.name
-  schema   = snowflake_schema.results.name
-
-  name            = "raw_alerts"
+  database        = snowflake_database.snowalert.name
+  schema          = snowflake_schema.results.name
+  name            = "RAW_ALERTS"
   change_tracking = true
 
   column {
@@ -48,15 +47,21 @@ resource "snowflake_table" "raw_alerts" {
   }
 
   column {
-    name    = "SUPPRESSION_RULE"
-    type    = "STRING"
-    default = 1
+    name = "SUPPRESSION_RULE"
+    type = "STRING"
+
+    default {
+      constant = 1
+    }
   }
 
   column {
-    name    = "COUNTER"
-    type    = "INTEGER"
-    default = 1
+    name = "COUNTER"
+    type = "INTEGER"
+
+    default {
+      constant = 1
+    }
   }
 
   column {
@@ -87,7 +92,7 @@ resource "snowflake_table" "raw_alerts" {
 resource "snowflake_table" "alerts" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "alerts"
+  name     = "ALERTS"
 
   change_tracking = true
 
@@ -122,15 +127,21 @@ resource "snowflake_table" "alerts" {
   }
 
   column {
-    name    = "SUPPRESSION_RULE"
-    type    = "STRING"
-    default = 1
+    name = "SUPPRESSION_RULE"
+    type = "STRING"
+
+    default {
+      constant = 1
+    }
   }
 
   column {
-    name    = "COUNTER"
-    type    = "INTEGER"
-    default = 1
+    name = "COUNTER"
+    type = "INTEGER"
+
+    default {
+      constant = 1
+    }
   }
 
   column {
@@ -155,7 +166,7 @@ resource "snowflake_table" "alerts" {
 resource "snowflake_table" "violations" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "violations"
+  name     = "VIOLATIONS"
 
   column {
     name = "RESULT"
@@ -183,9 +194,8 @@ resource "snowflake_table" "violations" {
   }
 
   column {
-    name    = "SUPPRESSION_RULE"
-    type    = "STRING"
-    default = null
+    name = "SUPPRESSION_RULE"
+    type = "STRING"
   }
 }
 
@@ -196,7 +206,7 @@ resource "snowflake_table" "violations" {
 resource "snowflake_table" "query_metadata" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "query_metadata"
+  name     = "QUERY_METADATA"
 
   column {
     name = "EVENT_TIME"
@@ -216,7 +226,7 @@ resource "snowflake_table" "query_metadata" {
 resource "snowflake_table" "run_metadata" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "run_metadata"
+  name     = "RUN_METADATA"
 
   column {
     name = "EVENT_TIME"
@@ -236,7 +246,7 @@ resource "snowflake_table" "run_metadata" {
 resource "snowflake_table" "ingestion_metadata" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "ingestion_metadata"
+  name     = "INGESTION_METADATA"
 
   column {
     name = "EVENT_TIME"

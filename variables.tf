@@ -1,7 +1,8 @@
 # Required Variables
 variable "snowflake_account" {
-  type      = string
-  sensitive = true
+  type        = string
+  description = "Dev/Prod/Staging or any other custom environment name."
+  sensitive   = true
 }
 
 # Optional Variables
@@ -45,23 +46,23 @@ variable "handlers" {
 variable "jira_secrets_arn" {
   type        = string
   description = "."
-  default     = ""
+  default     = null
 }
 
 variable "slack_secrets_arn" {
   type        = string
   description = "."
-  default     = ""
+  default     = null
 }
 
 variable "smtp_secrets_arn" {
   type        = string
   description = "."
-  default     = ""
+  default     = null
 }
 
 variable "smtp_driver_from_email_address" {
   type        = string
   description = "."
-  default     = ""
+  default     = null
 }

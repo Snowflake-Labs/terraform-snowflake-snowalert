@@ -9,9 +9,9 @@
 # $$
 # ;
 resource "snowflake_function" "time_slices" {
-  name     = "time_slices"
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
+  name     = "TIME_SLICES"
 
   arguments {
     name = "n"
@@ -28,14 +28,9 @@ resource "snowflake_function" "time_slices" {
     type = "TIMESTAMP_NTZ"
   }
 
-  language        = "SQL"
-  return_type     = "TABLE (slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)" # TODO: I don't think this type is supported
+  return_type     = "TABLE(slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)" # TODO: I don't think this type is supported
   return_behavior = "IMMUTABLE"
-  statement       = <<SQL
-SELECT DATEADD(sec, DATEDIFF(sec, s, e) * ROW_NUMBER() OVER (ORDER BY SEQ4()) / n, s) AS slice_start
-      , DATEADD(sec, DATEDIFF(sec, s, e) * 1 / n, slice_start) AS slice_end
-FROM TABLE(GENERATOR(ROWCOUNT => n))
-SQL
+  statement       = templatefile("${path.module}/functions_sql/time_slices.sql", {})
 }
 
 # CREATE FUNCTION IF NOT EXISTS time_slices_before_t (num_slices NUMBER, seconds_in_slice NUMBER, t TIMESTAMP_NTZ)
@@ -52,10 +47,10 @@ SQL
 # )
 # $$
 # ;
-resource "snowflake_function" "time_slices_before_t" {
-  name     = "time_slices_before_t"
+resource "snowflake_function" "time_slices_before_t_with_t" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
+  name     = "TIME_SLICES_BEFORE_T"
 
   arguments {
     name = "num_slices"
@@ -72,19 +67,16 @@ resource "snowflake_function" "time_slices_before_t" {
     type = "TIMESTAMP_NTZ"
   }
 
-  language    = "SQL"
-  return_type = "TABLE (slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)" # TODO: I don't think this type is supported
-  statement   = <<SQL
-SELECT slice_start
-     , slice_end
-FROM TABLE(
-  time_slices(
-    num_slices,
-    DATEADD(sec, -seconds_in_slice * num_slices, t),
-    t
+  return_type = "TABLE(slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)" # TODO: I don't think this type is supported
+  statement = templatefile(
+    "${path.module}/functions_sql/time_slices_before_t_with_t.sql", {
+      time_slices_function = join(".", [
+        snowflake_database.snowalert.name,
+        snowflake_schema.data.name,
+        snowflake_function.time_slices.name,
+      ])
+    }
   )
-)
-SQL
 }
 
 # CREATE FUNCTION IF NOT EXISTS time_slices_before_t (num_slices NUMBER, seconds_in_slice NUMBER)
@@ -101,10 +93,10 @@ SQL
 # )
 # $$
 # ;
-resource "snowflake_function" "time_slices_before_t" {
+resource "snowflake_function" "time_slices_before_t_without_t" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
-  name     = "time_slices_before_t"
+  name     = "TIME_SLICES_BEFORE_T"
 
   arguments {
     name = "num_slices"
@@ -116,19 +108,16 @@ resource "snowflake_function" "time_slices_before_t" {
     type = "NUMBER"
   }
 
-  language    = "SQL"
   return_type = "TABLE (slice_start TIMESTAMP, slice_end TIMESTAMP)"
-  statement   = <<SQL
-SELECT slice_start
-     , slice_end
-FROM TABLE(
-  time_slices(
-    num_slices,
-    DATEADD(sec, -seconds_in_slice * num_slices, CONVERT_TIMEZONE('UTC', CURRENT_TIMESTAMP)::TIMESTAMP),
-    CONVERT_TIMEZONE('UTC', CURRENT_TIMESTAMP)::TIMESTAMP
+  statement = templatefile(
+    "${path.module}/functions_sql/time_slices_before_t_without_t.sql", {
+      time_slices_function = join(".", [
+        snowflake_database.snowalert.name,
+        snowflake_schema.data.name,
+        snowflake_function.time_slices.name,
+      ])
+    }
   )
-)
-SQL
 }
 
 # CREATE FUNCTION IF NOT EXISTS object_assign (o1 VARIANT, o2 VARIANT)
@@ -141,7 +130,7 @@ SQL
 resource "snowflake_function" "object_assign" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
-  name     = "object_assign"
+  name     = "OBJECT_ASSIGN"
 
   arguments {
     name = "o1"
@@ -153,15 +142,15 @@ resource "snowflake_function" "object_assign" {
     type = "VARIANT"
   }
 
-  language    = "JAVASCRIPT"
+  language    = "javascript"
   return_type = "VARIANT"
-  statement   = <<JAVASCRIPT
+  statement   = <<javascript
 return Object.assign(O1, O2)
-JAVASCRIPT
+javascript
 }
 
 # CREATE OR REPLACE FUNCTION urlencode("obj" VARIANT) RETURNS STRING
-# LANGUAGE JAVASCRIPT
+# LANGUAGE javascript
 # AS $$
 # var ret = []
 # for (var p in obj)
@@ -176,16 +165,16 @@ JAVASCRIPT
 resource "snowflake_function" "urlencode" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
-  name     = "urlencode"
+  name     = "URLENCODE"
 
   arguments {
     name = "obj"
     type = "VARIANT"
   }
 
-  language    = "JAVASCRIPT"
+  language    = "javascript"
   return_type = "STRING"
-  statement   = <<JAVASCRIPT
+  statement   = <<javascript
 var ret = []
 for (var p in obj)
 if (obj.hasOwnProperty(p)) {
@@ -194,7 +183,7 @@ if (obj.hasOwnProperty(p)) {
   ret.push(encodeURIComponent(p) + "=" + encodeURIComponent(v))
 }
 return ret.join("&")
-JAVASCRIPT
+javascript
 }
 
 # CREATE OR REPLACE FUNCTION rules.has_no_violations(qid VARCHAR)
@@ -209,14 +198,13 @@ JAVASCRIPT
 resource "snowflake_function" "has_no_violations" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.rules.name
-  name     = "has_no_violations"
+  name     = "HAS_NO_VIOLATIONS"
 
   arguments {
     name = "qid"
     type = "VARCHAR"
   }
 
-  language    = "SQL"
   return_type = "BOOLEAN"
   statement   = <<SQL
 (

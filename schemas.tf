@@ -4,7 +4,7 @@
 
 resource "snowflake_schema" "data" {
   database = snowflake_database.snowalert.name
-  name     = "data"
+  name     = "DATA"
 
   #   comment  = "."
   #   is_transient        = false
@@ -14,7 +14,7 @@ resource "snowflake_schema" "data" {
 
 resource "snowflake_schema" "rules" {
   database = snowflake_database.snowalert.name
-  name     = "rules"
+  name     = "RULES"
 
   #   comment  = "."
   #   is_transient        = false
@@ -24,7 +24,7 @@ resource "snowflake_schema" "rules" {
 
 resource "snowflake_schema" "results" {
   database = snowflake_database.snowalert.name
-  name     = "results"
+  name     = "RESULTS"
 
   #   comment  = "."
   #   is_transient        = false

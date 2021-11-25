@@ -7,5 +7,5 @@
 
 provider "snowflake" {
   account = var.snowflake_account
-  role    = var.snowflake_pipeline_role
+  role    = var.terraform_role
 }

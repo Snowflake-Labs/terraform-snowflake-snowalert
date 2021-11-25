@@ -8,13 +8,12 @@
 # USING TEMPLATE 'results-alert-dispatcher.js'
 # ;
 resource "snowflake_procedure" "alert_dispatcher" {
-  name     = "alert_dispatcher"
-  database = snowflake_database.db.name
+  database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
+  name     = "alert_dispatcher"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
   statement   = templatefile("${path.module}/procedures_js/alert_dispatcher.js", {})
 }
 
@@ -28,18 +27,17 @@ resource "snowflake_procedure" "alert_dispatcher" {
 # USING TEMPLATE 'results-alert-merge.js'
 # ;
 resource "snowflake_procedure" "alert_merge" {
-  name     = "alert_merge"
-  database = snowflake_database.db.name
+  database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
+  name     = "alert_merge"
 
-  arg {
+  arguments {
     name = "deduplication_offset"
     type = "STRING"
   }
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
   statement   = templatefile("${path.module}/procedures_js/alert_merge.js", {})
 }
 
@@ -53,13 +51,12 @@ resource "snowflake_procedure" "alert_merge" {
 # USING TEMPLATE 'results-alert-processor.js'
 # ;
 resource "snowflake_procedure" "alert_processor" {
-  name     = "alert_processor"
-  database = snowflake_database.db.name
+  database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
+  name     = "alert_processor"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
   statement   = templatefile("${path.module}/procedures_js/alert_processor.js", {})
 }
 
@@ -72,29 +69,28 @@ resource "snowflake_procedure" "alert_processor" {
 # EXECUTE AS CALLER
 # USING TEMPLATE 'results-alert-queries-runner.js'
 # ;
-resource "snowflake_procedure" "alert_queries_runner" {
-  name     = "alert_queries_runner"
-  database = snowflake_database.db.name
+resource "snowflake_procedure" "alert_queries_runner_with_time" {
+  database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
+  name     = "alert_queries_runner"
 
-  arg {
+  arguments {
     name = "query_name"
     type = "STRING"
   }
 
-  arg {
+  arguments {
     name = "from_time_sql"
     type = "STRING"
   }
 
-  arg {
+  arguments {
     name = "to_time_sql"
     type = "STRING"
   }
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
   statement   = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {})
 }
 
@@ -104,24 +100,23 @@ resource "snowflake_procedure" "alert_queries_runner" {
 # EXECUTE AS CALLER
 # USING TEMPLATE 'results-alert-queries-runner.js'
 # ;
-resource "snowflake_procedure" "alert_queries_runner" {
-  name     = "alert_queries_runner"
-  database = snowflake_database.db.name
+resource "snowflake_procedure" "alert_queries_runner_without_time" {
+  database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
+  name     = "alert_queries_runner"
 
-  arg {
+  arguments {
     name = "query_name"
     type = "STRING"
   }
 
-  arg {
+  arguments {
     name = "offset"
     type = "STRING"
   }
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
   statement   = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {})
 }
 
@@ -132,18 +127,17 @@ resource "snowflake_procedure" "alert_queries_runner" {
 # USING TEMPLATE 'results-alert-queries-runner.js'
 # ;
 resource "snowflake_procedure" "alert_queries_runner" {
-  name     = "alert_queries_runner"
-  database = snowflake_database.db.name
+  database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
+  name     = "alert_queries_runner"
 
-  arg {
+  arguments {
     name = "query_name"
     type = "STRING"
   }
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
   statement   = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {})
 }
 
@@ -157,18 +151,17 @@ resource "snowflake_procedure" "alert_queries_runner" {
 # USING TEMPLATE 'results-alert-scheduler.js'
 # ;
 resource "snowflake_procedure" "alert_scheduler" {
-  name     = "alert_scheduler"
-  database = snowflake_database.db.name
+  database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
+  name     = "alert_scheduler"
 
-  arg {
+  arguments {
     name = "warehouse"
     type = "STRING"
   }
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
   statement   = templatefile("${path.module}/procedures_js/alert_scheduler.js", {})
 }
 
@@ -182,18 +175,17 @@ resource "snowflake_procedure" "alert_scheduler" {
 # USING TEMPLATE 'results-alert-suppressions-runner.js'
 # ;
 resource "snowflake_procedure" "alert_suppressions_runner" {
-  name     = "alert_suppressions_runner"
-  database = snowflake_database.db.name
+  database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
+  name     = "alert_suppressions_runner"
 
-  arg {
+  arguments {
     name = "queries_like"
     type = "STRING"
   }
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
   statement   = templatefile("${path.module}/procedures_js/alert_suppressions_runner.js", {})
 }
 
@@ -203,42 +195,19 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
 # EXECUTE AS CALLER
 # USING TEMPLATE 'results-alert-suppressions-runner.js'
 # ;
-resource "snowflake_procedure" "alert_suppressions_runner" {
-  name     = "alert_suppressions_runner"
-  database = snowflake_database.db.name
+resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" {
+  database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
+  name     = "alert_suppressions_runner"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
   statement   = templatefile("${path.module}/procedures_js/alert_suppressions_runner.js", {})
 }
 
 # ---------------------------
 # 7. Violation Queries Runner
 # ---------------------------
-# CREATE OR REPLACE PROCEDURE results.alert_suppressions_runner(queries_like STRING)
-# RETURNS VARIANT
-# LANGUAGE JAVASCRIPT
-# EXECUTE AS CALLER
-# USING TEMPLATE 'results-alert-suppressions-runner.js'
-# ;
-resource "snowflake_procedure" "alert_suppressions_runner" {
-  name     = "alert_suppressions_runner"
-  database = snowflake_database.db.name
-  schema   = snowflake_schema.results.name
-
-  arg {
-    name = "queries_like"
-    type = "STRING"
-  }
-
-  return_type = "VARIANT"
-  execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
-  statement   = templatefile("${path.module}/procedures_js/alert_suppressions_runner.js", {})
-}
-
 # CREATE OR REPLACE PROCEDURE results.violation_queries_runner()
 # RETURNS VARIANT
 # LANGUAGE JAVASCRIPT
@@ -246,13 +215,12 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
 # USING TEMPLATE 'results-violation-queries-runner.js'
 # ;
 resource "snowflake_procedure" "violation_queries_runner" {
-  name     = "violation_queries_runner"
-  database = snowflake_database.db.name
+  database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
+  name     = "violation_queries_runner"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  language    = "JAVASCRIPT"
   statement   = templatefile("${path.module}/procedures_js/violation_queries_runner.js", {})
 }
 

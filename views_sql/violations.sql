@@ -14,4 +14,4 @@ SELECT id
     , result['QUERY_ID']::VARCHAR     AS query_id
     , result['QUERY_NAME']::VARCHAR   AS query_name
     , result['OWNER']::VARCHAR        AS owner
-FROM results.violations
+FROM ${results_violations}

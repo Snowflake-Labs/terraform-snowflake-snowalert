@@ -1,32 +1,32 @@
 // args
-var WAREHOUSE;
+var WAREHOUSE
 
 // library
 function exec(sqlText, binds = []) {
-  let retval = [];
-  const stmnt = snowflake.createStatement({ sqlText, binds });
-  const result = stmnt.execute();
-  const columnCount = stmnt.getColumnCount();
-  const columnNames = [];
-  for (let i = 1; i < columnCount + 1; i++) {
-    columnNames.push(stmnt.getColumnName(i));
-  }
-
-  while (result.next()) {
-    let o = {};
-    for (let c of columnNames) {
-      o[c] = result.getColumnValue(c);
+    let retval = []
+    const stmnt = snowflake.createStatement({ sqlText, binds })
+    const result = stmnt.execute()
+    const columnCount = stmnt.getColumnCount()
+    const columnNames = []
+    for (let i = 1; i < columnCount + 1; i++) {
+        columnNames.push(stmnt.getColumnName(i))
     }
-    retval.push(o);
-  }
-  return retval;
+
+    while (result.next()) {
+        let o = {}
+        for (let c of columnNames) {
+            o[c] = result.getColumnValue(c)
+        }
+        retval.push(o)
+    }
+    return retval
 }
 
 function unindent(s) {
-  const min_indent = Math.min(
-    ...[...s.matchAll("\n *")].map((x) => x[0].length)
-  );
-  return s.replace("\n" + " ".repeat(min_indent), "\n");
+    const min_indent = Math.min(
+        ...[...s.matchAll('\n *')].map((x) => x[0].length)
+    )
+    return s.replace('\n' + ' '.repeat(min_indent), '\n')
 }
 
 // logic
@@ -53,23 +53,23 @@ SELECT table_name AS "rule_name"
 FROM information_schema.views
 WHERE table_schema='RULES'
   AND "schedule" IS NOT NULL
-`;
+`
 
 return {
-  handled: exec(FIND_VIEWS).map((v) => ({
-    run_alert_query: exec(
-      unindent(`-- create alert query run task
-        CREATE OR REPLACE TASK RUN_ALERT_QUERY_${v.rule_name}
-        WAREHOUSE=${WAREHOUSE}
-        SCHEDULE='${v.schedule}'
-        AS
-        CALL results.alert_queries_runner('${v.rule_name}', '${v.lookback}')
-      `)
-    )[0]["status"],
-    resume_alert_query: exec(
-      unindent(`
-        ALTER TASK RUN_ALERT_QUERY_${v.rule_name} RESUME
-      `)
-    )[0]["status"],
-  })),
-};
+    handled: exec(FIND_VIEWS).map((v) => ({
+        run_alert_query: exec(
+            unindent(`-- create alert query run task
+          CREATE OR REPLACE TASK RUN_ALERT_QUERY_$${v.rule_name}
+          WAREHOUSE=$${WAREHOUSE}
+          SCHEDULE='$${v.schedule}'
+          AS
+          CALL results.alert_queries_runner('$${v.rule_name}', '$${v.lookback}')
+        `)
+        )[0]['status'],
+        resume_alert_query: exec(
+            unindent(`
+          ALTER TASK RUN_ALERT_QUERY_$${v.rule_name} RESUME
+        `)
+        )[0]['status'],
+    })),
+}

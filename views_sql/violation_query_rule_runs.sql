@@ -5,5 +5,5 @@ SELECT V:RUN_ID::VARCHAR AS run_id
     , V:ERROR AS error
     , V:ROW_COUNT.INSERTED::INTEGER AS num_violations_created
     , V:ROW_COUNT.UPDATED::INTEGER AS num_violations_updated
-FROM results.query_metadata
+FROM ${results_query_metadata}
 WHERE V:QUERY_NAME ILIKE '%_VIOLATION_QUERY'

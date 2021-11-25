@@ -4,5 +4,5 @@ SELECT V:RUN_ID::VARCHAR AS run_id
     , V:END_TIME::TIMESTAMP AS end_time
     , V:ROW_COUNT.SUPPRESSED::INTEGER AS num_alerts_suppressed
     , V:ERROR AS error
-FROM results.query_metadata
+FROM ${results_query_metadata}
 WHERE V:QUERY_NAME ILIKE '%_ALERT_SUPPRESSION'
