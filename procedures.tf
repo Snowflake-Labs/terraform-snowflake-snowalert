@@ -10,7 +10,7 @@
 resource "snowflake_procedure" "alert_dispatcher" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "alert_dispatcher"
+  name     = "ALERT_DISPATCHER"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
@@ -29,7 +29,7 @@ resource "snowflake_procedure" "alert_dispatcher" {
 resource "snowflake_procedure" "alert_merge" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "alert_merge"
+  name     = "ALERT_MERGE"
 
   arguments {
     name = "deduplication_offset"
@@ -53,7 +53,7 @@ resource "snowflake_procedure" "alert_merge" {
 resource "snowflake_procedure" "alert_processor" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "alert_processor"
+  name     = "ALERT_PROCESSOR"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
@@ -72,7 +72,7 @@ resource "snowflake_procedure" "alert_processor" {
 resource "snowflake_procedure" "alert_queries_runner_with_time" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "alert_queries_runner"
+  name     = "ALERT_QUERIES_RUNNER"
 
   arguments {
     name = "query_name"
@@ -103,7 +103,7 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
 resource "snowflake_procedure" "alert_queries_runner_without_time" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "alert_queries_runner"
+  name     = "ALERT_QUERIES_RUNNER"
 
   arguments {
     name = "query_name"
@@ -129,7 +129,7 @@ resource "snowflake_procedure" "alert_queries_runner_without_time" {
 resource "snowflake_procedure" "alert_queries_runner" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "alert_queries_runner"
+  name     = "ALERT_QUERIES_RUNNER"
 
   arguments {
     name = "query_name"
@@ -153,7 +153,7 @@ resource "snowflake_procedure" "alert_queries_runner" {
 resource "snowflake_procedure" "alert_scheduler" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "alert_scheduler"
+  name     = "ALERT_SCHEDULER"
 
   arguments {
     name = "warehouse"
@@ -177,7 +177,7 @@ resource "snowflake_procedure" "alert_scheduler" {
 resource "snowflake_procedure" "alert_suppressions_runner" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "alert_suppressions_runner"
+  name     = "ALERT_SUPPRESSIONS_RUNNER"
 
   arguments {
     name = "queries_like"
@@ -198,7 +198,7 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
 resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "alert_suppressions_runner"
+  name     = "ALERT_SUPPRESSIONS_RUNNER"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
@@ -217,7 +217,7 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
 resource "snowflake_procedure" "violation_queries_runner" {
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
-  name     = "violation_queries_runner"
+  name     = "VIOLATION_QUERIES_RUNNER"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
