@@ -58,7 +58,7 @@ resource "snowflake_view" "tags_foj_alerts" {
       data_rule_tags = join(".", [
         snowflake_database.snowalert.name,
         snowflake_schema.data.name,
-        snowflake_table.run_metadata.name,
+        snowflake_view.rule_tags.name,
       ])
       data_alerts = join(".", [
         snowflake_database.snowalert.name,
@@ -82,7 +82,7 @@ resource "snowflake_view" "tags_foj_violations" {
       data_rule_tags = join(".", [
         snowflake_database.snowalert.name,
         snowflake_schema.data.name,
-        snowflake_table.run_metadata.name,
+        snowflake_view.rule_tags.name,
       ])
       data_violations = join(".", [
         snowflake_database.snowalert.name,
@@ -313,7 +313,7 @@ resource "snowflake_view" "violation_suppression_rule_run_errors" {
 
   statement = templatefile(
     "${path.module}/views_sql/violation_suppression_rule_run_errors.sql", {
-      data_violation_suppression_rule_runs = local.data_violation_query_rule_runs
+      data_violation_suppression_rule_runs = local.data_violation_suppression_rule_runs
       data_rule_views_to_titles_map        = local.data_rule_views_to_titles_map
     }
   )

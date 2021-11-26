@@ -28,7 +28,7 @@ resource "snowflake_function" "time_slices" {
     type = "TIMESTAMP_NTZ"
   }
 
-  return_type     = "TABLE(slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)" # TODO: I don't think this type is supported
+  return_type     = "TABLE(slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)"
   return_behavior = "IMMUTABLE"
   statement       = templatefile("${path.module}/functions_sql/time_slices.sql", {})
 }
@@ -67,7 +67,7 @@ resource "snowflake_function" "time_slices_before_t_with_t" {
     type = "TIMESTAMP_NTZ"
   }
 
-  return_type = "TABLE(slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)" # TODO: I don't think this type is supported
+  return_type = "TABLE(slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)"
   statement = templatefile(
     "${path.module}/functions_sql/time_slices_before_t_with_t.sql", {
       time_slices_function = join(".", [
@@ -108,7 +108,7 @@ resource "snowflake_function" "time_slices_before_t_without_t" {
     type = "NUMBER"
   }
 
-  return_type = "TABLE (slice_start TIMESTAMP, slice_end TIMESTAMP)"
+  return_type = "TABLE(slice_start TIMESTAMP, slice_end TIMESTAMP)"
   statement = templatefile(
     "${path.module}/functions_sql/time_slices_before_t_without_t.sql", {
       time_slices_function = join(".", [
