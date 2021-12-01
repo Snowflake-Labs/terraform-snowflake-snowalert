@@ -18,7 +18,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "RUN_ID"
-    type = "STRING"
+    type = "VARCHAR(16777216)"
   }
 
   column {
