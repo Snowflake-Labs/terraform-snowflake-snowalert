@@ -3,7 +3,8 @@ snowflake_account = "kh54840"
 
 # Optional
 env            = "dev"
-terraform_role = "ACCOUNTADMIN"
+terraform_role = "ACCOUNTADMIN" # security_alerting_rl
+
 
 snowalert_db_name        = "NACHIKET_SNOWALERT"
 snowalert_role_name      = "NACHIKET_APP_SNOWALERT"
