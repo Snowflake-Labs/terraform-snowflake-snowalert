@@ -3,7 +3,8 @@ snowflake_account = "oz03309"
 
 # Optional
 env            = "dev"
-terraform_role = "ACCOUNTADMIN"
+terraform_role = "ACCOUNTADMIN" # security_alerting_rl
+
 
 snowalert_db_name        = "PRASANTH_SNOWALERT"
 snowalert_role_name      = "PRASANTH_APP_SNOWALERT"
