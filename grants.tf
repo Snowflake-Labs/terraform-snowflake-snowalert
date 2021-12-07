@@ -67,15 +67,15 @@ resource "snowflake_view_grant" "view_grant_references" {
 }
 
 # View Level - ownership
-resource "snowflake_view_grant" "view_grant_ownership" {
-  database_name = snowflake_database.snowalert.name
+# resource "snowflake_view_grant" "view_grant_ownership" {
+#   database_name = snowflake_database.snowalert.name
 
-  privilege = "OWNERSHIP"
-  roles     = [snowflake_role.snowalert.name]
+#   privilege = "OWNERSHIP"
+#   roles     = [snowflake_role.snowalert.name]
 
-  on_future         = true
-  with_grant_option = false
-}
+#   on_future         = true
+#   with_grant_option = false
+# }
 
 # Table Level - Select
 resource "snowflake_table_grant" "table_grant_select" {
@@ -99,40 +99,40 @@ resource "snowflake_table_grant" "table_grant_insert" {
   with_grant_option = false
 }
 
-# Table Level - Ownership
-resource "snowflake_table_grant" "table_grant_ownership" {
-  database_name = snowflake_database.snowalert.name
+# # Table Level - Ownership
+# resource "snowflake_table_grant" "table_grant_ownership" {
+#   database_name = snowflake_database.snowalert.name
 
-  privilege = "OWNERSHIP"
-  roles     = [snowflake_role.snowalert.name]
+#   privilege = "OWNERSHIP"
+#   roles     = [snowflake_role.snowalert.name]
 
-  on_future         = true
-  with_grant_option = false
-}
+#   on_future         = true
+#   with_grant_option = false
+# }
 
-# Procedure Level - Select
-resource "snowflake_procedure_grant" "procedure_grant_ownership" {
-  database_name = snowflake_database.snowalert.name
-  schema_name   = snowflake_schema.results.name
+# # Procedure Level - Select
+# resource "snowflake_procedure_grant" "procedure_grant_ownership" {
+#   database_name = snowflake_database.snowalert.name
+#   schema_name   = snowflake_schema.results.name
 
-  privilege = "OWNERSHIP"
-  roles     = [snowflake_role.snowalert.name]
+#   privilege = "OWNERSHIP"
+#   roles     = [snowflake_role.snowalert.name]
 
-  on_future         = true
-  with_grant_option = false
-}
+#   on_future         = true
+#   with_grant_option = false
+# }
 
-# Procedure Level - Usage
-resource "snowflake_procedure_grant" "procedure_grant_usage" {
-  database_name = snowflake_database.snowalert.name
-  schema_name   = snowflake_schema.results.name
+# # Procedure Level - Usage
+# resource "snowflake_procedure_grant" "procedure_grant_usage" {
+#   database_name = snowflake_database.snowalert.name
+#   schema_name   = snowflake_schema.results.name
 
-  privilege = "USAGE"
-  roles     = [snowflake_role.snowalert.name]
+#   privilege = "USAGE"
+#   roles     = [snowflake_role.snowalert.name]
 
-  on_future         = true
-  with_grant_option = false
-}
+#   on_future         = true
+#   with_grant_option = false
+# }
 
 # Stream Level - SELECT
 resource "snowflake_stream_grant" "stream_grant_select" {
@@ -146,17 +146,17 @@ resource "snowflake_stream_grant" "stream_grant_select" {
   with_grant_option = false
 }
 
-# Stream Level - Ownership
-resource "snowflake_stream_grant" "stream_grant_ownerhsip" {
-  database_name = snowflake_database.snowalert.name
-  schema_name   = snowflake_schema.rules.name
-  stream_name   = snowflake_stream.raw_alerts_stream.name
+# # Stream Level - Ownership
+# resource "snowflake_stream_grant" "stream_grant_ownerhsip" {
+#   database_name = snowflake_database.snowalert.name
+#   schema_name   = snowflake_schema.rules.name
+#   stream_name   = snowflake_stream.raw_alerts_stream.name
 
-  privilege = "OWNERSHIP"
-  roles     = [snowflake_role.snowalert.name]
+#   privilege = "OWNERSHIP"
+#   roles     = [snowflake_role.snowalert.name]
 
-  with_grant_option = false
-}
+#   with_grant_option = false
+# }
 
 
 # GRANT ALL PRIVILEGES

@@ -6,6 +6,7 @@ module "snowalert" {
 
   # Optional
   env            = var.env
+  prefix         = var.prefix
   terraform_role = var.terraform_role
 
   snowalert_db_name        = var.snowalert_db_name

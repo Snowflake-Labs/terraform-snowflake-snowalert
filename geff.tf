@@ -3,8 +3,8 @@ module "geff_snowalert" {
   version = "1.3.0"
 
   # General
-  # prefix = var.prefix
-  # env    = var.env
+  prefix = var.prefix
+  env    = var.env
 
   # Snowflake
   # snowflake_integration_owner_role = var.terraform_role
@@ -12,7 +12,7 @@ module "geff_snowalert" {
 
   # # AWS
   # aws_cloudwatch_metric_namespace = var.aws_cloudwatch_metric_namespace
-  # aws_region                      = var.aws_region
+  aws_region = "us-west-2"
   # deploy_lambda_in_vpc            = var.deploy_lambda_in_vpc
   # lambda_security_group_ids       = var.lambda_security_group_ids
   # lambda_subnet_ids               = var.lambda_subnet_ids
