@@ -14,10 +14,7 @@ variable "env" {
 
 variable "prefix" {
   type        = string
-  description = <<EOT
-    This will be the prefix used to name the Resources.
-    WARNING: Enter a short prefix in order to prevent name length related restrictions
-  EOT
+  description = "This will be the prefix used to name the Resources. WARNING: Enter a short prefix in order to prevent name length related restrictions"
   default     = "example"
 }
 
