@@ -14,17 +14,17 @@ resource "snowflake_function" "time_slices" {
   name     = "TIME_SLICES"
 
   arguments {
-    name = "n"
+    name = "N"
     type = "NUMBER"
   }
 
   arguments {
-    name = "s"
+    name = "S"
     type = "TIMESTAMP_NTZ"
   }
 
   arguments {
-    name = "e"
+    name = "E"
     type = "TIMESTAMP_NTZ"
   }
 
@@ -53,17 +53,17 @@ resource "snowflake_function" "time_slices_before_t_with_t" {
   name     = "TIME_SLICES_BEFORE_T"
 
   arguments {
-    name = "num_slices"
+    name = "NUM_SLICES"
     type = "NUMBER"
   }
 
   arguments {
-    name = "seconds_in_slice"
+    name = "SECONDS_IN_SLICE"
     type = "NUMBER"
   }
 
   arguments {
-    name = "t"
+    name = "T"
     type = "TIMESTAMP_NTZ"
   }
 
@@ -99,12 +99,12 @@ resource "snowflake_function" "time_slices_before_t_without_t" {
   name     = "TIME_SLICES_BEFORE_T"
 
   arguments {
-    name = "num_slices"
+    name = "NUM_SLICES"
     type = "NUMBER"
   }
 
   arguments {
-    name = "seconds_in_slice"
+    name = "SECONDS_IN_SLICE"
     type = "NUMBER"
   }
 
@@ -168,12 +168,12 @@ resource "snowflake_function" "urlencode" {
   name     = "URLENCODE"
 
   arguments {
-    name = "obj"
+    name = "OBJ"
     type = "VARIANT"
   }
 
   language    = "javascript"
-  return_type = "STRING"
+  return_type = "VARCHAR"
   statement   = <<javascript
 var ret = []
 for (var p in obj)

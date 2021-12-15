@@ -3,6 +3,7 @@
 resource "snowflake_user" "user" {
   name       = "Snowalert User"
   login_name = "app_snowalert"
+  # make the above unique, if prompted with object already exists
 
   display_name = "Snowalert User"
   email        = "snowalert@snowflake.com"

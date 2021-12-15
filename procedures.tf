@@ -33,7 +33,7 @@ resource "snowflake_procedure" "alert_merge" {
 
   arguments {
     name = "deduplication_offset"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   return_type = "VARIANT"
@@ -76,17 +76,17 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
 
   arguments {
     name = "query_name"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   arguments {
     name = "from_time_sql"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   arguments {
     name = "to_time_sql"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   return_type = "VARIANT"
@@ -107,12 +107,12 @@ resource "snowflake_procedure" "alert_queries_runner_without_time" {
 
   arguments {
     name = "query_name"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   arguments {
     name = "offset"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   return_type = "VARIANT"
@@ -133,7 +133,7 @@ resource "snowflake_procedure" "alert_queries_runner" {
 
   arguments {
     name = "query_name"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   return_type = "VARIANT"
@@ -157,7 +157,7 @@ resource "snowflake_procedure" "alert_scheduler" {
 
   arguments {
     name = "warehouse"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   return_type = "VARIANT"
@@ -181,7 +181,7 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
 
   arguments {
     name = "queries_like"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   return_type = "VARIANT"

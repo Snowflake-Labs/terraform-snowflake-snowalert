@@ -12,6 +12,12 @@ variable "env" {
   default     = "dev"
 }
 
+variable "prefix" {
+  type        = string
+  description = "This will be the prefix used to name the Resources. WARNING: Enter a short prefix in order to prevent name length related restrictions"
+  default     = "example"
+}
+
 variable "terraform_role" {
   type        = string
   description = "Role used to create all the snowalert objects."

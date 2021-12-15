@@ -18,7 +18,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "RUN_ID"
-    type = "STRING"
+    type = "VARCHAR(256)"
   }
 
   column {
@@ -38,7 +38,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "TICKET"
-    type = "STRING"
+    type = "VARCHAR(256)"
   }
 
   column {
@@ -48,7 +48,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "SUPPRESSION_RULE"
-    type = "STRING"
+    type = "VARCHAR(512)"
 
     default {
       constant = 1
@@ -57,7 +57,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "COUNTER"
-    type = "INTEGER"
+    type = "NUMBER(38,0)"
 
     default {
       constant = 1
@@ -66,7 +66,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "CORRELATION_ID"
-    type = "STRING"
+    type = "VARCHAR(256)"
   }
 
   column {
@@ -98,7 +98,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "ALERT_ID"
-    type = "STRING"
+    type = "VARCHAR(256)"
   }
 
   column {
@@ -118,7 +118,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "TICKET"
-    type = "STRING"
+    type = "VARCHAR(256)"
   }
 
   column {
@@ -128,7 +128,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "SUPPRESSION_RULE"
-    type = "STRING"
+    type = "VARCHAR(512)"
 
     default {
       constant = 1
@@ -137,7 +137,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "COUNTER"
-    type = "INTEGER"
+    type = "NUMBER(38,0)"
 
     default {
       constant = 1
@@ -146,7 +146,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "CORRELATION_ID"
-    type = "STRING"
+    type = "VARCHAR(256)"
   }
 
   column {
@@ -175,7 +175,7 @@ resource "snowflake_table" "violations" {
 
   column {
     name = "ID"
-    type = "STRING"
+    type = "VARCHAR(256)"
   }
 
   column {
@@ -185,7 +185,7 @@ resource "snowflake_table" "violations" {
 
   column {
     name = "TICKET"
-    type = "STRING"
+    type = "VARCHAR(256)"
   }
 
   column {
@@ -195,7 +195,7 @@ resource "snowflake_table" "violations" {
 
   column {
     name = "SUPPRESSION_RULE"
-    type = "STRING"
+    type = "VARCHAR(512)"
   }
 }
 
@@ -230,7 +230,7 @@ resource "snowflake_table" "run_metadata" {
 
   column {
     name = "EVENT_TIME"
-    type = "TIMESTAMP_LTZ"
+    type = "TIMESTAMP_LTZ(9)"
   }
 
   column {
@@ -250,7 +250,7 @@ resource "snowflake_table" "ingestion_metadata" {
 
   column {
     name = "EVENT_TIME"
-    type = "TIMESTAMP_LTZ"
+    type = "TIMESTAMP_LTZ(9)"
   }
 
   column {
