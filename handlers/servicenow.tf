@@ -5,7 +5,7 @@
 #     API_INTEGRATION=integration
 #     HEADERS=(
 #     'method'='post'
-#     'url'='https://liftdev.snowflake.com/api/now/table/u_snowflake_incident'
+#     'url'={service_now_api_url}
 #     'json'='{0}'
 #     'auth'='arn:aws:secretsmanager:us-west-2:12332435:secret:dev/servicenow/api_secrets'
 #     )
