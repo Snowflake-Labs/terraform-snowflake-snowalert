@@ -4,6 +4,7 @@ snowalert_jira_api(
     TO_JSON(
         OBJECT_CONSTRUCT(
             'fields', OBJECT_CONSTRUCT(
+                'labels', ARRAY_CONSTRUCT('SnowAlert'),
                 'project', OBJECT_CONSTRUCT(
                     'key', COALESCE(payload['project'], '${sa_jira_project}')
                 ),
