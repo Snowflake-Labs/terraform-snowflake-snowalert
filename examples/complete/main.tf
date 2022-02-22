@@ -18,4 +18,10 @@ module "snowalert" {
   slack_secrets_arn              = var.slack_secrets_arn
   smtp_secrets_arn               = var.smtp_secrets_arn
   smtp_driver_from_email_address = var.smtp_driver_from_email_address
+
+  providers = {
+    snowflake.api_integration     = snowflake.api_integration
+    snowflake.storage_integration = snowflake.storage_integration
+    aws                           = aws
+  }
 }
