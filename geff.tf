@@ -1,5 +1,5 @@
 module "geff_snowalert" {
-  source  = "Snowflake-Labs/aws-geff/snowflake"
+  source = "Snowflake-Labs/aws-geff/snowflake"
 
   # Required
   prefix = var.prefix
