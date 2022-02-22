@@ -1,6 +1,5 @@
 module "geff_snowalert" {
   source  = "Snowflake-Labs/aws-geff/snowflake"
-  version = "1.3.0"
 
   # Required
   prefix = var.prefix
