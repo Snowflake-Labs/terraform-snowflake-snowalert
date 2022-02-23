@@ -1,8 +1,7 @@
 # Required Variables
 variable "snowflake_account" {
   type        = string
-  description = "Dev/Prod/Staging or any other custom environment name."
-  sensitive   = true
+  description = "Snowflake Account."
 }
 
 # Optional Variables
