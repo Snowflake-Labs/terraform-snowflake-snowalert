@@ -6,6 +6,7 @@
 # export AWS_DEFAULT_REGION="us-west-2"
 
 provider "aws" {
+  alias  = "aws_regional"
   region = var.aws_region
 
   default_tags {
