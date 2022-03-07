@@ -16,10 +16,11 @@
 # ;
 resource "snowflake_external_function" "slack_snowflake" {
   count = contains(var.handlers, "slack") ? 1 : 0
+  provider = snowflake.alerting_role
 
-  name     = "slack_snowflake"
-  database = snowalert.snowalert.name
-  schema   = snowalert.results.name
+  name     = "SLACK_SNOWFLAKE"
+  database = snowflake_database.snowalert.name
+  schema   = snowflake_schema.results.name
 
   arg {
     name = "method"
@@ -63,8 +64,8 @@ resource "snowflake_external_function" "slack_snowflake" {
 
   return_null_allowed       = true
   max_batch_rows            = 1
-  api_integration           = local.geff_api_integration_name
-  url_of_proxy_and_resource = "${local.geff_api_gateway_invoke_url}/${var.env}/https"
+  api_integration           = module.geff_snowalert.api_gateway_invoke_url
+  url_of_proxy_and_resource = "${module.geff_snowalert.api_gateway_invoke_url}/${var.env}/https"
 
   return_type     = "VARIANT"
   return_behavior = "VOLATILE"
@@ -72,43 +73,6 @@ resource "snowflake_external_function" "slack_snowflake" {
   comment = <<COMMENT
 slack_snowflake: (method, path, params) -> response
 COMMENT
-}
-
-# CREATE OR REPLACE FUNCTION results.urlencode("obj" VARIANT) RETURNS STRING
-# LANGUAGE javascript
-# AS $$
-# var ret = [];
-# for (var p in obj)
-# if (obj.hasOwnProperty(p)) {
-#   var v = obj[p];
-#   v = v instanceof Date ? v.toISOString() : v;
-#   ret.push(encodeURIComponent(p) + "=" + encodeURIComponent(v));
-# }
-# return ret.join("&");
-# $$
-# ;
-resource "snowflake_function" "urlencode" {
-  name     = "urlencode"
-  database = snowflake_database.snowalert.name
-  schema   = snowflake_schema.results.name
-
-  arguments {
-    name = "obj"
-    type = "VARIANT"
-  }
-
-  language    = "javascript"
-  return_type = "STRING"
-  statement   = <<javascript
-var ret = [];
-for (var p in obj)
-if (obj.hasOwnProperty(p)) {
-  var v = obj[p];
-  v = v instanceof Date ? v.toISOString() : v;
-  ret.push(encodeURIComponent(p) + "=" + encodeURIComponent(v));
-}
-return ret.join("&");
-javascript
 }
 
 # CREATE OR REPLACE FUNCTION results.slack_snowflake_chat_post_message(channel STRING, text STRING) RETURNS VARIANT
@@ -124,7 +88,10 @@ javascript
 # $$
 # ;
 resource "snowflake_function" "slack_snowflake_chat_post_message" {
-  name     = "slack_snowflake_chat_post_message"
+  count = contains(var.handlers, "slack") ? 1 : 0
+  provider = snowflake.alerting_role
+
+  name     = "SLACK_SNOWFLAKE_CHAT_POST_MESSAGE"
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
 
@@ -138,10 +105,9 @@ resource "snowflake_function" "slack_snowflake_chat_post_message" {
     type = "STRING"
   }
 
-  language    = "SQL"
   return_type = "VARIANT"
   statement   = <<SQL
-slack_snowflake(
+${snowflake_database.snowalert.name}.${snowflake_schema.results.name}.${snowflake_external_function.slack_snowflake[0].name}.(
   'post',
   'chat.postMessage',
   URLENCODE(OBJECT_CONSTRUCT(
@@ -161,25 +127,27 @@ SQL
 #   )
 # $$
 # ;
-resource "snowflake_function" "slack_snowflake_chat_post_message" {
-  name     = "slack_snowflake_chat_post_message"
+resource "snowflake_function" "slack_handler" {
+  count = contains(var.handlers, "slack") ? 1 : 0
+  provider = snowflake.alerting_role
+
+  name     = "SLACK_HANDLER"
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
 
   arguments {
-    name = "channel"
-    type = "STRING"
+    name = "alert"
+    type = "VARIANT"
   }
 
   arguments {
-    name = "text"
-    type = "STRING"
+    name = "payload"
+    type = "VARIANT"
   }
 
-  language    = "SQL"
   return_type = "VARIANT"
   statement   = <<SQL
-slack_snowflake_chat_post_message(
+${snowflake_database.snowalert.name}.${snowflake_schema.results.name}.${snowflake_function.slack_snowflake_chat_post_message[0].name}(
   payload['channel'],
   payload['message']
 )
