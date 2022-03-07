@@ -21,6 +21,6 @@ module "snowalert" {
     snowflake.storage_integration = snowflake.storage_integration
     snowflake.admin               = snowflake.admin
     snowflake.alerting_role       = snowflake.alerting_role
-    aws           = aws
+    aws                           = aws
   }
 }

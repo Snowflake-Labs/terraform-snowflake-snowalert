@@ -8,20 +8,20 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform'
+    name: Terraform
     runs-on: ubuntu-latest
     env:
       SNOWFLAKE_USER: dummy_user
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-    - name: Terraform Format
-      run: terraform fmt -check -recursive -diff
-    - name: Terraform Init
-      run: terraform init
-      working-directory: examples/complete/
-    - name: Terraform Validate
-      run: terraform validate -no-color
-      working-directory: examples/complete/
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+      - name: Terraform Format
+        run: terraform fmt -check -recursive -diff
+      - name: Terraform Init
+        run: terraform init
+        working-directory: examples/complete/
+      - name: Terraform Validate
+        run: terraform validate -no-color
+        working-directory: examples/complete/
