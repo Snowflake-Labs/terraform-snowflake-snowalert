@@ -141,7 +141,7 @@ resource "snowflake_function" "slack_snowflake_chat_post_message" {
   language    = "SQL"
   return_type = "VARIANT"
   statement   = <<SQL
-slack_snowflake(
+${snowflake_database.snowalert.name}.${snowflake_schema.results.name}.slack_snowflake(
   'post',
   'chat.postMessage',
   URLENCODE(OBJECT_CONSTRUCT(
@@ -162,24 +162,24 @@ SQL
 # $$
 # ;
 resource "snowflake_function" "slack_snowflake_chat_post_message" {
-  name     = "slack_snowflake_chat_post_message"
+  name     = "slack_handler"
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
 
   arguments {
-    name = "channel"
-    type = "STRING"
+    name = "alert"
+    type = "VARIANT"
   }
 
   arguments {
-    name = "text"
-    type = "STRING"
+    name = "payload"
+    type = "VARIANT"
   }
 
   language    = "SQL"
   return_type = "VARIANT"
   statement   = <<SQL
-slack_snowflake_chat_post_message(
+${snowflake_database.snowalert.name}.${snowflake_schema.results.name}.slack_snowflake_chat_post_message(
   payload['channel'],
   payload['message']
 )
