@@ -15,7 +15,7 @@
 # AS 'https://{aws_api_gateway_id}.execute-api.{aws_api_gateway_region}.amazonaws.com/prod/https'
 # ;
 resource "snowflake_external_function" "slack_snowflake" {
-  count = contains(var.handlers, "slack") ? 1 : 0
+  count    = contains(var.handlers, "slack") ? 1 : 0
   provider = snowflake.alerting_role
 
   name     = "SLACK_SNOWFLAKE"
@@ -88,7 +88,7 @@ COMMENT
 # $$
 # ;
 resource "snowflake_function" "slack_snowflake_chat_post_message" {
-  count = contains(var.handlers, "slack") ? 1 : 0
+  count    = contains(var.handlers, "slack") ? 1 : 0
   provider = snowflake.alerting_role
 
   name     = "SLACK_SNOWFLAKE_CHAT_POST_MESSAGE"
@@ -128,7 +128,7 @@ SQL
 # $$
 # ;
 resource "snowflake_function" "slack_handler" {
-  count = contains(var.handlers, "slack") ? 1 : 0
+  count    = contains(var.handlers, "slack") ? 1 : 0
   provider = snowflake.alerting_role
 
   name     = "SLACK_HANDLER"

@@ -2,8 +2,8 @@ module "snowalert" {
   source = "../../"
 
   # Optional
-  env               = var.env
-  prefix            = var.prefix
+  env    = var.env
+  prefix = var.prefix
 
   snowalert_db_name        = var.snowalert_db_name
   snowalert_role_name      = var.snowalert_role_name
