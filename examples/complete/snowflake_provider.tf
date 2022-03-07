@@ -18,3 +18,17 @@ provider "snowflake" {
   account = var.snowflake_account
   role    = var.terraform_role
 }
+
+provider "snowflake" {
+  alias = "admin"
+
+  account = var.snowflake_account
+  role    = var.terraform_role
+}
+
+provider "snowflake" {
+  alias = "alerting_role"
+
+  account = var.snowflake_account
+  role    = var.terraform_role
+}

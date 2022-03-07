@@ -4,8 +4,6 @@ module "snowalert" {
   # Optional
   env               = var.env
   prefix            = var.prefix
-  terraform_role    = var.terraform_role
-  snowflake_account = var.snowflake_account
 
   snowalert_db_name        = var.snowalert_db_name
   snowalert_role_name      = var.snowalert_role_name
@@ -21,6 +19,8 @@ module "snowalert" {
   providers = {
     snowflake.api_integration     = snowflake.api_integration
     snowflake.storage_integration = snowflake.storage_integration
-    aws                           = aws
+    snowflake.admin               = snowflake.admin
+    snowflake.alerting_role       = snowflake.alerting_role
+    aws           = aws
   }
 }
