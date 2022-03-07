@@ -1,4 +1,6 @@
 resource "snowflake_view" "rule_tags" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "RULE_TAGS"
@@ -9,6 +11,8 @@ resource "snowflake_view" "rule_tags" {
 }
 
 resource "snowflake_view" "alerts" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "ALERTS"
@@ -28,6 +32,8 @@ resource "snowflake_view" "alerts" {
 }
 
 resource "snowflake_view" "violations" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "VIOLATIONS"
@@ -47,6 +53,8 @@ resource "snowflake_view" "violations" {
 }
 
 resource "snowflake_view" "tags_foj_alerts" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "TAGS_FOJ_ALERTS"
@@ -71,6 +79,8 @@ resource "snowflake_view" "tags_foj_alerts" {
 }
 
 resource "snowflake_view" "tags_foj_violations" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "TAGS_FOJ_VIOLATIONS"
@@ -109,6 +119,8 @@ locals {
 }
 
 resource "snowflake_view" "alert_queries_runs" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "ALERT_QUERIES_RUNS"
@@ -122,6 +134,8 @@ resource "snowflake_view" "alert_queries_runs" {
 }
 
 resource "snowflake_view" "alert_query_rule_runs" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "ALERT_QUERY_RULE_RUNS"
@@ -135,6 +149,8 @@ resource "snowflake_view" "alert_query_rule_runs" {
 }
 
 resource "snowflake_view" "alert_suppressions_runs" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "ALERT_SUPPRESSIONS_RUNS"
@@ -148,6 +164,8 @@ resource "snowflake_view" "alert_suppressions_runs" {
 }
 
 resource "snowflake_view" "alert_suppression_rule_runs" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "ALERT_SUPPRESSION_RULE_RUNS"
@@ -161,6 +179,8 @@ resource "snowflake_view" "alert_suppression_rule_runs" {
 }
 
 resource "snowflake_view" "violation_queries_runs" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "VIOLATION_QUERIES_RUNS"
@@ -174,6 +194,8 @@ resource "snowflake_view" "violation_queries_runs" {
 }
 
 resource "snowflake_view" "violation_query_rule_runs" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "VIOLATION_QUERY_RULE_RUNS"
@@ -187,6 +209,8 @@ resource "snowflake_view" "violation_query_rule_runs" {
 }
 
 resource "snowflake_view" "violation_suppressions_runs" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "VIOLATION_SUPPRESSIONS_RUNS"
@@ -200,6 +224,8 @@ resource "snowflake_view" "violation_suppressions_runs" {
 }
 
 resource "snowflake_view" "violation_suppression_rule_runs" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "VIOLATION_SUPPRESSION_RULE_RUNS"
@@ -213,6 +239,8 @@ resource "snowflake_view" "violation_suppression_rule_runs" {
 }
 
 resource "snowflake_view" "rule_views_to_titles_map" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "RULE_VIEWS_TO_TITLES_MAP"
@@ -261,6 +289,8 @@ locals {
 }
 
 resource "snowflake_view" "alert_query_rule_run_errors" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "ALERT_QUERY_RULE_RUN_ERRORS"
@@ -276,6 +306,8 @@ resource "snowflake_view" "alert_query_rule_run_errors" {
 }
 
 resource "snowflake_view" "alert_suppression_rule_run_errors" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "ALERT_SUPPRESSION_RULE_RUN_ERRORS"
@@ -291,6 +323,8 @@ resource "snowflake_view" "alert_suppression_rule_run_errors" {
 }
 
 resource "snowflake_view" "violation_query_rule_run_errors" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "VIOLATION_QUERY_RULE_RUN_ERRORS"
@@ -306,6 +340,8 @@ resource "snowflake_view" "violation_query_rule_run_errors" {
 }
 
 resource "snowflake_view" "violation_suppression_rule_run_errors" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "VIOLATION_SUPPRESSION_RULE_RUN_ERRORS"
@@ -321,6 +357,8 @@ resource "snowflake_view" "violation_suppression_rule_run_errors" {
 }
 
 resource "snowflake_view" "data_connector_run_errors" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "DATA_CONNECTOR_RUN_ERRORS"

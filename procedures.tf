@@ -8,6 +8,8 @@
 # USING TEMPLATE 'results-alert-dispatcher.js'
 # ;
 resource "snowflake_procedure" "alert_dispatcher" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "ALERT_DISPATCHER"
@@ -27,6 +29,8 @@ resource "snowflake_procedure" "alert_dispatcher" {
 # USING TEMPLATE 'results-alert-merge.js'
 # ;
 resource "snowflake_procedure" "alert_merge" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "ALERT_MERGE"
@@ -51,6 +55,8 @@ resource "snowflake_procedure" "alert_merge" {
 # USING TEMPLATE 'results-alert-processor.js'
 # ;
 resource "snowflake_procedure" "alert_processor" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "ALERT_PROCESSOR"
@@ -70,6 +76,8 @@ resource "snowflake_procedure" "alert_processor" {
 # USING TEMPLATE 'results-alert-queries-runner.js'
 # ;
 resource "snowflake_procedure" "alert_queries_runner_with_time" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "ALERT_QUERIES_RUNNER"
@@ -101,6 +109,8 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
 # USING TEMPLATE 'results-alert-queries-runner.js'
 # ;
 resource "snowflake_procedure" "alert_queries_runner_without_time" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "ALERT_QUERIES_RUNNER"
@@ -127,6 +137,8 @@ resource "snowflake_procedure" "alert_queries_runner_without_time" {
 # USING TEMPLATE 'results-alert-queries-runner.js'
 # ;
 resource "snowflake_procedure" "alert_queries_runner" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "ALERT_QUERIES_RUNNER"
@@ -151,6 +163,8 @@ resource "snowflake_procedure" "alert_queries_runner" {
 # USING TEMPLATE 'results-alert-scheduler.js'
 # ;
 resource "snowflake_procedure" "alert_scheduler" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "ALERT_SCHEDULER"
@@ -175,6 +189,8 @@ resource "snowflake_procedure" "alert_scheduler" {
 # USING TEMPLATE 'results-alert-suppressions-runner.js'
 # ;
 resource "snowflake_procedure" "alert_suppressions_runner" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "ALERT_SUPPRESSIONS_RUNNER"
@@ -196,6 +212,8 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
 # USING TEMPLATE 'results-alert-suppressions-runner.js'
 # ;
 resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "ALERT_SUPPRESSIONS_RUNNER"
@@ -215,6 +233,8 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
 # USING TEMPLATE 'results-violation-queries-runner.js'
 # ;
 resource "snowflake_procedure" "violation_queries_runner" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "VIOLATION_QUERIES_RUNNER"

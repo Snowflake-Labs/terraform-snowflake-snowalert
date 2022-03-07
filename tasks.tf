@@ -6,6 +6,8 @@
 # CALL results.alerts_merge('30m')
 # ;
 resource "snowflake_task" "snowalert_alert_merge_task" {
+  provider = snowflake.admin
+
   warehouse = snowflake_warehouse.snowalert.name
   database  = snowflake_database.snowalert.name
   schema    = snowflake_schema.results.name
@@ -29,6 +31,8 @@ resource "snowflake_task" "snowalert_alert_merge_task" {
 # CALL results.alert_suppressions_runner()
 # ;
 resource "snowflake_task" "snowalert_suppression_merge_task" {
+  provider = snowflake.admin
+
   warehouse = snowflake_warehouse.snowalert.name
   database  = snowflake_database.snowalert.name
   schema    = snowflake_schema.results.name

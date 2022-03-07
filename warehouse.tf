@@ -6,6 +6,8 @@
 # INITIALLY_SUSPENDED=TRUE
 # ;
 resource "snowflake_warehouse" "snowalert" {
+  provider = snowflake.admin
+
   name           = var.snowalert_warehouse_name
   comment        = "Warehouse that will be used for Snowalert."
   warehouse_size = "X-Small"

@@ -13,7 +13,9 @@ terraform {
 
       configuration_aliases = [
         snowflake.api_integration,
-        snowflake.storage_integration
+        snowflake.storage_integration,
+        snowflake.admin,
+        snowflake.alerting_role,
       ]
     }
   }

@@ -1,7 +1,7 @@
 # Required Variables
-variable "snowflake_account" {
+variable "prefix" {
   type        = string
-  description = "Snowflake Account."
+  description = "This will be the prefix used to name the Resources."
 }
 
 # Optional Variables
@@ -9,21 +9,6 @@ variable "env" {
   type        = string
   description = "Dev/Prod/Staging or any other custom environment name."
   default     = "dev"
-}
-
-variable "prefix" {
-  type        = string
-  description = <<EOT
-    This will be the prefix used to name the Resources.
-    WARNING: Enter a short prefix in order to prevent name length related restrictions
-  EOT
-  default     = "example"
-}
-
-variable "terraform_role" {
-  type        = string
-  description = "Role used to create all the snowalert objects."
-  default     = "ACCOUNTADMIN"
 }
 
 variable "snowalert_db_name" {

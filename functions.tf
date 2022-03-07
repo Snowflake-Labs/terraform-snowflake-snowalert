@@ -9,6 +9,8 @@
 # $$
 # ;
 resource "snowflake_function" "time_slices" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "TIME_SLICES"
@@ -48,6 +50,8 @@ resource "snowflake_function" "time_slices" {
 # $$
 # ;
 resource "snowflake_function" "time_slices_before_t_with_t" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "TIME_SLICES_BEFORE_T"
@@ -94,6 +98,8 @@ resource "snowflake_function" "time_slices_before_t_with_t" {
 # $$
 # ;
 resource "snowflake_function" "time_slices_before_t_without_t" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "TIME_SLICES_BEFORE_T"
@@ -128,6 +134,8 @@ resource "snowflake_function" "time_slices_before_t_without_t" {
 # $$
 # ;
 resource "snowflake_function" "object_assign" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "OBJECT_ASSIGN"
@@ -163,6 +171,8 @@ javascript
 # $$
 # ;
 resource "snowflake_function" "urlencode" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.data.name
   name     = "URLENCODE"
@@ -196,6 +206,8 @@ javascript
 # ) = 0
 # ';
 resource "snowflake_function" "has_no_violations" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.rules.name
   name     = "HAS_NO_VIOLATIONS"

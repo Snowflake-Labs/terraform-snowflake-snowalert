@@ -11,6 +11,8 @@
 #   handled VARIANT
 # );
 resource "snowflake_table" "raw_alerts" {
+  provider = snowflake.alerting_role
+
   database        = snowflake_database.snowalert.name
   schema          = snowflake_schema.results.name
   name            = "RAW_ALERTS"
@@ -90,6 +92,8 @@ resource "snowflake_table" "raw_alerts" {
 #   handled VARIANT
 # );
 resource "snowflake_table" "alerts" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "ALERTS"
@@ -164,6 +168,8 @@ resource "snowflake_table" "alerts" {
 #   suppression_rule STRING DEFAULT NULL
 # );
 resource "snowflake_table" "violations" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "VIOLATIONS"
@@ -204,6 +210,8 @@ resource "snowflake_table" "violations" {
 #   v VARIANT
 # );
 resource "snowflake_table" "query_metadata" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "QUERY_METADATA"
@@ -224,6 +232,8 @@ resource "snowflake_table" "query_metadata" {
 #   v VARIANT
 # );
 resource "snowflake_table" "run_metadata" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "RUN_METADATA"
@@ -244,6 +254,8 @@ resource "snowflake_table" "run_metadata" {
 #   v VARIANT
 # );
 resource "snowflake_table" "ingestion_metadata" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.results.name
   name     = "INGESTION_METADATA"

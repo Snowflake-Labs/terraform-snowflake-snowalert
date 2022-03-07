@@ -2,6 +2,8 @@
 # ON TABLE results.raw_alerts
 # ;
 resource "snowflake_stream" "raw_alerts_stream" {
+  provider = snowflake.alerting_role
+
   database = snowflake_database.snowalert.name
   schema   = snowflake_schema.rules.name
   name     = "raw_alerts_stream"

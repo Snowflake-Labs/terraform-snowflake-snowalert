@@ -1,5 +1,7 @@
 # Account Level - Execute
 resource "snowflake_account_grant" "account_grant" {
+  provider = snowflake.alerting_role
+
   roles             = [snowflake_role.snowalert.name]
   privilege         = "EXECUTE TASK"
   with_grant_option = false
@@ -7,6 +9,8 @@ resource "snowflake_account_grant" "account_grant" {
 
 # Database Level - Usage
 resource "snowflake_database_grant" "db_grant" {
+  provider = snowflake.alerting_role
+
   database_name = snowflake_database.snowalert.name
 
   privilege = "USAGE"
@@ -17,6 +21,8 @@ resource "snowflake_database_grant" "db_grant" {
 
 # Schema Level - Usage
 resource "snowflake_schema_grant" "schema_grant_usage" {
+  provider = snowflake.alerting_role
+
   database_name = snowflake_database.snowalert.name
 
   privilege = "USAGE"
@@ -28,6 +34,8 @@ resource "snowflake_schema_grant" "schema_grant_usage" {
 
 # View Level - Select
 resource "snowflake_view_grant" "view_grant_select" {
+  provider = snowflake.alerting_role
+
   database_name = snowflake_database.snowalert.name
 
   privilege = "SELECT"
@@ -39,6 +47,8 @@ resource "snowflake_view_grant" "view_grant_select" {
 
 # View Level - references
 resource "snowflake_view_grant" "view_grant_references" {
+  provider = snowflake.alerting_role
+
   database_name = snowflake_database.snowalert.name
 
   privilege = "REFERENCES"
@@ -50,6 +60,8 @@ resource "snowflake_view_grant" "view_grant_references" {
 
 # Table Level - Select
 resource "snowflake_table_grant" "table_grant_select" {
+  provider = snowflake.alerting_role
+
   database_name = snowflake_database.snowalert.name
 
   privilege = "SELECT"
@@ -61,6 +73,8 @@ resource "snowflake_table_grant" "table_grant_select" {
 
 # Table Level - Insert
 resource "snowflake_table_grant" "table_grant_insert" {
+  provider = snowflake.alerting_role
+
   database_name = snowflake_database.snowalert.name
 
   privilege = "INSERT"
@@ -72,6 +86,8 @@ resource "snowflake_table_grant" "table_grant_insert" {
 
 # Stream Level - Select
 resource "snowflake_stream_grant" "stream_grant_select" {
+  provider = snowflake.alerting_role
+
   database_name = snowflake_database.snowalert.name
   schema_name   = snowflake_schema.rules.name
   stream_name   = snowflake_stream.raw_alerts_stream.name
