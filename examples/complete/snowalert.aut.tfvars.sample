@@ -1,0 +1,29 @@
+# Required
+snowflake_account = "account_name"
+
+# Optional
+env            = "dev"
+prefix         = "my"
+terraform_role = "ACCOUNTADMIN" # my_org_alerting_rl
+
+snowalert_db_name        = "<PREFIX>_SNOWALERT"
+snowalert_role_name      = "<PREFIX>_APP_SNOWALERT"
+snowalert_warehouse_name = "<PREFIX>_SNOWALERT_WAREHOUSE"
+
+handlers = [
+  "slack",
+  #   "jira",
+  #   "smtp",
+]
+
+# Correspoding variables of the specified handlers are required
+slack_secrets_arn = "arn:aws:secretsmanager:us-east-1:1234567890:secret:test/snowalert/slack-oauth-token"
+
+jira_secrets_arn               = ""
+smtp_secrets_arn               = ""
+smtp_driver_from_email_address = ""
+
+# GEFF
+aws_region         = "us-west-2"
+geff_image_version = "latest"
+data_bucket_arns   = []
