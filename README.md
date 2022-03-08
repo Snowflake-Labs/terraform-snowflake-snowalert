@@ -21,13 +21,13 @@ sfc_env()
 {
     case $1 in
         "sfc_dev")
-            export SNOWFLAKE_USER=$1_tf_key
+            export SNOWFLAKE_USER=$1_tf_user
             export SNOWFLAKE_PRIVATE_KEY_PATH=
             export SNOWFLAKE_PRIVATE_KEY=`cat ~/.ssh/$1_tf_key.p8`
             export SNOWFLAKE_PRIVATE_KEY_PASSPHRASE='<my private key passphrase>'
             ;;
         "sfc_prod")
-            export SNOWFLAKE_USER=$1_tf_key
+            export SNOWFLAKE_USER=$1_tf_user
             export SNOWFLAKE_PRIVATE_KEY_PATH="~/.ssh/$1_tf_key.p8"
             export SNOWFLAKE_PRIVATE_KEY=
             export SNOWFLAKE_PRIVATE_KEY_PASSPHRASE='<my private key passphrase>'
