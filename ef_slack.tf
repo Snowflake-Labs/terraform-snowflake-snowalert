@@ -107,10 +107,10 @@ resource "snowflake_function" "slack_snowflake_chat_post_message" {
 
   return_type = "VARIANT"
   statement   = <<SQL
-${snowflake_database.snowalert.name}.${snowflake_schema.results.name}.${snowflake_external_function.slack_snowflake[0].name}.(
+${snowflake_database.snowalert.name}.${snowflake_schema.results.name}.${snowflake_external_function.slack_snowflake[0].name}(
   'post',
   'chat.postMessage',
-  URLENCODE(OBJECT_CONSTRUCT(
+  ${snowflake_database.snowalert.name}.${snowflake_schema.data.name}.${snowflake_function.urlencode.name}(OBJECT_CONSTRUCT(
     'channel', channel::STRING,
     'text', text::STRING
   ))
