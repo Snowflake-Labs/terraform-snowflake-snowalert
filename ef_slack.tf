@@ -23,17 +23,17 @@ resource "snowflake_external_function" "slack_snowflake" {
   schema   = snowflake_schema.results.name
 
   arg {
-    name = "method"
+    name = "METHOD"
     type = "STRING"
   }
 
   arg {
-    name = "path"
+    name = "PATH"
     type = "STRING"
   }
 
   arg {
-    name = "params"
+    name = "PARAMS"
     type = "STRING"
   }
 
