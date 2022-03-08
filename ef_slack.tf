@@ -64,7 +64,7 @@ resource "snowflake_external_function" "slack_snowflake" {
 
   return_null_allowed       = true
   max_batch_rows            = 1
-  api_integration           = module.geff_snowalert.api_gateway_invoke_url
+  api_integration           = module.geff_snowalert.api_integration_name
   url_of_proxy_and_resource = "${module.geff_snowalert.api_gateway_invoke_url}/${var.env}/https"
 
   return_type     = "VARIANT"
