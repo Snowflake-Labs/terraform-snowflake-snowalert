@@ -186,9 +186,9 @@ resource "snowflake_function" "urlencode" {
   return_type = "VARCHAR"
   statement   = <<javascript
 var ret = []
-for (var p in obj)
-if (obj.hasOwnProperty(p)) {
-  var v = obj[p]
+for (var p in OBJ)
+if (OBJ.hasOwnProperty(p)) {
+  var v = OBJ[p]
   v = v instanceof Date ? v.toISOString() : v
   ret.push(encodeURIComponent(p) + "=" + encodeURIComponent(v))
 }

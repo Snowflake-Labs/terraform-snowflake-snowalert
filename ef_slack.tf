@@ -49,7 +49,7 @@ resource "snowflake_external_function" "slack_snowflake" {
 
   header {
     name  = "url"
-    value = "'/api/{1}'"
+    value = "/api/{1}"
   }
 
   header {
