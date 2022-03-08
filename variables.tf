@@ -38,25 +38,25 @@ variable "handlers" {
 # Correspoding variables of the specified handlers are required
 variable "jira_secrets_arn" {
   type        = string
-  description = "."
+  description = ""
   default     = null
 }
 
 variable "slack_secrets_arn" {
   type        = string
-  description = "."
+  description = ""
   default     = null
 }
 
 variable "smtp_secrets_arn" {
   type        = string
-  description = "."
+  description = ""
   default     = null
 }
 
 variable "smtp_driver_from_email_address" {
   type        = string
-  description = "."
+  description = ""
   default     = null
 }
 
