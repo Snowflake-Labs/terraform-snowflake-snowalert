@@ -24,6 +24,6 @@ smtp_secrets_arn               = ""
 smtp_driver_from_email_address = ""
 
 # GEFF
-aws_region         = "us-west-2"
+aws_region         = "us-east-1"
 geff_image_version = "latest"
 data_bucket_arns   = []
