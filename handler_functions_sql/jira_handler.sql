@@ -1,4 +1,4 @@
-snowalert_jira_api(
+${database}.${schema}.SNOWALERT_JIRA_API(
     'POST',
     '/rest/api/3/issue',
     TO_JSON(

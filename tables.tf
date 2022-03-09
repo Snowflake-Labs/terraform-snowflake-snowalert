@@ -28,7 +28,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "TICKET"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -38,7 +38,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "SUPPRESSION_RULE"
-    type = "VARCHAR(512)"
+    type = "VARCHAR(16777216)"
 
     default {
       constant = 1
@@ -56,7 +56,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "CORRELATION_ID"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -98,7 +98,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "TICKET"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -108,7 +108,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "SUPPRESSION_RULE"
-    type = "VARCHAR(512)"
+    type = "VARCHAR(16777216)"
 
     default {
       constant = 1
@@ -126,7 +126,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "CORRELATION_ID"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -149,7 +149,7 @@ resource "snowflake_table" "violations" {
 
   column {
     name = "ID"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -159,7 +159,7 @@ resource "snowflake_table" "violations" {
 
   column {
     name = "TICKET"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -169,7 +169,7 @@ resource "snowflake_table" "violations" {
 
   column {
     name = "SUPPRESSION_RULE"
-    type = "VARCHAR(512)"
+    type = "VARCHAR(16777216)"
   }
 }
 

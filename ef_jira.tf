@@ -98,6 +98,8 @@ resource "snowflake_function" "jira_handler" {
     "${path.module}/handler_functions_sql/jira_handler.sql", {
       default_jira_project    = var.default_jira_project
       default_jira_issue_type = var.default_jira_issue_type
+      database                = local.snowalert_database_name
+      schema                  = snowflake_schema.results.name
     }
   )
 }
