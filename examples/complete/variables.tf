@@ -29,22 +29,28 @@ variable "terraform_role" {
   default     = "ACCOUNTADMIN"
 }
 
-variable "snowalert_db_name" {
+variable "snowalert_warehouse_name" {
+  type        = string
+  description = "Warehouse for snowalert."
+  default     = "SNOWALERT_WAREHOUSE"
+}
+
+variable "snowalert_database_name" {
   type        = string
   description = "Database that will be created for all the Snowalert objects."
   default     = "SNOWALERT"
+}
+
+variable "snowalert_user_name" {
+  type        = string
+  description = "User used to grant ownership to all Snowalert objects."
+  default     = "APP_SNOWALERT"
 }
 
 variable "snowalert_role_name" {
   type        = string
   description = "Role used to grant ownership to all Snowalert objects."
   default     = "APP_SNOWALERT"
-}
-
-variable "snowalert_warehouse_name" {
-  type        = string
-  description = "Warehouse for snowalert."
-  default     = "SNOWALERT_WAREHOUSE"
 }
 
 variable "handlers" {
@@ -88,4 +94,46 @@ variable "geff_image_version" {
   type        = string
   description = "Version of the GEFF docker image."
   default     = "latest"
+}
+
+variable "create_warehouse" {
+  type        = bool
+  default     = false
+  description = "Flag to create warehouse or not."
+}
+
+variable "create_database" {
+  type        = bool
+  default     = false
+  description = "Flag to create database or not."
+}
+
+variable "create_user" {
+  type        = bool
+  default     = false
+  description = "Flag to create user or not."
+}
+
+variable "create_role" {
+  type        = bool
+  default     = false
+  description = "Flag to create role or not."
+}
+
+variable "jira_url" {
+  type        = string
+  default     = null
+  description = "Fallback JIRA project for the JIRA handler."
+}
+
+variable "default_jira_project" {
+  type        = string
+  default     = "SA"
+  description = "Fallback JIRA project for the JIRA handler."
+}
+
+variable "default_jira_issue_type" {
+  type        = string
+  default     = "Task"
+  description = "Fallback Issue type for the JIRA handler."
 }

@@ -1,19 +1,7 @@
-# CREATE TABLE IF NOT EXISTS results.raw_alerts(
-#   run_id STRING,
-#   alert VARIANT,
-#   alert_time TIMESTAMP_LTZ(9),
-#   event_time TIMESTAMP_LTZ(9),
-#   ticket STRING,
-#   suppressed BOOLEAN,
-#   suppression_rule STRING DEFAULT NULL,
-#   counter INTEGER DEFAULT 1,
-#   correlation_id STRING,
-#   handled VARIANT
-# );
 resource "snowflake_table" "raw_alerts" {
   provider = snowflake.alerting_role
 
-  database        = snowflake_database.snowalert.name
+  database        = local.snowalert_database_name
   schema          = snowflake_schema.results.name
   name            = "RAW_ALERTS"
   change_tracking = true
@@ -40,7 +28,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "TICKET"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -50,7 +38,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "SUPPRESSION_RULE"
-    type = "VARCHAR(512)"
+    type = "VARCHAR(16777216)"
 
     default {
       constant = 1
@@ -68,7 +56,7 @@ resource "snowflake_table" "raw_alerts" {
 
   column {
     name = "CORRELATION_ID"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -79,22 +67,10 @@ resource "snowflake_table" "raw_alerts" {
   comment = "A raw alerts table."
 }
 
-# CREATE TABLE IF NOT EXISTS results.alerts(
-#   alert_id STRING,
-#   alert VARIANT,
-#   alert_time TIMESTAMP_LTZ(9),
-#   event_time TIMESTAMP_LTZ(9),
-#   ticket STRING,
-#   suppressed BOOLEAN,
-#   suppression_rule STRING DEFAULT NULL,
-#   counter INTEGER DEFAULT 1,
-#   correlation_id STRING,
-#   handled VARIANT
-# );
 resource "snowflake_table" "alerts" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "ALERTS"
 
@@ -122,7 +98,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "TICKET"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -132,7 +108,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "SUPPRESSION_RULE"
-    type = "VARCHAR(512)"
+    type = "VARCHAR(16777216)"
 
     default {
       constant = 1
@@ -150,7 +126,7 @@ resource "snowflake_table" "alerts" {
 
   column {
     name = "CORRELATION_ID"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -159,18 +135,10 @@ resource "snowflake_table" "alerts" {
   }
 }
 
-# CREATE TABLE IF NOT EXISTS results.violations(
-#   result VARIANT,
-#   id STRING,
-#   alert_time TIMESTAMP_LTZ(9),
-#   ticket STRING,
-#   suppressed BOOLEAN,
-#   suppression_rule STRING DEFAULT NULL
-# );
 resource "snowflake_table" "violations" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "VIOLATIONS"
 
@@ -181,7 +149,7 @@ resource "snowflake_table" "violations" {
 
   column {
     name = "ID"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -191,7 +159,7 @@ resource "snowflake_table" "violations" {
 
   column {
     name = "TICKET"
-    type = "VARCHAR(256)"
+    type = "VARCHAR(16777216)"
   }
 
   column {
@@ -201,18 +169,14 @@ resource "snowflake_table" "violations" {
 
   column {
     name = "SUPPRESSION_RULE"
-    type = "VARCHAR(512)"
+    type = "VARCHAR(16777216)"
   }
 }
 
-# CREATE TABLE IF NOT EXISTS results.query_metadata(
-#   event_time TIMESTAMP_LTZ,
-#   v VARIANT
-# );
 resource "snowflake_table" "query_metadata" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "QUERY_METADATA"
 
@@ -227,14 +191,10 @@ resource "snowflake_table" "query_metadata" {
   }
 }
 
-# CREATE TABLE IF NOT EXISTS results.run_metadata(
-#   event_time TIMESTAMP_LTZ,
-#   v VARIANT
-# );
 resource "snowflake_table" "run_metadata" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "RUN_METADATA"
 
@@ -249,14 +209,10 @@ resource "snowflake_table" "run_metadata" {
   }
 }
 
-# CREATE TABLE IF NOT EXISTS results.ingestion_metadata(
-#   event_time TIMESTAMP_LTZ,
-#   v VARIANT
-# );
 resource "snowflake_table" "ingestion_metadata" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "INGESTION_METADATA"
 

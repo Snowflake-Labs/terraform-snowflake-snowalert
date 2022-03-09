@@ -11,22 +11,28 @@ variable "env" {
   default     = "dev"
 }
 
-variable "snowalert_db_name" {
+variable "snowalert_warehouse_name" {
+  type        = string
+  description = "Warehouse for snowalert."
+  default     = "SNOWALERT_WAREHOUSE"
+}
+
+variable "snowalert_database_name" {
   type        = string
   description = "Database that will be created for all the Snowalert objects."
   default     = "SNOWALERT"
+}
+
+variable "snowalert_user_name" {
+  type        = string
+  description = "User used to grant ownership to all Snowalert objects."
+  default     = "APP_SNOWALERT"
 }
 
 variable "snowalert_role_name" {
   type        = string
   description = "Role used to grant ownership to all Snowalert objects."
   default     = "APP_SNOWALERT"
-}
-
-variable "snowalert_warehouse_name" {
-  type        = string
-  description = "Warehouse for snowalert."
-  default     = "SNOWALERT_WAREHOUSE"
 }
 
 variable "handlers" {
@@ -60,13 +66,10 @@ variable "smtp_driver_from_email_address" {
   default     = null
 }
 
-
-# Optional Variables
 variable "aws_region" {
   description = "The AWS region in which the AWS infrastructure is created."
   default     = "us-west-2"
 }
-
 
 variable "aws_cloudwatch_metric_namespace" {
   type        = string
@@ -113,6 +116,54 @@ variable "data_bucket_arns" {
   type        = list(string)
   default     = []
   description = "List of Bucket ARNs for the s3_reader role to read from."
+}
+
+variable "create_warehouse" {
+  type        = bool
+  default     = false
+  description = "Flag to create warehouse or not."
+}
+
+variable "create_database" {
+  type        = bool
+  default     = false
+  description = "Flag to create database or not."
+}
+
+variable "create_user" {
+  type        = bool
+  default     = false
+  description = "Flag to create user or not."
+}
+
+variable "create_role" {
+  type        = bool
+  default     = false
+  description = "Flag to create role or not."
+}
+
+variable "snowalert_user_email" {
+  type        = string
+  default     = null
+  description = "Email of the snowalert Snowflake user."
+}
+
+variable "jira_url" {
+  type        = string
+  default     = null
+  description = "Fallback JIRA project for the JIRA handler."
+}
+
+variable "default_jira_project" {
+  type        = string
+  default     = "SA"
+  description = "Fallback JIRA project for the JIRA handler."
+}
+
+variable "default_jira_issue_type" {
+  type        = string
+  default     = "Task"
+  description = "Fallback Issue type for the JIRA handler."
 }
 
 data "aws_caller_identity" "current" {}

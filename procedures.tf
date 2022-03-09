@@ -10,7 +10,7 @@
 resource "snowflake_procedure" "alert_dispatcher" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "ALERT_DISPATCHER"
 
@@ -31,7 +31,7 @@ resource "snowflake_procedure" "alert_dispatcher" {
 resource "snowflake_procedure" "alert_merge" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "ALERT_MERGE"
 
@@ -57,7 +57,7 @@ resource "snowflake_procedure" "alert_merge" {
 resource "snowflake_procedure" "alert_processor" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "ALERT_PROCESSOR"
 
@@ -78,7 +78,7 @@ resource "snowflake_procedure" "alert_processor" {
 resource "snowflake_procedure" "alert_queries_runner_with_time" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "ALERT_QUERIES_RUNNER"
 
@@ -111,7 +111,7 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
 resource "snowflake_procedure" "alert_queries_runner_without_time" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "ALERT_QUERIES_RUNNER"
 
@@ -139,7 +139,7 @@ resource "snowflake_procedure" "alert_queries_runner_without_time" {
 resource "snowflake_procedure" "alert_queries_runner" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "ALERT_QUERIES_RUNNER"
 
@@ -165,7 +165,7 @@ resource "snowflake_procedure" "alert_queries_runner" {
 resource "snowflake_procedure" "alert_scheduler" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "ALERT_SCHEDULER"
 
@@ -191,7 +191,7 @@ resource "snowflake_procedure" "alert_scheduler" {
 resource "snowflake_procedure" "alert_suppressions_runner" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "ALERT_SUPPRESSIONS_RUNNER"
 
@@ -214,7 +214,7 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
 resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "ALERT_SUPPRESSIONS_RUNNER"
 
@@ -235,7 +235,7 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
 resource "snowflake_procedure" "violation_queries_runner" {
   provider = snowflake.alerting_role
 
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
   name     = "VIOLATION_QUERIES_RUNNER"
 
