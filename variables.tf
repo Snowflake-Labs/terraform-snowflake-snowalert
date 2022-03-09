@@ -66,6 +66,12 @@ variable "smtp_driver_from_email_address" {
   default     = null
 }
 
+variable "jira_url" {
+  type        = string
+  description = ""
+  default     = null
+}
+
 # Optional Variables
 variable "aws_region" {
   description = "The AWS region in which the AWS infrastructure is created."
@@ -147,6 +153,17 @@ variable "snowalert_user_email" {
   type        = string
   default     = null
   description = "Email of the snowalert Snowflake user."
+}
+
+variable "default_jira_project" {
+  type        = string
+  default     = "SA"
+  description = "Fallback JIRA project for the JIRA handler."
+}
+variable "default_jira_issue_type" {
+  type        = string
+  default     = "Task"
+  description = "Fallback Issue type for the JIRA handler."
 }
 
 data "aws_caller_identity" "current" {}

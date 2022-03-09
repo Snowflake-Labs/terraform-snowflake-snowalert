@@ -1,119 +1,103 @@
-# # CREATE OR REPLACE SECURE EXTERNAL FUNCTION results.snowalert_jira_api(method STRING, path STRING, body STRING, querystring STRING)
-# # RETURNS VARIANT
-# # RETURNS NULL ON NULL INPUT
-# # VOLATILE
-# # MAX_BATCH_ROWS=1
-# # COMMENT='jira_api: (method, path, body) -> api_response
-# # https://developer.atlassian.com/cloud/jira/platform/rest/v3/'
-# # API_INTEGRATION={sa_api_integration}
-# # HEADERS=(
-# #   'method'='{0}'
-# #   'base-url'='https://snowflakecomputing.atlassian.net'
-# #   'url'='{1}'
-# #   'data'='{2}'
-# #   'params'='{3}'
-# #   'headers'='content-type=application%2Fjson&accept=application%2Fjson'
-# #   'auth'='{sa_jira_auth}'
-# # )
-# # AS 'https://{aws_api_gateway_id}.execute-api.{aws_api_gateway_region}.amazonaws.com/prod/https'
-# # ;
-# resource "snowflake_external_function" "snowalert_jira_api" {
-#   name     = "snowalert_jira_api"
-#   database = snowalert.snowalert.name
-#   schema   = snowalert.results.name
+resource "snowflake_external_function" "snowalert_jira_api" {
+  count    = contains(var.handlers, "jira") == true ? 1 : 0
+  provider = snowflake.alerting_role
 
-#   arg {
-#     name = "method"
-#     type = "STRING"
-#   }
+  name     = "SNOWALERT_JIRA_API"
+  database = local.snowalert_database_name
+  schema   = snowflake_schema.results.name
 
-#   arg {
-#     name = "path"
-#     type = "STRING"
-#   }
+  arg {
+    name = "METHOD"
+    type = "STRING"
+  }
 
-#   arg {
-#     name = "body"
-#     type = "STRING"
-#   }
+  arg {
+    name = "PATH"
+    type = "STRING"
+  }
 
-#   arg {
-#     name = "querystring"
-#     type = "STRING"
-#   }
+  arg {
+    name = "BODY"
+    type = "STRING"
+  }
 
-#   header {
-#     name  = "method"
-#     value = "{0}"
-#   }
+  arg {
+    name = "QUERYSTRING"
+    type = "STRING"
+  }
 
-#   header {
-#     name  = "base-url"
-#     value = "https://snowflakecomputing.atlassian.net"
-#   }
+  header {
+    name  = "method"
+    value = "{0}"
+  }
 
-#   header {
-#     name  = "url"
-#     value = "{1}"
-#   }
+  header {
+    name  = "base-url"
+    value = var.jira_url
+  }
 
-#   header {
-#     name  = "params"
-#     value = "{3}"
-#   }
+  header {
+    name  = "url"
+    value = "{1}"
+  }
 
-#   header {
-#     name  = "data"
-#     value = "{2}"
-#   }
+  header {
+    name  = "params"
+    value = "{3}"
+  }
 
-#   header {
-#     name  = "headers"
-#     value = "content-type=application%2Fjson&accept=application%2Fjson"
-#   }
+  header {
+    name  = "data"
+    value = "{2}"
+  }
 
-#   header {
-#     name  = "auth"
-#     value = var.jira_secrets_arn
-#   }
+  header {
+    name  = "headers"
+    value = "content-type=application%2Fjson&accept=application%2Fjson"
+  }
 
-#   return_null_allowed       = true
-#   return_type               = "VARIANT"
-#   return_behavior           = "VOLATILE"
-#   api_integration           = local.geff_api_integration_name
-#   url_of_proxy_and_resource = "${local.geff_api_gateway_invoke_url}/${var.env}/https"
+  header {
+    name  = "auth"
+    value = var.jira_secrets_arn
+  }
 
-#   comment = <<COMMENT
-# jira_api: (method, path, body) -> api_response
-# https://developer.atlassian.com/cloud/jira/platform/rest/v3/
-# COMMENT
-# }
+  return_null_allowed       = true
+  return_type               = "VARIANT"
+  return_behavior           = "VOLATILE"
+  api_integration           = module.geff_snowalert.api_integration_name
+  url_of_proxy_and_resource = "${module.geff_snowalert.api_gateway_invoke_url}/${var.env}/https"
 
-# # CREATE OR REPLACE FUNCTION results.jira_handler(alert VARIANT, payload VARIANT)
-# # RETURNS VARIANT
-# # AS $$
-# #   get from jira_handler.sql
-# # $$
-# # ;
-# resource "snowflake_function" "jira_handler" {
-#   count = contains(var.handlers, "jira") ? 1 : 0
+  comment = <<COMMENT
+jira_api: (method, path, body) -> api_response
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/
+COMMENT
+}
 
-#   name     = "jira_handler"
-#   database = local.snowalert_database_name
-#   schema   = snowflake_schema.results.name
+resource "snowflake_function" "jira_handler" {
+  count    = contains(var.handlers, "jira") == true ? 1 : 0
+  provider = snowflake.alerting_role
 
-#   arguments {
-#     name = "alert"
-#     type = "VARIANT"
-#   }
+  name     = "JIRA_HANDLER"
+  database = local.snowalert_database_name
+  schema   = snowflake_schema.results.name
 
-#   arguments {
-#     name = "payload"
-#     type = "VARIANT"
-#   }
+  arguments {
+    name = "ALERT"
+    type = "VARIANT"
+  }
 
-#   language        = "SQL"
-#   return_type     = "VARIANT"
-#   return_behavior = "IMMUTABLE"
-#   statement       = templatefile("${path.module}/handlers/user_defined_functions_sql/jira_handler.sql", {})
-# }
+  arguments {
+    name = "PAYLOAD"
+    type = "VARIANT"
+  }
+
+  return_type     = "VARIANT"
+  return_behavior = "IMMUTABLE"
+
+  statement = templatefile(
+    "${path.module}/handler_functions_sql/jira_handler.sql", {
+      default_jira_project    = var.default_jira_project
+      default_jira_issue_type = var.default_jira_issue_type
+    }
+  )
+}

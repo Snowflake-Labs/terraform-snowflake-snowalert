@@ -8,10 +8,10 @@ snowalert_jira_api(
                     'accountId',  COALESCE(payload['assignee'], NULL)
                 ),
                 'project', OBJECT_CONSTRUCT(
-                    'key', COALESCE(payload['project'], '${sa_jira_project}')
+                    'key', COALESCE(payload['project'], '${default_jira_project}')
                 ),
                 'issuetype', OBJECT_CONSTRUCT(
-                    'name', COALESCE(payload['issue_type'], '${sa_jira_issue_type}')
+                    'name', COALESCE(payload['issue_type'], '${default_jira_issue_type}')
                 ),
                 'summary', alert['TITLE']::STRING,
                 'description', OBJECT_CONSTRUCT(
