@@ -99,7 +99,7 @@
 #   count = contains(var.handlers, "jira") ? 1 : 0
 
 #   name     = "jira_handler"
-#   database = snowflake_database.snowalert.name
+#   database = local.snowalert_database_name
 #   schema   = snowflake_schema.results.name
 
 #   arguments {

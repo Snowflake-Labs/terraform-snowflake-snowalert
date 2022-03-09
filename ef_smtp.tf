@@ -84,7 +84,7 @@
 # # ;
 # resource "snowflake_function" "smtp_handler" {
 #   name     = "smtp_handler"
-#   database = snowflake_database.snowalert.name
+#   database = local.snowalert_database_name
 #   schema   = snowflake_schema.results.name
 
 #   arguments {
@@ -112,7 +112,7 @@
 # # ;
 # resource "snowflake_function" "smtp_handler" {
 #   name     = "smtp_handler"
-#   database = snowflake_database.snowalert.name
+#   database = local.snowalert_database_name
 #   schema   = snowflake_schema.results.name
 
 #   arguments {

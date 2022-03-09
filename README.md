@@ -12,8 +12,8 @@ Terraformed version of Snowalert. It creates the following resources:
 6. Procedures
 7. Tasks
 
-
 ### `zsh` Function
+
 zsh function to set appropriate env variables based on which snowflake you want to target with terraform:
 
 ```bash

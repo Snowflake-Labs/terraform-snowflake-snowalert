@@ -19,7 +19,7 @@ resource "snowflake_external_function" "slack_snowflake" {
   provider = snowflake.alerting_role
 
   name     = "SLACK_SNOWFLAKE"
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
 
   arg {
@@ -92,7 +92,7 @@ resource "snowflake_function" "slack_snowflake_chat_post_message" {
   provider = snowflake.alerting_role
 
   name     = "SLACK_SNOWFLAKE_CHAT_POST_MESSAGE"
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
 
   arguments {
@@ -107,10 +107,10 @@ resource "snowflake_function" "slack_snowflake_chat_post_message" {
 
   return_type = "VARIANT"
   statement   = <<SQL
-${snowflake_database.snowalert.name}.${snowflake_schema.results.name}.${snowflake_external_function.slack_snowflake[0].name}(
+${local.snowalert_database_name}.${snowflake_schema.results.name}.${snowflake_external_function.slack_snowflake[0].name}(
   'post',
   'chat.postMessage',
-  ${snowflake_database.snowalert.name}.${snowflake_schema.data.name}.${snowflake_function.urlencode.name}(OBJECT_CONSTRUCT(
+  ${local.snowalert_database_name}.${snowflake_schema.data.name}.${snowflake_function.urlencode.name}(OBJECT_CONSTRUCT(
     'channel', channel::STRING,
     'text', text::STRING
   ))
@@ -132,7 +132,7 @@ resource "snowflake_function" "slack_handler" {
   provider = snowflake.alerting_role
 
   name     = "SLACK_HANDLER"
-  database = snowflake_database.snowalert.name
+  database = local.snowalert_database_name
   schema   = snowflake_schema.results.name
 
   arguments {
@@ -147,7 +147,7 @@ resource "snowflake_function" "slack_handler" {
 
   return_type = "VARIANT"
   statement   = <<SQL
-${snowflake_database.snowalert.name}.${snowflake_schema.results.name}.${snowflake_function.slack_snowflake_chat_post_message[0].name}(
+${local.snowalert_database_name}.${snowflake_schema.results.name}.${snowflake_function.slack_snowflake_chat_post_message[0].name}(
   payload['channel'],
   payload['message']
 )
