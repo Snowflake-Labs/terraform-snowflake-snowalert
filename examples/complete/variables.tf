@@ -119,3 +119,21 @@ variable "create_role" {
   default     = false
   description = "Flag to create role or not."
 }
+
+variable "jira_url" {
+  type        = string
+  default     = null
+  description = "Fallback JIRA project for the JIRA handler."
+}
+
+variable "default_jira_project" {
+  type        = string
+  default     = "SA"
+  description = "Fallback JIRA project for the JIRA handler."
+}
+
+variable "default_jira_issue_type" {
+  type        = string
+  default     = "Task"
+  description = "Fallback Issue type for the JIRA handler."
+}

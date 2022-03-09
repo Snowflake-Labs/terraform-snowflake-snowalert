@@ -10,12 +10,19 @@ module "snowalert" {
   snowalert_user_name      = var.snowalert_user_name
   snowalert_role_name      = var.snowalert_role_name
 
-  handlers                       = var.handlers
-  jira_secrets_arn               = var.jira_secrets_arn
-  slack_secrets_arn              = var.slack_secrets_arn
+  handlers = var.handlers
+
+  slack_secrets_arn = var.slack_secrets_arn
+
+  jira_secrets_arn        = var.jira_secrets_arn
+  jira_url                = var.jira_url
+  default_jira_project    = var.default_jira_project
+  default_jira_issue_type = var.default_jira_issue_type
+
   smtp_secrets_arn               = var.smtp_secrets_arn
   smtp_driver_from_email_address = var.smtp_driver_from_email_address
-  geff_image_version             = var.geff_image_version
+
+  geff_image_version = var.geff_image_version
 
   providers = {
     snowflake.api_integration     = snowflake.api_integration
