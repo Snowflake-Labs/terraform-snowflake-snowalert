@@ -35,37 +35,6 @@ variable "snowalert_role_name" {
   default     = "APP_SNOWALERT"
 }
 
-variable "handlers" {
-  type        = list(string)
-  description = "List of handlers to enable."
-  default     = []
-}
-
-# Correspoding variables of the specified handlers are required
-variable "jira_secrets_arn" {
-  type        = string
-  description = ""
-  default     = null
-}
-
-variable "slack_secrets_arn" {
-  type        = string
-  description = ""
-  default     = null
-}
-
-variable "smtp_secrets_arn" {
-  type        = string
-  description = ""
-  default     = null
-}
-
-variable "smtp_driver_from_email_address" {
-  type        = string
-  description = ""
-  default     = null
-}
-
 variable "aws_region" {
   description = "The AWS region in which the AWS infrastructure is created."
   default     = "us-west-2"
@@ -148,6 +117,37 @@ variable "snowalert_user_email" {
   description = "Email of the snowalert Snowflake user."
 }
 
+variable "handlers" {
+  type        = list(string)
+  description = "List of handlers to enable."
+  default     = []
+}
+
+# Correspoding variables of the specified handlers are required
+variable "jira_secrets_arn" {
+  type        = string
+  description = "Secrets for JIRA in the specified format with host pinned."
+  default     = null
+}
+
+variable "slack_secrets_arn" {
+  type        = string
+  description = "Secrets for slack in the specified format with host pinned."
+  default     = null
+}
+
+variable "smtp_secrets_arn" {
+  type        = string
+  description = "Secrets for SMTP server in the specified format with host pinned."
+  default     = null
+}
+
+variable "smtp_driver_from_email_address" {
+  type        = string
+  description = "."
+  default     = null
+}
+
 variable "jira_url" {
   type        = string
   default     = null
@@ -164,6 +164,18 @@ variable "default_jira_issue_type" {
   type        = string
   default     = "Task"
   description = "Fallback Issue type for the JIRA handler."
+}
+
+variable "servicenow_secrets_arn" {
+  type        = string
+  default     = null
+  description = "Secrets for service now in the specified format with host pinned."
+}
+
+variable "servicenow_api_url" {
+  type        = string
+  default     = null
+  description = "Service Now API URL."
 }
 
 data "aws_caller_identity" "current" {}

@@ -1,12 +1,13 @@
 resource "snowflake_external_function" "servicenow_create_incident" {
-  count = contains(var.handlers, "servicenow") ? 1 : 0
+  count    = contains(var.handlers, "servicenow") == true ? 1 : 0
+  provider = snowflake.alerting_role
 
   name     = "SERVICENOW_CREATE_INCIDENT"
-  database = snowalert.snowalert.name
-  schema   = snowalert.results.name
+  database = local.snowalert_database_name
+  schema   = snowflake_schema.results.name
 
   arg {
-    name = "payload"
+    name = "PAYLOAD"
     type = "STRING"
   }
 
