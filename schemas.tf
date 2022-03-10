@@ -22,10 +22,6 @@ resource "snowflake_database" "snowalert" {
 
   name    = var.snowalert_database_name
   comment = "Snowalert Database."
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 locals {
@@ -84,10 +80,6 @@ resource "snowflake_schema" "data" {
 
   database = local.snowalert_database_name
   name     = "DATA"
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "snowflake_schema" "rules" {
@@ -95,10 +87,6 @@ resource "snowflake_schema" "rules" {
 
   database = local.snowalert_database_name
   name     = "RULES"
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "snowflake_schema" "results" {
@@ -106,8 +94,4 @@ resource "snowflake_schema" "results" {
 
   database = local.snowalert_database_name
   name     = "RESULTS"
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }

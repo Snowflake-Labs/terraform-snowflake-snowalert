@@ -100,6 +100,7 @@ resource "snowflake_function" "jira_handler" {
       default_jira_issue_type = var.default_jira_issue_type
       database                = local.snowalert_database_name
       schema                  = snowflake_schema.results.name
+      ef_jira_name            = snowflake_external_function.snowalert_jira_api[0].name
     }
   )
 }

@@ -11,8 +11,4 @@ resource "snowflake_stream" "raw_alerts_stream" {
     snowflake_table.raw_alerts.name,
   ])
   comment = "A stream to track the diffs on raw_alerts table."
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
