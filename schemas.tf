@@ -76,22 +76,37 @@ locals {
 
 # Schemas
 resource "snowflake_schema" "data" {
+  count    = var.create_schemas == true ? 1 : 0
   provider = snowflake.admin
 
   database = local.snowalert_database_name
-  name     = "DATA"
+  name     = var.data_schema_name
+}
+
+locals {
+  data_schema_name = var.create_schemas == true ? snowflake_schema.data[0].name : var.data_schema_name
 }
 
 resource "snowflake_schema" "rules" {
+  count    = var.create_schemas == true ? 1 : 0
   provider = snowflake.admin
 
   database = local.snowalert_database_name
-  name     = "RULES"
+  name     = var.rules_schema_name
+}
+
+locals {
+  rules_schema_name = var.create_schemas == true ? snowflake_schema.rules[0].name : var.rules_schema_name
 }
 
 resource "snowflake_schema" "results" {
+  count    = var.create_schemas == true ? 1 : 0
   provider = snowflake.admin
 
   database = local.snowalert_database_name
-  name     = "RESULTS"
+  name     = var.results_schema_name
+}
+
+locals {
+  results_schema_name = var.create_schemas == true ? snowflake_schema.results[0].name : var.results_schema_name
 }

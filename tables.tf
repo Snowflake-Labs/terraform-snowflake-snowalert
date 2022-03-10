@@ -2,7 +2,7 @@ resource "snowflake_table" "raw_alerts" {
   provider = snowflake.alerting_role
 
   database        = local.snowalert_database_name
-  schema          = snowflake_schema.results.name
+  schema          = local.results_schema_name
   name            = "RAW_ALERTS"
   change_tracking = true
 
@@ -71,7 +71,7 @@ resource "snowflake_table" "alerts" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
   name     = "ALERTS"
 
   change_tracking = true
@@ -139,7 +139,7 @@ resource "snowflake_table" "violations" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
   name     = "VIOLATIONS"
 
   column {
@@ -177,7 +177,7 @@ resource "snowflake_table" "query_metadata" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
   name     = "QUERY_METADATA"
 
   column {
@@ -195,7 +195,7 @@ resource "snowflake_table" "run_metadata" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
   name     = "RUN_METADATA"
 
   column {
@@ -213,7 +213,7 @@ resource "snowflake_table" "ingestion_metadata" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
   name     = "INGESTION_METADATA"
 
   column {

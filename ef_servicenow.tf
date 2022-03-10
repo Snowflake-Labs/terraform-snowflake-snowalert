@@ -4,7 +4,7 @@ resource "snowflake_external_function" "servicenow_create_incident" {
 
   name     = "SERVICENOW_CREATE_INCIDENT"
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
 
   arg {
     name = "PAYLOAD"

@@ -89,7 +89,7 @@ resource "snowflake_stream_grant" "stream_grant_select" {
   provider = snowflake.alerting_role
 
   database_name = local.snowalert_database_name
-  schema_name   = snowflake_schema.rules.name
+  schema_name   = local.rules_schema_name
   stream_name   = snowflake_stream.raw_alerts_stream.name
 
   privilege = "SELECT"
@@ -106,7 +106,7 @@ resource "snowflake_stream_grant" "stream_grant_select" {
 # # Stream Level - Ownership
 # resource "snowflake_stream_grant" "stream_grant_ownerhsip" {
 #   database_name = local.snowalert_database_name
-#   schema_name   = snowflake_schema.rules.name
+#   schema_name   = local.rules_schema_name
 #   stream_name   = snowflake_stream.raw_alerts_stream.name
 
 #   privilege = "OWNERSHIP"
@@ -140,7 +140,7 @@ resource "snowflake_stream_grant" "stream_grant_select" {
 # # Procedure Level - Ownership
 # resource "snowflake_procedure_grant" "procedure_grant_ownership" {
 #   database_name = local.snowalert_database_name
-#   schema_name   = snowflake_schema.results.name
+#   schema_name   = local.results_schema_name
 
 #   privilege = "OWNERSHIP"
 #   roles     = [local.snowalert_role_name]
@@ -152,7 +152,7 @@ resource "snowflake_stream_grant" "stream_grant_select" {
 # # Procedure Level - Usage
 # resource "snowflake_procedure_grant" "procedure_grant_usage" {
 #   database_name = local.snowalert_database_name
-#   schema_name   = snowflake_schema.results.name
+#   schema_name   = local.results_schema_name
 
 #   privilege = "USAGE"
 #   roles     = [local.snowalert_role_name]

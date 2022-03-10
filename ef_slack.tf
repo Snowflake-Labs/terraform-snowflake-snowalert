@@ -4,7 +4,7 @@ resource "snowflake_external_function" "slack_snowflake" {
 
   name     = "SLACK_SNOWFLAKE"
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
 
   arg {
     name = "METHOD"
@@ -65,7 +65,7 @@ resource "snowflake_function" "slack_snowflake_chat_post_message" {
 
   name     = "SLACK_SNOWFLAKE_CHAT_POST_MESSAGE"
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
 
   arguments {
     name = "CHANNEL"
@@ -79,10 +79,10 @@ resource "snowflake_function" "slack_snowflake_chat_post_message" {
 
   return_type = "VARIANT"
   statement   = <<SQL
-${local.snowalert_database_name}.${snowflake_schema.results.name}.${snowflake_external_function.slack_snowflake[0].name}(
+${local.snowalert_database_name}.${local.results_schema_name}.${snowflake_external_function.slack_snowflake[0].name}(
   'post',
   'chat.postMessage',
-  ${local.snowalert_database_name}.${snowflake_schema.data.name}.${snowflake_function.urlencode.name}(OBJECT_CONSTRUCT(
+  ${local.snowalert_database_name}.${local.data_schema_name}.${snowflake_function.urlencode.name}(OBJECT_CONSTRUCT(
     'channel', channel::STRING,
     'text', text::STRING
   ))
@@ -96,7 +96,7 @@ resource "snowflake_function" "slack_handler" {
 
   name     = "SLACK_HANDLER"
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
 
   arguments {
     name = "ALERT"
@@ -110,7 +110,7 @@ resource "snowflake_function" "slack_handler" {
 
   return_type = "VARIANT"
   statement   = <<SQL
-${local.snowalert_database_name}.${snowflake_schema.results.name}.${snowflake_function.slack_snowflake_chat_post_message[0].name}(
+${local.snowalert_database_name}.${local.results_schema_name}.${snowflake_function.slack_snowflake_chat_post_message[0].name}(
   payload['channel'],
   payload['message']
 )

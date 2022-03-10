@@ -4,7 +4,7 @@ resource "snowflake_external_function" "snowalert_jira_api" {
 
   name     = "SNOWALERT_JIRA_API"
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
 
   arg {
     name = "METHOD"
@@ -71,6 +71,10 @@ resource "snowflake_external_function" "snowalert_jira_api" {
 jira_api: (method, path, body) -> api_response
 https://developer.atlassian.com/cloud/jira/platform/rest/v3/
 COMMENT
+
+  depends_on = [
+    snowflake_schema.results
+  ]
 }
 
 resource "snowflake_function" "jira_handler" {
@@ -79,7 +83,7 @@ resource "snowflake_function" "jira_handler" {
 
   name     = "JIRA_HANDLER"
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema_name
 
   arguments {
     name = "ALERT"
@@ -99,8 +103,12 @@ resource "snowflake_function" "jira_handler" {
       default_jira_project    = var.default_jira_project
       default_jira_issue_type = var.default_jira_issue_type
       database                = local.snowalert_database_name
-      schema                  = snowflake_schema.results.name
+      schema                  = local.results_schema_name
       ef_jira_name            = snowflake_external_function.snowalert_jira_api[0].name
     }
   )
+
+  depends_on = [
+    snowflake_schema.results
+  ]
 }

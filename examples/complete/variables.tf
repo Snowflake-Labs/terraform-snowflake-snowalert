@@ -77,6 +77,29 @@ variable "create_role" {
   description = "Flag to create role or not."
 }
 
+variable "create_schemas" {
+  type        = bool
+  default     = false
+  description = "Flag to create schemas within the module or not."
+}
+
+variable "data_schema_name" {
+  type        = string
+  default     = "DATA"
+  description = "Schema that either already exists or is created in this module is create_schemas = true."
+}
+
+variable "rules_schema_name" {
+  type        = string
+  default     = "RULES"
+  description = "Schema that either already exists or is created in this module is create_schemas = true."
+}
+
+variable "results_schema_name" {
+  type        = string
+  default     = "RESULTS"
+  description = "Schema that either already exists or is created in this module is create_schemas = true."
+}
 
 variable "data_bucket_arns" {
   type        = list(string)
@@ -150,4 +173,3 @@ variable "servicenow_api_url" {
   default     = null
   description = "Service Now API URL."
 }
-
