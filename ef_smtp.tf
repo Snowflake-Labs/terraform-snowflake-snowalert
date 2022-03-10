@@ -1,40 +1,22 @@
-# # CREATE OR REPLACE SECURE EXTERNAL FUNCTION snowalert.results.smtp_send(
-# #     recipient_email STRING,
-# #     subject STRING,
-# #     message_text STRING
-# # )
-# #   RETURNS VARIANT
-# #   RETURNS NULL ON NULL INPUT
-# #   VOLATILE
-# #   API_INTEGRATION={sa_api_integration}
-# #   HEADERS=(
-# #     'auth'              = {smtp_secrets_manager_arn}
-# #     'sender-email'      = {from_email_address}
-# #     'recipient-email'   = '{0}'
-# #     'subject'           = '{1}'
-# #     'text'              = '{2}'
-# #   )
-# # AS 'https://{aws_api_gateway_id}.execute-api.{aws_api_gateway_region}.amazonaws.com/prod/https'
-# # ;
 # resource "snowflake_external_function" "smtp_send" {
 #   count = contains(var.handlers, "smtp") ? 1 : 0
 
-#   name     = "smtp_send"
+#   name     = "SMTP_SEND"
 #   database = snowalert.snowalert.name
 #   schema   = snowalert.results.name
 
 #   arg {
-#     name = "recipient_email"
+#     name = "RECIPIENT_EMAIL"
 #     type = "STRING"
 #   }
 
 #   arg {
-#     name = "subject"
+#     name = "SUBJECT"
 #     type = "STRING"
 #   }
 
 #   arg {
-#     name = "message_text"
+#     name = "MESSAGE_TEXT"
 #     type = "STRING"
 #   }
 
@@ -76,51 +58,37 @@
 # COMMENT
 # }
 
-# # CREATE OR REPLACE SECURE FUNCTION snowalert.results.smtp_handler(alert VARIANT, payload VARIANT)
-# # RETURNS VARIANT
-# # AS $$
-# #   snowalert.results.smtp_send(payload['recipient'], payload['subject'], payload['message_text'])
-# # $$
-# # ;
 # resource "snowflake_function" "smtp_handler" {
-#   name     = "smtp_handler"
-#   database = snowflake_database.snowalert.name
+#   name     = "SMTP_HANDLER"
+#   database = local.snowalert_database_name
 #   schema   = snowflake_schema.results.name
 
 #   arguments {
-#     name = "alert"
+#     name = "ALERT"
 #     type = "VARIANT"
 #   }
 
 #   arguments {
-#     name = "payload"
+#     name = "PAYLOAD"
 #     type = "VARIANT"
 #   }
 
-#   language    = "SQL"
 #   return_type = "VARIANT"
 #   statement   = <<SQL
 # snowalert.results.smtp_send(payload['recipient'], payload['subject'], payload['message_text'])
 # SQL
 # }
 
-# # CREATE OR REPLACE SECURE FUNCTION snowalert.results.smtp_handler(payload VARIANT)
-# # RETURNS VARIANT
-# # AS $$
-# #   snowalert.results.smtp_handler(OBJECT_CONSTRUCT(), payload)
-# # $$
-# # ;
 # resource "snowflake_function" "smtp_handler" {
-#   name     = "smtp_handler"
-#   database = snowflake_database.snowalert.name
+#   name     = "SMTP_HANDLER"
+#   database = local.snowalert_database_name
 #   schema   = snowflake_schema.results.name
 
 #   arguments {
-#     name = "payload"
+#     name = "PAYLOAD"
 #     type = "VARIANT"
 #   }
 
-#   language    = "SQL"
 #   return_type = "VARIANT"
 #   statement   = <<SQL
 # snowalert.results.smtp_handler(OBJECT_CONSTRUCT(), payload)

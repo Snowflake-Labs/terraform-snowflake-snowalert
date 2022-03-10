@@ -1,16 +1,3 @@
-# CREATE OR REPLACE EXTERNAL FUNCTION results.servicenow_create_incident(payload STRING)
-#     RETURNS VARIANT
-#     RETURNS NULL ON NULL INPUT
-#     VOLATILE
-#     API_INTEGRATION=integration
-#     HEADERS=(
-#     'method'='post'
-#     'url'={service_now_api_url}
-#     'json'='{0}'
-#     'auth'='arn:aws:secretsmanager:us-west-2:12332435:secret:dev/servicenow/api_secrets'
-#     )
-#     AS 'https://ASDFASDF.execute-api.us-west-2.amazonaws.com/prod/https'
-# ;
 resource "snowflake_external_function" "servicenow_create_incident" {
   count = contains(var.handlers, "servicenow") ? 1 : 0
 
@@ -45,8 +32,8 @@ resource "snowflake_external_function" "servicenow_create_incident" {
 
   return_null_allowed       = true
   max_batch_rows            = 1
-  api_integration           = local.geff_api_integration_name
-  url_of_proxy_and_resource = "${local.geff_api_gateway_invoke_url}/${var.env}/https"
+  api_integration           = module.geff_snowalert.api_integration_name
+  url_of_proxy_and_resource = "${module.geff_snowalert.api_gateway_invoke_url}/${var.env}/https"
 
   return_type     = "VARIANT"
   return_behavior = "VOLATILE"

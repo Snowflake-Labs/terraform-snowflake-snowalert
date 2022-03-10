@@ -1,8 +1,7 @@
 # Required Variables
-variable "snowflake_account" {
+variable "prefix" {
   type        = string
-  description = "Dev/Prod/Staging or any other custom environment name."
-  sensitive   = true
+  description = "This will be the prefix used to name the Resources."
 }
 
 # Optional Variables
@@ -12,37 +11,28 @@ variable "env" {
   default     = "dev"
 }
 
-variable "prefix" {
+variable "snowalert_warehouse_name" {
   type        = string
-  description = <<EOT
-    This will be the prefix used to name the Resources.
-    WARNING: Enter a short prefix in order to prevent name length related restrictions
-  EOT
-  default     = "example"
+  description = "Warehouse for snowalert."
+  default     = "SNOWALERT_WAREHOUSE"
 }
 
-variable "terraform_role" {
-  type        = string
-  description = "Role used to create all the snowalert objects."
-  default     = "ACCOUNTADMIN"
-}
-
-variable "snowalert_db_name" {
+variable "snowalert_database_name" {
   type        = string
   description = "Database that will be created for all the Snowalert objects."
   default     = "SNOWALERT"
+}
+
+variable "snowalert_user_name" {
+  type        = string
+  description = "User used to grant ownership to all Snowalert objects."
+  default     = "APP_SNOWALERT"
 }
 
 variable "snowalert_role_name" {
   type        = string
   description = "Role used to grant ownership to all Snowalert objects."
   default     = "APP_SNOWALERT"
-}
-
-variable "snowalert_warehouse_name" {
-  type        = string
-  description = "Warehouse for snowalert."
-  default     = "SNOWALERT_WAREHOUSE"
 }
 
 variable "handlers" {
@@ -54,35 +44,32 @@ variable "handlers" {
 # Correspoding variables of the specified handlers are required
 variable "jira_secrets_arn" {
   type        = string
-  description = "."
+  description = ""
   default     = null
 }
 
 variable "slack_secrets_arn" {
   type        = string
-  description = "."
+  description = ""
   default     = null
 }
 
 variable "smtp_secrets_arn" {
   type        = string
-  description = "."
+  description = ""
   default     = null
 }
 
 variable "smtp_driver_from_email_address" {
   type        = string
-  description = "."
+  description = ""
   default     = null
 }
 
-
-# Optional Variables
 variable "aws_region" {
   description = "The AWS region in which the AWS infrastructure is created."
   default     = "us-west-2"
 }
-
 
 variable "aws_cloudwatch_metric_namespace" {
   type        = string
@@ -129,6 +116,54 @@ variable "data_bucket_arns" {
   type        = list(string)
   default     = []
   description = "List of Bucket ARNs for the s3_reader role to read from."
+}
+
+variable "create_warehouse" {
+  type        = bool
+  default     = false
+  description = "Flag to create warehouse or not."
+}
+
+variable "create_database" {
+  type        = bool
+  default     = false
+  description = "Flag to create database or not."
+}
+
+variable "create_user" {
+  type        = bool
+  default     = false
+  description = "Flag to create user or not."
+}
+
+variable "create_role" {
+  type        = bool
+  default     = false
+  description = "Flag to create role or not."
+}
+
+variable "snowalert_user_email" {
+  type        = string
+  default     = null
+  description = "Email of the snowalert Snowflake user."
+}
+
+variable "jira_url" {
+  type        = string
+  default     = null
+  description = "Fallback JIRA project for the JIRA handler."
+}
+
+variable "default_jira_project" {
+  type        = string
+  default     = "SA"
+  description = "Fallback JIRA project for the JIRA handler."
+}
+
+variable "default_jira_issue_type" {
+  type        = string
+  default     = "Task"
+  description = "Fallback Issue type for the JIRA handler."
 }
 
 data "aws_caller_identity" "current" {}

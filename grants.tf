@@ -1,26 +1,32 @@
 # Account Level - Execute
 resource "snowflake_account_grant" "account_grant" {
-  roles             = [snowflake_role.snowalert.name]
+  provider = snowflake.alerting_role
+
+  roles             = [local.snowalert_role_name]
   privilege         = "EXECUTE TASK"
   with_grant_option = false
 }
 
 # Database Level - Usage
 resource "snowflake_database_grant" "db_grant" {
-  database_name = snowflake_database.snowalert.name
+  provider = snowflake.alerting_role
+
+  database_name = local.snowalert_database_name
 
   privilege = "USAGE"
-  roles     = [snowflake_role.snowalert.name]
+  roles     = [local.snowalert_role_name]
 
   with_grant_option = false
 }
 
 # Schema Level - Usage
 resource "snowflake_schema_grant" "schema_grant_usage" {
-  database_name = snowflake_database.snowalert.name
+  provider = snowflake.alerting_role
+
+  database_name = local.snowalert_database_name
 
   privilege = "USAGE"
-  roles     = [snowflake_role.snowalert.name]
+  roles     = [local.snowalert_role_name]
 
   on_future         = true
   with_grant_option = false
@@ -28,10 +34,12 @@ resource "snowflake_schema_grant" "schema_grant_usage" {
 
 # View Level - Select
 resource "snowflake_view_grant" "view_grant_select" {
-  database_name = snowflake_database.snowalert.name
+  provider = snowflake.alerting_role
+
+  database_name = local.snowalert_database_name
 
   privilege = "SELECT"
-  roles     = [snowflake_role.snowalert.name]
+  roles     = [local.snowalert_role_name]
 
   on_future         = true
   with_grant_option = false
@@ -39,10 +47,12 @@ resource "snowflake_view_grant" "view_grant_select" {
 
 # View Level - references
 resource "snowflake_view_grant" "view_grant_references" {
-  database_name = snowflake_database.snowalert.name
+  provider = snowflake.alerting_role
+
+  database_name = local.snowalert_database_name
 
   privilege = "REFERENCES"
-  roles     = [snowflake_role.snowalert.name]
+  roles     = [local.snowalert_role_name]
 
   on_future         = true
   with_grant_option = false
@@ -50,10 +60,12 @@ resource "snowflake_view_grant" "view_grant_references" {
 
 # Table Level - Select
 resource "snowflake_table_grant" "table_grant_select" {
-  database_name = snowflake_database.snowalert.name
+  provider = snowflake.alerting_role
+
+  database_name = local.snowalert_database_name
 
   privilege = "SELECT"
-  roles     = [snowflake_role.snowalert.name]
+  roles     = [local.snowalert_role_name]
 
   on_future         = true
   with_grant_option = false
@@ -61,10 +73,12 @@ resource "snowflake_table_grant" "table_grant_select" {
 
 # Table Level - Insert
 resource "snowflake_table_grant" "table_grant_insert" {
-  database_name = snowflake_database.snowalert.name
+  provider = snowflake.alerting_role
+
+  database_name = local.snowalert_database_name
 
   privilege = "INSERT"
-  roles     = [snowflake_role.snowalert.name]
+  roles     = [local.snowalert_role_name]
 
   on_future         = true
   with_grant_option = false
@@ -72,12 +86,14 @@ resource "snowflake_table_grant" "table_grant_insert" {
 
 # Stream Level - Select
 resource "snowflake_stream_grant" "stream_grant_select" {
-  database_name = snowflake_database.snowalert.name
+  provider = snowflake.alerting_role
+
+  database_name = local.snowalert_database_name
   schema_name   = snowflake_schema.rules.name
   stream_name   = snowflake_stream.raw_alerts_stream.name
 
   privilege = "SELECT"
-  roles     = [snowflake_role.snowalert.name]
+  roles     = [local.snowalert_role_name]
 
   with_grant_option = false
 }
@@ -89,22 +105,22 @@ resource "snowflake_stream_grant" "stream_grant_select" {
 
 # # Stream Level - Ownership
 # resource "snowflake_stream_grant" "stream_grant_ownerhsip" {
-#   database_name = snowflake_database.snowalert.name
+#   database_name = local.snowalert_database_name
 #   schema_name   = snowflake_schema.rules.name
 #   stream_name   = snowflake_stream.raw_alerts_stream.name
 
 #   privilege = "OWNERSHIP"
-#   roles     = [snowflake_role.snowalert.name]
+#   roles     = [local.snowalert_role_name]
 
 #   with_grant_option = false
 # }
 
 # Schema Level - ownership
 # resource "snowflake_view_grant" "schema_grant_ownership" {
-#   database_name = snowflake_database.snowalert.name
+#   database_name = local.snowalert_database_name
 
 #   privilege = "OWNERSHIP"
-#   roles     = [snowflake_role.snowalert.name]
+#   roles     = [local.snowalert_role_name]
 
 #   on_future         = true
 #   with_grant_option = false
@@ -112,10 +128,10 @@ resource "snowflake_stream_grant" "stream_grant_select" {
 
 # # Table Level - Ownership
 # resource "snowflake_table_grant" "table_grant_ownership" {
-#   database_name = snowflake_database.snowalert.name
+#   database_name = local.snowalert_database_name
 
 #   privilege = "OWNERSHIP"
-#   roles     = [snowflake_role.snowalert.name]
+#   roles     = [local.snowalert_role_name]
 
 #   on_future         = true
 #   with_grant_option = false
@@ -123,11 +139,11 @@ resource "snowflake_stream_grant" "stream_grant_select" {
 
 # # Procedure Level - Ownership
 # resource "snowflake_procedure_grant" "procedure_grant_ownership" {
-#   database_name = snowflake_database.snowalert.name
+#   database_name = local.snowalert_database_name
 #   schema_name   = snowflake_schema.results.name
 
 #   privilege = "OWNERSHIP"
-#   roles     = [snowflake_role.snowalert.name]
+#   roles     = [local.snowalert_role_name]
 
 #   on_future         = true
 #   with_grant_option = false
@@ -135,11 +151,11 @@ resource "snowflake_stream_grant" "stream_grant_select" {
 
 # # Procedure Level - Usage
 # resource "snowflake_procedure_grant" "procedure_grant_usage" {
-#   database_name = snowflake_database.snowalert.name
+#   database_name = local.snowalert_database_name
 #   schema_name   = snowflake_schema.results.name
 
 #   privilege = "USAGE"
-#   roles     = [snowflake_role.snowalert.name]
+#   roles     = [local.snowalert_role_name]
 
 #   on_future         = true
 #   with_grant_option = false
@@ -148,10 +164,10 @@ resource "snowflake_stream_grant" "stream_grant_select" {
 
 # View Level - ownership
 # resource "snowflake_view_grant" "view_grant_ownership" {
-#   database_name = snowflake_database.snowalert.name
+#   database_name = local.snowalert_database_name
 
 #   privilege = "OWNERSHIP"
-#   roles     = [snowflake_role.snowalert.name]
+#   roles     = [local.snowalert_role_name]
 
 #   on_future         = true
 #   with_grant_option = false
