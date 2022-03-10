@@ -4,6 +4,7 @@ ${database}.${schema}.SNOWALERT_JIRA_API(
     TO_JSON(
         OBJECT_CONSTRUCT(
             'fields', OBJECT_CONSTRUCT(
+                'labels', ARRAY_CONSTRUCT('SnowAlert'),
                 'assignee', OBJECT_CONSTRUCT(
                     'accountId',  COALESCE(payload['assignee'], NULL)
                 ),
