@@ -8,17 +8,17 @@ resource "snowflake_external_function" "slack_snowflake" {
 
   arg {
     name = "METHOD"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   arg {
     name = "PATH"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   arg {
     name = "PARAMS"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   header {
@@ -69,12 +69,12 @@ resource "snowflake_function" "slack_snowflake_chat_post_message" {
 
   arguments {
     name = "CHANNEL"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   arguments {
     name = "TEXT"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   return_type = "VARIANT"
