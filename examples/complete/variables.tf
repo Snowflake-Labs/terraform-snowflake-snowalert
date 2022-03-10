@@ -53,49 +53,6 @@ variable "snowalert_role_name" {
   default     = "APP_SNOWALERT"
 }
 
-variable "handlers" {
-  type        = list(string)
-  description = "List of handlers to enable."
-  default     = []
-}
-
-# Correspoding variables of the specified handlers are required
-variable "jira_secrets_arn" {
-  type        = string
-  description = "."
-  default     = null
-}
-
-variable "slack_secrets_arn" {
-  type        = string
-  description = "."
-  default     = null
-}
-
-variable "smtp_secrets_arn" {
-  type        = string
-  description = "."
-  default     = null
-}
-
-variable "smtp_driver_from_email_address" {
-  type        = string
-  description = "."
-  default     = null
-}
-
-variable "data_bucket_arns" {
-  type        = list(string)
-  default     = []
-  description = "List of Bucket ARNs for the s3_reader role to read from."
-}
-
-variable "geff_image_version" {
-  type        = string
-  description = "Version of the GEFF docker image."
-  default     = "latest"
-}
-
 variable "create_warehouse" {
   type        = bool
   default     = false
@@ -120,6 +77,50 @@ variable "create_role" {
   description = "Flag to create role or not."
 }
 
+
+variable "data_bucket_arns" {
+  type        = list(string)
+  default     = []
+  description = "List of Bucket ARNs for the s3_reader role to read from."
+}
+
+variable "geff_image_version" {
+  type        = string
+  description = "Version of the GEFF docker image."
+  default     = "latest"
+}
+
+variable "handlers" {
+  type        = list(string)
+  description = "List of handlers to enable."
+  default     = []
+}
+
+# Correspoding variables of the specified handlers are required
+variable "jira_secrets_arn" {
+  type        = string
+  description = "Secrets for JIRA in the specified format with host pinned."
+  default     = null
+}
+
+variable "slack_secrets_arn" {
+  type        = string
+  description = "Secrets for slack in the specified format with host pinned."
+  default     = null
+}
+
+variable "smtp_secrets_arn" {
+  type        = string
+  description = "Secrets for SMTP server in the specified format with host pinned."
+  default     = null
+}
+
+variable "smtp_driver_from_email_address" {
+  type        = string
+  description = "."
+  default     = null
+}
+
 variable "jira_url" {
   type        = string
   default     = null
@@ -137,3 +138,16 @@ variable "default_jira_issue_type" {
   default     = "Task"
   description = "Fallback Issue type for the JIRA handler."
 }
+
+variable "servicenow_secrets_arn" {
+  type        = string
+  default     = null
+  description = "Secrets for service now in the specified format with host pinned."
+}
+
+variable "servicenow_api_url" {
+  type        = string
+  default     = null
+  description = "Service Now API URL."
+}
+
