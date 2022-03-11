@@ -173,3 +173,9 @@ variable "servicenow_api_url" {
   default     = null
   description = "Service Now API URL."
 }
+
+variable "snowalert_user_email" {
+  type        = string
+  default     = null
+  description = "Email of the snowalert Snowflake user."
+}
