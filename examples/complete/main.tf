@@ -25,11 +25,12 @@ module "snowalert" {
   servicenow_secrets_arn = var.servicenow_secrets_arn
   servicenow_api_url     = var.servicenow_api_url
 
-  create_warehouse = var.create_warehouse
-  create_database  = var.create_database
-  create_user      = var.create_user
-  create_role      = var.create_role
-  create_schemas   = var.create_schemas
+  create_warehouse     = var.create_warehouse
+  create_database      = var.create_database
+  create_user          = var.create_user
+  snowalert_user_email = var.snowalert_user_email
+  create_role          = var.create_role
+  create_schemas       = var.create_schemas
 
   providers = {
     snowflake.api_integration     = snowflake.api_integration
