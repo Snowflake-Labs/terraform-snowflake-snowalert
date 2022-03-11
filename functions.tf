@@ -2,7 +2,7 @@ resource "snowflake_function" "time_slices" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.data.name
+  schema   = local.data_schema
   name     = "TIME_SLICES"
 
   arguments {
@@ -29,7 +29,7 @@ resource "snowflake_function" "time_slices_before_t_with_t" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.data.name
+  schema   = local.data_schema
   name     = "TIME_SLICES_BEFORE_T"
 
   arguments {
@@ -52,7 +52,7 @@ resource "snowflake_function" "time_slices_before_t_with_t" {
     "${path.module}/functions_sql/time_slices_before_t_with_t.sql", {
       time_slices_function = join(".", [
         local.snowalert_database_name,
-        snowflake_schema.data.name,
+        local.data_schema,
         snowflake_function.time_slices.name,
       ])
     }
@@ -63,7 +63,7 @@ resource "snowflake_function" "time_slices_before_t_without_t" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.data.name
+  schema   = local.data_schema
   name     = "TIME_SLICES_BEFORE_T"
 
   arguments {
@@ -81,7 +81,7 @@ resource "snowflake_function" "time_slices_before_t_without_t" {
     "${path.module}/functions_sql/time_slices_before_t_without_t.sql", {
       time_slices_function = join(".", [
         local.snowalert_database_name,
-        snowflake_schema.data.name,
+        local.data_schema,
         snowflake_function.time_slices.name,
       ])
     }
@@ -92,7 +92,7 @@ resource "snowflake_function" "object_assign" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.data.name
+  schema   = local.data_schema
   name     = "OBJECT_ASSIGN"
 
   arguments {
@@ -116,7 +116,7 @@ resource "snowflake_function" "urlencode" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.data.name
+  schema   = local.data_schema
   name     = "URLENCODE"
 
   arguments {
@@ -142,7 +142,7 @@ resource "snowflake_function" "has_no_violations" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = snowflake_schema.rules.name
+  schema   = local.rules_schema
   name     = "HAS_NO_VIOLATIONS"
 
   arguments {
@@ -154,7 +154,7 @@ resource "snowflake_function" "has_no_violations" {
   statement   = <<SQL
 (
   SELECT COUNT(*) AS c
-  FROM ${local.snowalert_database_name}.${snowflake_schema.data.name}.${snowflake_view.violations.name}
+  FROM ${local.snowalert_database_name}.${local.data_schema}.${snowflake_view.violations.name}
   WHERE created_time > DATEADD(day, -1, CURRENT_TIMESTAMP())
     AND query_id = qid
 ) = 0

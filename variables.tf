@@ -105,16 +105,40 @@ variable "create_user" {
   description = "Flag to create user or not."
 }
 
+variable "snowalert_user_email" {
+  type        = string
+  default     = null
+  description = "Email of the snowalert Snowflake user."
+}
+
 variable "create_role" {
   type        = bool
   default     = false
   description = "Flag to create role or not."
 }
 
-variable "snowalert_user_email" {
+variable "create_schemas" {
+  type        = bool
+  default     = false
+  description = "Flag to create schemas within the module or not."
+}
+
+variable "data_schema_name" {
   type        = string
-  default     = null
-  description = "Email of the snowalert Snowflake user."
+  default     = "DATA"
+  description = "Schema that either already exists or is created in this module is create_schemas = true."
+}
+
+variable "rules_schema_name" {
+  type        = string
+  default     = "RULES"
+  description = "Schema that either already exists or is created in this module is create_schemas = true."
+}
+
+variable "results_schema_name" {
+  type        = string
+  default     = "RESULTS"
+  description = "Schema that either already exists or is created in this module is create_schemas = true."
 }
 
 variable "handlers" {

@@ -2,10 +2,11 @@ resource "snowflake_external_function" "slack_snowflake" {
   count    = contains(var.handlers, "slack") == true ? 1 : 0
   provider = snowflake.alerting_role
 
-  name     = "SLACK_SNOWFLAKE"
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema
+  name     = "SLACK_SNOWFLAKE"
 
+  # Function arguments
   arg {
     name = "METHOD"
     type = "VARCHAR"
@@ -21,6 +22,7 @@ resource "snowflake_external_function" "slack_snowflake" {
     type = "VARCHAR"
   }
 
+  # Function headers
   header {
     name  = "method"
     value = "{0}"
@@ -59,14 +61,29 @@ slack_snowflake: (method, path, params) -> response
 COMMENT
 }
 
+locals {
+  slack_snowflake_function = join(".", [
+    local.snowalert_database_name,
+    local.results_schema,
+    snowflake_external_function.slack_snowflake[0].name,
+  ])
+
+  url_encode_function = join(".", [
+    local.snowalert_database_name,
+    local.data_schema,
+    snowflake_function.urlencode.name,
+  ])
+}
+
 resource "snowflake_function" "slack_snowflake_chat_post_message" {
   count    = contains(var.handlers, "slack") == true ? 1 : 0
   provider = snowflake.alerting_role
 
   name     = "SLACK_SNOWFLAKE_CHAT_POST_MESSAGE"
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema
 
+  # Function arguments
   arguments {
     name = "CHANNEL"
     type = "VARCHAR"
@@ -79,10 +96,10 @@ resource "snowflake_function" "slack_snowflake_chat_post_message" {
 
   return_type = "VARIANT"
   statement   = <<SQL
-${local.snowalert_database_name}.${snowflake_schema.results.name}.${snowflake_external_function.slack_snowflake[0].name}(
+${local.slack_snowflake_function}(
   'post',
   'chat.postMessage',
-  ${local.snowalert_database_name}.${snowflake_schema.data.name}.${snowflake_function.urlencode.name}(OBJECT_CONSTRUCT(
+  ${local.url_encode_function}(OBJECT_CONSTRUCT(
     'channel', channel::STRING,
     'text', text::STRING
   ))
@@ -90,14 +107,23 @@ ${local.snowalert_database_name}.${snowflake_schema.results.name}.${snowflake_ex
 SQL
 }
 
+locals {
+  slack_post_message_function = join(".", [
+    local.snowalert_database_name,
+    local.results_schema,
+    snowflake_function.slack_snowflake_chat_post_message[0].name,
+  ])
+}
+
 resource "snowflake_function" "slack_handler" {
   count    = contains(var.handlers, "slack") == true ? 1 : 0
   provider = snowflake.alerting_role
 
-  name     = "SLACK_HANDLER"
   database = local.snowalert_database_name
-  schema   = snowflake_schema.results.name
+  schema   = local.results_schema
+  name     = "SLACK_HANDLER"
 
+  # Function arguments
   arguments {
     name = "ALERT"
     type = "VARIANT"
@@ -110,7 +136,7 @@ resource "snowflake_function" "slack_handler" {
 
   return_type = "VARIANT"
   statement   = <<SQL
-${local.snowalert_database_name}.${snowflake_schema.results.name}.${snowflake_function.slack_snowflake_chat_post_message[0].name}(
+${local.slack_post_message_function}(
   payload['channel'],
   payload['message']
 )
