@@ -67,7 +67,7 @@ resource "snowflake_external_function" "snowalert_jira_api" {
   return_type               = "VARIANT"
   return_behavior           = "VOLATILE"
   api_integration           = module.geff_snowalert.api_integration_name
-  url_of_proxy_and_resource = "${module.geff_snowalert.api_gateway_invoke_url}/${var.env}/https"
+  url_of_proxy_and_resource = "${module.geff_snowalert.api_gateway_invoke_url}${var.env}/https"
 
   comment = <<COMMENT
 jira_api: (method, path, body) -> api_response
