@@ -2,7 +2,7 @@ resource "snowflake_view" "rule_tags" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "RULE_TAGS"
 
   statement  = templatefile("${path.module}/views_sql/rule_tags.sql", {})
@@ -14,7 +14,7 @@ resource "snowflake_view" "alerts" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "ALERTS"
   comment  = "Reflects on existing Alerts, e.g. for writing alert suppressions"
 
@@ -23,7 +23,7 @@ resource "snowflake_view" "alerts" {
     {
       results_alerts = join(".", [
         local.snowalert_database_name,
-        local.results_schema_name,
+        local.results_schema,
         snowflake_table.alerts.name,
       ])
     }
@@ -35,7 +35,7 @@ resource "snowflake_view" "violations" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "VIOLATIONS"
   comment  = "Reflects on existing Violations, e.g. for violation suppressions"
 
@@ -44,7 +44,7 @@ resource "snowflake_view" "violations" {
     {
       results_violations = join(".", [
         local.snowalert_database_name,
-        local.results_schema_name,
+        local.results_schema,
         snowflake_table.violations.name,
       ])
     }
@@ -56,7 +56,7 @@ resource "snowflake_view" "tags_foj_alerts" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "TAGS_FOJ_ALERTS"
   comment  = "this view selects all tags, FOJed on alerts generated from queries having those tags."
 
@@ -65,12 +65,12 @@ resource "snowflake_view" "tags_foj_alerts" {
     {
       data_rule_tags = join(".", [
         local.snowalert_database_name,
-        local.data_schema_name,
+        local.data_schema,
         snowflake_view.rule_tags.name,
       ])
       data_alerts = join(".", [
         local.snowalert_database_name,
-        local.data_schema_name,
+        local.data_schema,
         snowflake_view.alerts.name,
       ])
     }
@@ -82,7 +82,7 @@ resource "snowflake_view" "tags_foj_violations" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "TAGS_FOJ_VIOLATIONS"
   comment  = "this view selects all tags, FOJed on violations generated from queries having those tags."
 
@@ -91,12 +91,12 @@ resource "snowflake_view" "tags_foj_violations" {
     {
       data_rule_tags = join(".", [
         local.snowalert_database_name,
-        local.data_schema_name,
+        local.data_schema,
         snowflake_view.rule_tags.name,
       ])
       data_violations = join(".", [
         local.snowalert_database_name,
-        local.data_schema_name,
+        local.data_schema,
         snowflake_view.violations.name,
       ])
     }
@@ -107,13 +107,13 @@ resource "snowflake_view" "tags_foj_violations" {
 locals {
   results_run_metadata = join(".", [
     local.snowalert_database_name,
-    local.results_schema_name,
+    local.results_schema,
     snowflake_table.run_metadata.name,
   ])
 
   results_query_metadata = join(".", [
     local.snowalert_database_name,
-    local.results_schema_name,
+    local.results_schema,
     snowflake_table.query_metadata.name,
   ])
 }
@@ -122,7 +122,7 @@ resource "snowflake_view" "alert_queries_runs" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "ALERT_QUERIES_RUNS"
   comment  = "Stable interface to underlying metadata tables."
 
@@ -137,7 +137,7 @@ resource "snowflake_view" "alert_query_rule_runs" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "ALERT_QUERY_RULE_RUNS"
   comment  = "Stable interface to underlying metadata tables."
 
@@ -152,7 +152,7 @@ resource "snowflake_view" "alert_suppressions_runs" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "ALERT_SUPPRESSIONS_RUNS"
   comment  = "Stable interface to underlying metadata tables."
 
@@ -167,7 +167,7 @@ resource "snowflake_view" "alert_suppression_rule_runs" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "ALERT_SUPPRESSION_RULE_RUNS"
   comment  = "Stable interface to underlying metadata tables."
 
@@ -182,7 +182,7 @@ resource "snowflake_view" "violation_queries_runs" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "VIOLATION_QUERIES_RUNS"
   comment  = "Stable interface to underlying metadata tables."
 
@@ -197,7 +197,7 @@ resource "snowflake_view" "violation_query_rule_runs" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "VIOLATION_QUERY_RULE_RUNS"
   comment  = "Stable interface to underlying metadata tables."
 
@@ -212,7 +212,7 @@ resource "snowflake_view" "violation_suppressions_runs" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "VIOLATION_SUPPRESSIONS_RUNS"
   comment  = "Stable interface to underlying metadata tables."
 
@@ -227,7 +227,7 @@ resource "snowflake_view" "violation_suppression_rule_runs" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "VIOLATION_SUPPRESSION_RULE_RUNS"
   comment  = "Stable interface to underlying metadata tables."
 
@@ -242,7 +242,7 @@ resource "snowflake_view" "rule_views_to_titles_map" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "RULE_VIEWS_TO_TITLES_MAP"
   comment  = "Maps rules views to their titles for easy joining."
 
@@ -253,37 +253,37 @@ resource "snowflake_view" "rule_views_to_titles_map" {
 locals {
   data_alert_query_rule_runs = join(".", [
     local.snowalert_database_name,
-    local.data_schema_name,
+    local.data_schema,
     snowflake_view.alert_query_rule_runs.name,
   ])
 
   data_alert_suppression_rule_runs = join(".", [
     local.snowalert_database_name,
-    local.data_schema_name,
+    local.data_schema,
     snowflake_view.alert_suppression_rule_runs.name,
   ])
 
   data_violation_query_rule_runs = join(".", [
     local.snowalert_database_name,
-    local.data_schema_name,
+    local.data_schema,
     snowflake_view.violation_query_rule_runs.name,
   ])
 
   data_violation_suppression_rule_runs = join(".", [
     local.snowalert_database_name,
-    local.data_schema_name,
+    local.data_schema,
     snowflake_view.violation_suppression_rule_runs.name,
   ])
 
   data_rule_views_to_titles_map = join(".", [
     local.snowalert_database_name,
-    local.data_schema_name,
+    local.data_schema,
     snowflake_view.rule_views_to_titles_map.name,
   ])
 
   data_time_slices_before_t = join(".", [
     local.snowalert_database_name,
-    local.data_schema_name,
+    local.data_schema,
     snowflake_function.time_slices_before_t_with_t.name,
   ])
 }
@@ -292,7 +292,7 @@ resource "snowflake_view" "alert_query_rule_run_errors" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "ALERT_QUERY_RULE_RUN_ERRORS"
   comment  = "Alert Query rule runs joined on errors."
 
@@ -309,7 +309,7 @@ resource "snowflake_view" "alert_suppression_rule_run_errors" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "ALERT_SUPPRESSION_RULE_RUN_ERRORS"
   comment  = "Alert Query rule runs joined on errors."
 
@@ -326,7 +326,7 @@ resource "snowflake_view" "violation_query_rule_run_errors" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "VIOLATION_QUERY_RULE_RUN_ERRORS"
   comment  = "Violation Query rule runs joined on errors."
 
@@ -343,7 +343,7 @@ resource "snowflake_view" "violation_suppression_rule_run_errors" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "VIOLATION_SUPPRESSION_RULE_RUN_ERRORS"
   comment  = "Violation Query rule runs joined on errors."
 
@@ -360,7 +360,7 @@ resource "snowflake_view" "data_connector_run_errors" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.data_schema_name
+  schema   = local.data_schema
   name     = "DATA_CONNECTOR_RUN_ERRORS"
   comment  = "Violation Query rule runs joined on errors."
 

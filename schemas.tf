@@ -17,8 +17,8 @@ locals {
 
 # Database
 resource "snowflake_database" "snowalert" {
-  provider = snowflake.admin
   count    = var.create_database == true ? 1 : 0
+  provider = snowflake.admin
 
   name    = var.snowalert_database_name
   comment = "Snowalert Database."
@@ -39,8 +39,8 @@ locals {
 
 # User
 resource "snowflake_user" "snowalert" {
-  provider = snowflake.admin
   count    = var.create_user == true ? 1 : 0
+  provider = snowflake.admin
 
   # Make sure the name is unique, if prompted with object already exists
   login_name = "${upper(trimspace(var.prefix))}_APP_SNOWALERT"
@@ -63,8 +63,8 @@ locals {
 
 # Role
 resource "snowflake_role" "snowalert" {
-  provider = snowflake.admin
   count    = var.create_role == true ? 1 : 0
+  provider = snowflake.admin
 
   name    = upper(trimspace(var.snowalert_role_name))
   comment = "The role that all Snowalert objects are granted to."
@@ -84,7 +84,7 @@ resource "snowflake_schema" "data" {
 }
 
 locals {
-  data_schema_name = var.create_schemas == true ? snowflake_schema.data[0].name : var.data_schema_name
+  data_schema = var.create_schemas == true ? snowflake_schema.data[0].name : var.data_schema_name
 }
 
 resource "snowflake_schema" "rules" {
@@ -96,7 +96,7 @@ resource "snowflake_schema" "rules" {
 }
 
 locals {
-  rules_schema_name = var.create_schemas == true ? snowflake_schema.rules[0].name : var.rules_schema_name
+  rules_schema = var.create_schemas == true ? snowflake_schema.rules[0].name : var.rules_schema_name
 }
 
 resource "snowflake_schema" "results" {
@@ -108,5 +108,5 @@ resource "snowflake_schema" "results" {
 }
 
 locals {
-  results_schema_name = var.create_schemas == true ? snowflake_schema.results[0].name : var.results_schema_name
+  results_schema = var.create_schemas == true ? snowflake_schema.results[0].name : var.results_schema_name
 }

@@ -2,7 +2,7 @@ resource "snowflake_procedure" "alert_dispatcher" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
   name     = "ALERT_DISPATCHER"
 
   return_type = "VARIANT"
@@ -14,7 +14,7 @@ resource "snowflake_procedure" "alert_merge" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
   name     = "ALERT_MERGE"
 
   arguments {
@@ -31,7 +31,7 @@ resource "snowflake_procedure" "alert_processor" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
   name     = "ALERT_PROCESSOR"
 
   return_type = "VARIANT"
@@ -43,7 +43,7 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
   name     = "ALERT_QUERIES_RUNNER"
 
   arguments {
@@ -70,7 +70,7 @@ resource "snowflake_procedure" "alert_queries_runner_without_time" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
   name     = "ALERT_QUERIES_RUNNER"
 
   arguments {
@@ -92,7 +92,7 @@ resource "snowflake_procedure" "alert_queries_runner" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
   name     = "ALERT_QUERIES_RUNNER"
 
   arguments {
@@ -109,7 +109,7 @@ resource "snowflake_procedure" "alert_scheduler" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
   name     = "ALERT_SCHEDULER"
 
   arguments {
@@ -126,7 +126,7 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
   name     = "ALERT_SUPPRESSIONS_RUNNER"
 
   arguments {
@@ -143,7 +143,7 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
   name     = "ALERT_SUPPRESSIONS_RUNNER"
 
   return_type = "VARIANT"
@@ -155,7 +155,7 @@ resource "snowflake_procedure" "violation_queries_runner" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
   name     = "VIOLATION_QUERIES_RUNNER"
 
   return_type = "VARIANT"

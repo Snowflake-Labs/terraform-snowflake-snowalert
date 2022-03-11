@@ -2,10 +2,11 @@ resource "snowflake_external_function" "snowalert_jira_api" {
   count    = contains(var.handlers, "jira") == true ? 1 : 0
   provider = snowflake.alerting_role
 
-  name     = "SNOWALERT_JIRA_API"
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
+  name     = "SNOWALERT_JIRA_API"
 
+  # Function arguments
   arg {
     name = "METHOD"
     type = "STRING"
@@ -26,6 +27,7 @@ resource "snowflake_external_function" "snowalert_jira_api" {
     type = "STRING"
   }
 
+  # Function headers
   header {
     name  = "method"
     value = "{0}"
@@ -71,10 +73,6 @@ resource "snowflake_external_function" "snowalert_jira_api" {
 jira_api: (method, path, body) -> api_response
 https://developer.atlassian.com/cloud/jira/platform/rest/v3/
 COMMENT
-
-  depends_on = [
-    snowflake_schema.results
-  ]
 }
 
 resource "snowflake_function" "jira_handler" {
@@ -83,8 +81,9 @@ resource "snowflake_function" "jira_handler" {
 
   name     = "JIRA_HANDLER"
   database = local.snowalert_database_name
-  schema   = local.results_schema_name
+  schema   = local.results_schema
 
+  # Function arguments
   arguments {
     name = "ALERT"
     type = "VARIANT"
@@ -102,13 +101,12 @@ resource "snowflake_function" "jira_handler" {
     "${path.module}/handler_functions_sql/jira_handler.sql", {
       default_jira_project    = var.default_jira_project
       default_jira_issue_type = var.default_jira_issue_type
-      database                = local.snowalert_database_name
-      schema                  = local.results_schema_name
-      ef_jira_name            = snowflake_external_function.snowalert_jira_api[0].name
+
+      jira_api_function = join(".", [
+        local.snowalert_database_name,
+        local.results_schema,
+        snowflake_external_function.snowalert_jira_api[0].name,
+      ])
     }
   )
-
-  depends_on = [
-    snowflake_schema.results
-  ]
 }

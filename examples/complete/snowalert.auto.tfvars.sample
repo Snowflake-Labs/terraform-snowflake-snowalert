@@ -6,22 +6,41 @@ env            = "dev"
 prefix         = "my"
 terraform_role = "ACCOUNTADMIN" # my_org_alerting_rl
 
-snowalert_db_name        = "<PREFIX>_SNOWALERT"
-snowalert_role_name      = "<PREFIX>_APP_SNOWALERT"
-snowalert_warehouse_name = "<PREFIX>_SNOWALERT_WAREHOUSE"
+snowalert_warehouse_name = "SNOWALERT_WAREHOUSE"
+snowalert_database_name  = "SNOWALERT"
+snowalert_user_name      = "APP_SNOWALERT"
+snowalert_role_name      = "APP_SNOWALERT"
+
+create_warehouse = false
+create_database  = false
+create_user      = false
+create_role      = false
+create_schemas   = true
+
+data_schema_name    = "DATA"
+rules_schema_name   = "RULES"
+results_schema_name = "RESULTS"
 
 handlers = [
   "slack",
   #   "jira",
   #   "smtp",
+  #   "servicenow",
 ]
 
 # Correspoding variables of the specified handlers are required
-slack_secrets_arn = "arn:aws:secretsmanager:us-east-1:1234567890:secret:test/snowalert/slack-oauth-token"
+slack_secrets_arn = "arn:dummy"
 
-jira_secrets_arn               = ""
+jira_secrets_arn        = "arn:dummy"
+jira_url                = "https://my-dummy-org.atlassian.net"
+default_jira_project    = "SA"
+default_jira_issue_type = "Task"
+
 smtp_secrets_arn               = ""
 smtp_driver_from_email_address = ""
+
+servicenow_secrets_arn = "arn:dummy"
+servicenow_api_url     = "https://api.servicenow.com"
 
 # GEFF
 aws_region         = "us-east-1"

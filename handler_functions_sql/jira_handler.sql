@@ -1,4 +1,4 @@
-${database}.${schema}.${ef_jira_name}(
+${jira_api_function}(
     'POST',
     '/rest/api/3/issue',
     TO_JSON(
