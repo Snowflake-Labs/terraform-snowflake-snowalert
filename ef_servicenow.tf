@@ -45,3 +45,11 @@ resource "snowflake_external_function" "servicenow_create_incident" {
 servicenow_create_incident: (payload) -> response
 COMMENT
 }
+
+locals {
+  servicenow_create_incident = contains(var.handlers, "servicenow") == true ? join(".", [
+    local.snowalert_database_name,
+    local.results_schema,
+    snowflake_external_function.servicenow_create_incident[0].name,
+  ]) : null
+}

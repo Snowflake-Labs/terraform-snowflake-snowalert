@@ -62,11 +62,11 @@ COMMENT
 }
 
 locals {
-  smtp_send_function = join(".", [
+  smtp_send_function = contains(var.handlers, "smtp") == true ? join(".", [
     local.snowalert_database_name,
     local.results_schema,
     snowflake_external_function.smtp_send[0].name,
-  ])
+  ]) : null
 }
 
 resource "snowflake_function" "smtp_handler" {
@@ -99,11 +99,11 @@ SQL
 }
 
 locals {
-  smtp_handler_function = join(".", [
+  smtp_handler_function = contains(var.handlers, "smtp") == true ? join(".", [
     local.snowalert_database_name,
     local.results_schema,
     snowflake_function.smtp_handler[0].name,
-  ])
+  ]) : null
 }
 
 resource "snowflake_function" "smtp_handler_1_arg" {

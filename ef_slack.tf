@@ -62,11 +62,11 @@ COMMENT
 }
 
 locals {
-  slack_snowflake_function = join(".", [
+  slack_snowflake_function = contains(var.handlers, "slack") == true ? join(".", [
     local.snowalert_database_name,
     local.results_schema,
     snowflake_external_function.slack_snowflake[0].name,
-  ])
+  ]) : null
 
   url_encode_function = join(".", [
     local.snowalert_database_name,
@@ -108,11 +108,11 @@ SQL
 }
 
 locals {
-  slack_post_message_function = join(".", [
+  slack_post_message_function = contains(var.handlers, "slack") == true ? join(".", [
     local.snowalert_database_name,
     local.results_schema,
     snowflake_function.slack_snowflake_chat_post_message[0].name,
-  ])
+  ]) : null
 }
 
 resource "snowflake_function" "slack_handler" {

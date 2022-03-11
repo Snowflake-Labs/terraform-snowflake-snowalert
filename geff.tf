@@ -1,5 +1,5 @@
 module "geff_snowalert" {
-  source = "Snowflake-Labs/aws-geff/snowflake"
+  source = "Snowflake-Labs/api-integration-with-geff/snowflake"
 
   # Required
   prefix = var.prefix
@@ -14,6 +14,7 @@ module "geff_snowalert" {
   # Other config items
   geff_image_version = var.geff_image_version
   data_bucket_arns   = var.data_bucket_arns
+  geff_secret_arns   = local.snowalert_secret_arns
 
   providers = {
     snowflake.api_integration     = snowflake.api_integration

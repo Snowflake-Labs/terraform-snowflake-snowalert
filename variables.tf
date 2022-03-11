@@ -210,3 +210,12 @@ locals {
   account_id = data.aws_caller_identity.current.account_id
   aws_region = data.aws_region.current.name
 }
+
+locals {
+  snowalert_secret_arns = flatten([
+    contains(var.handlers, "jira") == true ? [var.jira_secrets_arn] : [],
+    contains(var.handlers, "slack") == true ? [var.slack_secrets_arn] : [],
+    contains(var.handlers, "servicenow") == true ? [var.servicenow_secrets_arn] : [],
+    contains(var.handlers, "smtp") == true ? [var.smtp_secrets_arn] : [],
+  ])
+}
