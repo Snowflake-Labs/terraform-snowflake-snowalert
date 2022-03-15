@@ -73,7 +73,7 @@ sfc_env()
 
 You can then set the appropriate env vars using:
 
-```
+```bash
 sfc_env sfc_dev
 # or
 sfc_env sfc_prod
