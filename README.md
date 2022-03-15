@@ -21,7 +21,7 @@ A couple of instructions to provide the right set of input variables:
 1. _Conditional resources_: warehouse, database, user, role, schemas are conditional resources and hence existing resources can be re-used and provided as input variables. This can be done by setting the `snowalert_*_name` variables to the existing resource names and setting `create_*` variables to `false`(which is the default).
 2. _Handlers_: The handlers list is an optional list for those handlers you want created. For each handler provider the corresponding `*_secrets_arn` must be passed and should be created with the specific format required by GEFF with hostname pinned into the secret for added security. Other variables may be conditionally required depending on the handler.
 
-For example, if `handlers = ["jira"]`, you'll additional have to pass:
+For example, if `handlers = ["jira"]`, you'll additionally have to pass:
 
 - `jira_secrets_arn`
 - `jira_url`
