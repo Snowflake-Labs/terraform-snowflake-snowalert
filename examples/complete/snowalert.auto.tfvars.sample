@@ -29,18 +29,7 @@ handlers = [
 ]
 
 # Correspoding variables of the specified handlers are required
-slack_secrets_arn = "arn:dummy"
-
-jira_secrets_arn        = "arn:dummy"
-jira_url                = "https://my-dummy-org.atlassian.net"
-default_jira_project    = "SA"
-default_jira_issue_type = "Task"
-
-smtp_secrets_arn               = ""
-smtp_driver_from_email_address = ""
-
-servicenow_secrets_arn = "arn:dummy"
-servicenow_api_url     = "https://api.servicenow.com"
+slack_secrets_arn = "arn:aws:secretsmanager:us-east-1:111122223333:secret:tutorial/MyFirstSecret-x1y2z3"
 
 # GEFF
 aws_region         = "us-east-1"
