@@ -41,8 +41,6 @@ terraform plan -out=snowalert.plan # no need to pass tfvars file if you have an 
 terraform apply snowalert.plan
 ```
 
-
-
 ### `zsh` Function
 
 zsh function to set appropriate env variables based on which snowflake you want to target with terraform:
