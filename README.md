@@ -12,39 +12,7 @@ Terraformed version of Snowalert. It creates the following resources:
 6. Procedures
 7. Tasks
 
-### `zsh` Function
-
-zsh function to set appropriate env variables based on which snowflake you want to target with terraform:
-
-```bash
-sfc_env()
-{
-    case $1 in
-        "sfc_dev")
-            export SNOWFLAKE_USER=$1_tf_user
-            export SNOWFLAKE_PRIVATE_KEY_PATH=
-            export SNOWFLAKE_PRIVATE_KEY=`cat ~/.ssh/$1_tf_key.p8`
-            export SNOWFLAKE_PRIVATE_KEY_PASSPHRASE='<my private key passphrase>'
-            ;;
-        "sfc_prod")
-            export SNOWFLAKE_USER=$1_tf_user
-            export SNOWFLAKE_PRIVATE_KEY_PATH="~/.ssh/$1_tf_key.p8"
-            export SNOWFLAKE_PRIVATE_KEY=
-            export SNOWFLAKE_PRIVATE_KEY_PASSPHRASE='<my private key passphrase>'
-            ;;
-        *)
-            export SNOWFLAKE_USER=<username>
-            export SNOWFLAKE_PRIVATE_KEY_PATH="~/.ssh/$1_tf_key.p8"
-            export SNOWFLAKE_PRIVATE_KEY=
-            export SNOWFLAKE_PRIVATE_KEY_PASSPHRASE='<my private key passphrase>'
-            ;;
-    esac
-}
-```
-
-For this function to work, you'll have to place `~/.ssh/sfc_dev_tf_key.p8` and `~/.ssh/sfc_prod_tf_key.p8` keys in your `~/.ssh/` folder.
-
-# `snowalert.auto.tfvars` Inputs File
+### `snowalert.auto.tfvars` Inputs File
 
 A couple of instructions to provide the right set of input variables:
 
@@ -60,7 +28,7 @@ For example, if `handlers = ["jira"]`, you'll additional have to pass:
 
 which are the variables that come into play due to using the JIRA handler. The same follows for serviceNow, slack or SMTP.
 
-# Install
+### Install
 
 ```bash
 git clone git@github.com:Snowflake-Labs/terraform-snowflake-api-integration-with-geff.git
