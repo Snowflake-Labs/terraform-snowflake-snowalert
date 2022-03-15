@@ -2,15 +2,17 @@
 
 # _snowalert-tf_
 
-Terraformed version of Snowalert. It creates the following resources:
+Terraformed version of [Snowalert](https://github.com/snowflakedb/SnowAlert). It creates the following resources:
 
 1. Database
 2. Schemas
 3. Role
 4. Future Grants
-5. Task Scheduler, Task Runner and Alert handler UDFs
+5. Task Scheduler, Task Runner and Alert Handler UDFs
 6. Procedures
 7. Tasks
+
+This version of Snowalert is implemented fully in Snowflake using Snowflake native objects such as tasks to schedule runs of alerts and dispatch them to external services such as slack, jira and e-mail using Snowflake External Functions with a [GEFF API](https://github.com/Snowflake-Labs/geff) backend.
 
 ### `snowalert.auto.tfvars` Inputs File
 
