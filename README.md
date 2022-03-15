@@ -73,4 +73,12 @@ sfc_env()
 }
 ```
 
+You can then set the appropriate env vars using:
+
+```
+sfc_env sfc_dev
+# or
+sfc_env sfc_prod
+```
+
 For this function to work, you'll have to place `~/.ssh/sfc_dev_tf_key.p8` and `~/.ssh/sfc_prod_tf_key.p8` keys in your `~/.ssh/` folder.
