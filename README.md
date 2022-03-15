@@ -28,16 +28,18 @@ For example, if `handlers = ["jira"]`, you'll additional have to pass:
 
 which are the variables that come into play due to using the JIRA handler. The same follows for serviceNow, slack or SMTP.
 
+A sample tfvars file is provided in the examples. You can copy it and rename it to anything with an extension of `.auto.tfvars` e.g. `snowalert.auto.tfvars`
+
 ### Install
 
 ```bash
 git clone git@github.com:Snowflake-Labs/terraform-snowflake-api-integration-with-geff.git
 cd examples/complete
 
-# copy the tfvars file
+# copy the tfvars file and rename to remove the '.sample' suffix
 
 terraform init
-terraform plan -out=snowalert.plan # no need to pass tfvars file if you have an snowalert.auto.tfvars file
+terraform plan -out=snowalert.plan # Use the .auto.tfvars file in the same dir
 terraform apply snowalert.plan
 ```
 
