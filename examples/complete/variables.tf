@@ -179,3 +179,9 @@ variable "snowalert_user_email" {
   default     = null
   description = "Email of the snowalert Snowflake user."
 }
+
+variable "snowalert_warehouse_size" {
+  type        = string
+  description = "Warehouse size."
+  default     = "X-Small"
+}

@@ -5,7 +5,7 @@ resource "snowflake_warehouse" "snowalert" {
 
   name           = var.snowalert_warehouse_name
   comment        = "Warehouse that will be used for Snowalert."
-  warehouse_size = "X-Small"
+  warehouse_size = var.snowalert_warehouse_size
 
   auto_suspend = 60
   auto_resume  = true

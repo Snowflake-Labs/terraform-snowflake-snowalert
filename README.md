@@ -42,8 +42,8 @@ terraform init
 
 # Import any external resources you want controlled in this module.
 # NOTE: The import HAS to be done before plan and apply otherwise the downstream resources will error out at creation.
-terraform import snowflake_database.database[0] 'SNOWALERT'
-terraform import snowflake_database.warehouse[0] 'SNOWALERT_WAREHOUSE'
+terraform import snowflake_database.snowalert[0] 'SNOWALERT'
+terraform import snowflake_warehouse.snowalert[0] 'SNOWALERT_WAREHOUSE'
 # ...
 
 terraform plan -out=snowalert.plan # Use the .auto.tfvars file in the same dir

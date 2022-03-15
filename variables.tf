@@ -202,6 +202,12 @@ variable "servicenow_api_url" {
   description = "Service Now API URL."
 }
 
+variable "snowalert_warehouse_size" {
+  type        = string
+  description = "Warehouse size."
+  default     = "X-Small"
+}
+
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
