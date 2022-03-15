@@ -39,9 +39,33 @@ cd examples/complete
 # copy the tfvars file and rename to remove the '.sample' suffix
 
 terraform init
+
+# Import any external resources you want controlled in this module.
+# NOTE: The import HAS to be done before plan and apply otherwise the downstream resources will error out at creation.
+terraform import snowflake_database.database[0] 'SNOWALERT'
+terraform import snowflake_database.warehouse[0] 'SNOWALERT_WAREHOUSE'
+# ...
+
 terraform plan -out=snowalert.plan # Use the .auto.tfvars file in the same dir
 terraform apply snowalert.plan
 ```
+
+### Importing Resources
+
+This module is designed to work with the following existing resources:
+
+1. Warehouse
+1. Database
+1. User
+1. Role
+1. Schemas
+
+There are two ways to use existing resources:
+
+1. _Provide them as inputs_: In this case, they're managed elsewhere and the names of the resources are input as strings through the tfvars file.
+1. _Import them into the module_: In this case, they were managed elsewhere and with the import you can manage them within this module. The first step is to `import` these conditional resources and then run the terraform `plan` and `apply`.
+
+NOTE: The
 
 ### `zsh` Function
 
