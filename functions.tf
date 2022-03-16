@@ -1,4 +1,4 @@
-resource "snowflake_function" "time_slices" {
+resource "snowflake_function" "time_slices_without_tz" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
@@ -22,10 +22,45 @@ resource "snowflake_function" "time_slices" {
 
   return_type     = "TABLE (slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)"
   return_behavior = "IMMUTABLE"
-  statement       = templatefile("${path.module}/functions_sql/time_slices.sql", {})
+  statement       = templatefile("${path.module}/functions_sql/time_slices_without_tz.sql", {})
 }
 
-resource "snowflake_function" "time_slices_before_t_with_t" {
+resource "snowflake_function" "time_slices_with_tz" {
+  provider = snowflake.alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.data_schema
+  name     = "TIME_SLICES"
+
+  arguments {
+    name = "N"
+    type = "NUMBER"
+  }
+
+  arguments {
+    name = "S"
+    type = "TIMESTAMP_LTZ"
+  }
+
+  arguments {
+    name = "E"
+    type = "TIMESTAMP_LTZ"
+  }
+
+  return_type     = "TABLE (slice_start TIMESTAMP_LTZ, slice_end TIMESTAMP_LTZ)"
+  return_behavior = "IMMUTABLE"
+  statement       = templatefile("${path.module}/functions_sql/time_slices_with_tz.sql", {})
+}
+
+locals {
+  data_time_slices_function = join(".", [
+    local.snowalert_database_name,
+    local.data_schema,
+    snowflake_function.time_slices.name,
+  ])
+}
+
+resource "snowflake_function" "time_slices_before_t_without_tz" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
@@ -47,19 +82,15 @@ resource "snowflake_function" "time_slices_before_t_with_t" {
     type = "TIMESTAMP_NTZ"
   }
 
-  return_type = "TABLE (slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)"
+  return_type = "TABLE (slice_start TIMESTAMP_LTZ, slice_end TIMESTAMP_LTZ)"
   statement = templatefile(
-    "${path.module}/functions_sql/time_slices_before_t_with_t.sql", {
-      time_slices_function = join(".", [
-        local.snowalert_database_name,
-        local.data_schema,
-        snowflake_function.time_slices.name,
-      ])
+    "${path.module}/functions_sql/time_slices_before_t_without_tz.sql", {
+      data_time_slices_function = local.data_time_slices_function
     }
   )
 }
 
-resource "snowflake_function" "time_slices_before_t_without_t" {
+resource "snowflake_function" "time_slices_before_t_with_tz" {
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
@@ -76,17 +107,44 @@ resource "snowflake_function" "time_slices_before_t_without_t" {
     type = "NUMBER"
   }
 
-  return_type = "TABLE (slice_start TIMESTAMP, slice_end TIMESTAMP)"
+  arguments {
+    name = "T"
+    type = "TIMESTAMP_LTZ"
+  }
+
+  return_type = "TABLE (slice_start TIMESTAMP_LTZ, slice_end TIMESTAMP_LTZ)"
   statement = templatefile(
-    "${path.module}/functions_sql/time_slices_before_t_without_t.sql", {
-      time_slices_function = join(".", [
-        local.snowalert_database_name,
-        local.data_schema,
-        snowflake_function.time_slices.name,
-      ])
+    "${path.module}/functions_sql/time_slices_before_t_with_tz.sql", {
+      data_time_slices_function = local.data_time_slices_function
     }
   )
 }
+
+resource "snowflake_function" "time_slices_before_t_without_time" {
+  provider = snowflake.alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.data_schema
+  name     = "TIME_SLICES_BEFORE_T"
+
+  arguments {
+    name = "NUM_SLICES"
+    type = "NUMBER"
+  }
+
+  arguments {
+    name = "SECONDS_IN_SLICE"
+    type = "NUMBER"
+  }
+
+  return_type = "TABLE ( slice_start TIMESTAMP, slice_end TIMESTAMP )"
+  statement = templatefile(
+    "${path.module}/functions_sql/time_slices_before_t_without_time.sql", {
+      data_time_slices_function = local.data_time_slices_function
+    }
+  )
+}
+
 
 resource "snowflake_function" "object_assign" {
   provider = snowflake.alerting_role
@@ -136,27 +194,4 @@ if (OBJ.hasOwnProperty(p)) {
 }
 return ret.join("&")
 javascript
-}
-
-resource "snowflake_function" "has_no_violations" {
-  provider = snowflake.alerting_role
-
-  database = local.snowalert_database_name
-  schema   = local.rules_schema
-  name     = "HAS_NO_VIOLATIONS"
-
-  arguments {
-    name = "qid"
-    type = "VARCHAR"
-  }
-
-  return_type = "BOOLEAN"
-  statement   = <<SQL
-(
-  SELECT COUNT(*) AS c
-  FROM ${local.snowalert_database_name}.${local.data_schema}.${snowflake_view.violations.name}
-  WHERE created_time > DATEADD(day, -1, CURRENT_TIMESTAMP())
-    AND query_id = qid
-) = 0
-SQL
 }

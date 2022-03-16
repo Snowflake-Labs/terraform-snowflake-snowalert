@@ -290,6 +290,12 @@ locals {
     local.data_schema,
     snowflake_function.time_slices_before_t_with_t.name,
   ])
+
+  results_ingestion_metadata_table = join(".", [
+    local.snowalert_database_name,
+    local.results_schema,
+    local.ingestion_metadata_table,
+  ])
 }
 
 resource "snowflake_view" "alert_query_rule_run_errors" {
@@ -371,11 +377,7 @@ resource "snowflake_view" "data_connector_run_errors" {
   statement = templatefile(
     "${path.module}/views_sql/data_connector_run_errors.sql", {
       data_time_slices_before_t = local.data_time_slices_before_t
-      ingestion_metadata_table = join(".", [
-        local.snowalert_database_name,
-        local.results_schema,
-        local.ingestion_metadata_table
-      ])
+      ingestion_metadata_table  = local.results_ingestion_metadata_table
     }
   )
   or_replace = true
