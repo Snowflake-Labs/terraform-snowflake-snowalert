@@ -53,10 +53,16 @@ resource "snowflake_function" "time_slices_with_tz" {
 }
 
 locals {
-  data_time_slices_function = join(".", [
+  data_time_slices_without_tz_function = join(".", [
     local.snowalert_database_name,
     local.data_schema,
-    snowflake_function.time_slices.name,
+    snowflake_function.time_slices_without_tz.name,
+  ])
+
+  data_time_slices_with_tz_function = join(".", [
+    local.snowalert_database_name,
+    local.data_schema,
+    snowflake_function.time_slices_with_tz.name,
   ])
 }
 
@@ -82,10 +88,10 @@ resource "snowflake_function" "time_slices_before_t_without_tz" {
     type = "TIMESTAMP_NTZ"
   }
 
-  return_type = "TABLE (slice_start TIMESTAMP_LTZ, slice_end TIMESTAMP_LTZ)"
+  return_type = "TABLE (slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)"
   statement = templatefile(
     "${path.module}/functions_sql/time_slices_before_t_without_tz.sql", {
-      data_time_slices_function = local.data_time_slices_function
+      data_time_slices_without_tz_function = local.data_time_slices_without_tz_function
     }
   )
 }
@@ -115,7 +121,7 @@ resource "snowflake_function" "time_slices_before_t_with_tz" {
   return_type = "TABLE (slice_start TIMESTAMP_LTZ, slice_end TIMESTAMP_LTZ)"
   statement = templatefile(
     "${path.module}/functions_sql/time_slices_before_t_with_tz.sql", {
-      data_time_slices_function = local.data_time_slices_function
+      data_time_slices_with_tz_function = local.data_time_slices_with_tz_function
     }
   )
 }
@@ -140,7 +146,7 @@ resource "snowflake_function" "time_slices_before_t_without_time" {
   return_type = "TABLE ( slice_start TIMESTAMP, slice_end TIMESTAMP )"
   statement = templatefile(
     "${path.module}/functions_sql/time_slices_before_t_without_time.sql", {
-      data_time_slices_function = local.data_time_slices_function
+      data_time_slices_without_tz_function = local.data_time_slices_without_tz_function
     }
   )
 }

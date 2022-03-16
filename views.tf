@@ -285,10 +285,10 @@ locals {
     snowflake_view.rule_views_to_titles_map.name,
   ])
 
-  data_time_slices_before_t = join(".", [
+  data_time_slices_before_t_without_time = join(".", [
     local.snowalert_database_name,
     local.data_schema,
-    snowflake_function.time_slices_before_t_with_t.name,
+    snowflake_function.time_slices_before_t_without_time.name,
   ])
 
   results_ingestion_metadata_table = join(".", [
@@ -376,8 +376,8 @@ resource "snowflake_view" "data_connector_run_errors" {
 
   statement = templatefile(
     "${path.module}/views_sql/data_connector_run_errors.sql", {
-      data_time_slices_before_t = local.data_time_slices_before_t
-      ingestion_metadata_table  = local.results_ingestion_metadata_table
+      data_time_slices_before_t_without_time = local.data_time_slices_before_t_without_time
+      ingestion_metadata_table               = local.results_ingestion_metadata_table
     }
   )
   or_replace = true
