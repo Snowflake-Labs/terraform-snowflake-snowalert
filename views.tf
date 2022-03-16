@@ -24,7 +24,7 @@ resource "snowflake_view" "alerts" {
       results_alerts = join(".", [
         local.snowalert_database_name,
         local.results_schema,
-        snowflake_table.alerts.name,
+        local.alerts_table,
       ])
     }
   )
@@ -45,7 +45,7 @@ resource "snowflake_view" "violations" {
       results_violations = join(".", [
         local.snowalert_database_name,
         local.results_schema,
-        snowflake_table.violations.name,
+        local.violations_table,
       ])
     }
   )
@@ -108,13 +108,13 @@ locals {
   results_run_metadata = join(".", [
     local.snowalert_database_name,
     local.results_schema,
-    snowflake_table.run_metadata.name,
+    local.run_metadata_table,
   ])
 
   results_query_metadata = join(".", [
     local.snowalert_database_name,
     local.results_schema,
-    snowflake_table.query_metadata.name,
+    local.query_metadata_table,
   ])
 }
 
@@ -367,6 +367,11 @@ resource "snowflake_view" "data_connector_run_errors" {
   statement = templatefile(
     "${path.module}/views_sql/data_connector_run_errors.sql", {
       data_time_slices_before_t = local.data_time_slices_before_t
+      ingestion_metadata_table = join(".", [
+        local.snowalert_database_name,
+        local.results_schema,
+        local.ingestion_metadata_table
+      ])
     }
   )
   or_replace = true

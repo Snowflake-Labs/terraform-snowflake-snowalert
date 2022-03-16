@@ -1,12 +1,5 @@
-# -- 1. Runs the alert queries merge
-# CREATE OR REPLACE TASK results.alerts_merge
-#   WAREHOUSE=snowalert_warehouse
-#   SCHEDULE='USING CRON * * * * * UTC'
-# AS
-# CALL results.alerts_merge('30m')
-# ;
 resource "snowflake_task" "snowalert_alert_merge_task" {
-  provider = snowflake.admin
+  provider = snowflake.admin_role
 
   warehouse = local.snowalert_warehouse_name
   database  = local.snowalert_database_name
@@ -23,15 +16,8 @@ resource "snowflake_task" "snowalert_alert_merge_task" {
   }
 }
 
-# -- 2. Runs the alerts supressions merge
-# CREATE OR REPLACE TASK results.suppressions_merge 
-#   WAREHOUSE=snowalert_warehouse
-#   AFTER results.alerts_merge
-# AS
-# CALL results.alert_suppressions_runner()
-# ;
 resource "snowflake_task" "snowalert_suppression_merge_task" {
-  provider = snowflake.admin
+  provider = snowflake.admin_role
 
   warehouse = local.snowalert_warehouse_name
   database  = local.snowalert_database_name

@@ -3,12 +3,12 @@ resource "snowflake_stream" "raw_alerts_stream" {
 
   database = local.snowalert_database_name
   schema   = local.rules_schema
-  name     = "raw_alerts_stream"
+  name     = "RAW_ALERTS_STREAM"
 
   on_table = join(".", [
     local.snowalert_database_name,
     local.results_schema,
-    snowflake_table.raw_alerts.name,
+    local.raw_alerts_table,
   ])
   comment = "A stream to track the diffs on raw_alerts table."
 }

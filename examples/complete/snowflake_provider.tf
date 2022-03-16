@@ -6,21 +6,21 @@
 # export SNOWFLAKE_PRIVATE_KEY_PASSPHRASE="snowflake_passphrase"
 
 provider "snowflake" {
-  alias = "api_integration"
+  alias = "api_integration_role"
 
   account = var.snowflake_account
   role    = var.terraform_role
 }
 
 provider "snowflake" {
-  alias = "storage_integration"
+  alias = "storage_integration_role"
 
   account = var.snowflake_account
   role    = var.terraform_role
 }
 
 provider "snowflake" {
-  alias = "admin"
+  alias = "admin_role"
 
   account = var.snowflake_account
   role    = var.terraform_role

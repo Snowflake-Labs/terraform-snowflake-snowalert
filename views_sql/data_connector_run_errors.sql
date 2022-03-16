@@ -8,7 +8,7 @@ FROM (
 RIGHT OUTER JOIN (
     SELECT v:START_TIME::DATE AS day
         , v:ERROR.EXCEPTION_ONLY AS exc
-    FROM results.ingestion_metadata
+    FROM ${ingestion_metadata_table}
 ) e
 USING (day)
 GROUP BY day

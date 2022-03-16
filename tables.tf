@@ -1,4 +1,5 @@
 resource "snowflake_table" "raw_alerts" {
+  count    = var.create_tables == true ? 1 : 0
   provider = snowflake.alerting_role
 
   database        = local.snowalert_database_name
@@ -67,7 +68,12 @@ resource "snowflake_table" "raw_alerts" {
   comment = "A raw alerts table."
 }
 
+locals {
+  raw_alerts_table = var.create_tables == true ? snowflake_table.raw_alerts[0].name : "RAW_ALERTS"
+}
+
 resource "snowflake_table" "alerts" {
+  count    = var.create_tables == true ? 1 : 0
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
@@ -135,7 +141,12 @@ resource "snowflake_table" "alerts" {
   }
 }
 
+locals {
+  alerts_table = var.create_tables == true ? snowflake_table.alerts[0].name : "ALERTS"
+}
+
 resource "snowflake_table" "violations" {
+  count    = var.create_tables == true ? 1 : 0
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
@@ -173,7 +184,12 @@ resource "snowflake_table" "violations" {
   }
 }
 
+locals {
+  violations_table = var.create_tables == true ? snowflake_table.violations[0].name : "VIOLATIONS"
+}
+
 resource "snowflake_table" "query_metadata" {
+  count    = var.create_tables == true ? 1 : 0
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
@@ -191,7 +207,12 @@ resource "snowflake_table" "query_metadata" {
   }
 }
 
+locals {
+  query_metadata_table = var.create_tables == true ? snowflake_table.query_metadata[0].name : "QUERY_METADATA"
+}
+
 resource "snowflake_table" "run_metadata" {
+  count    = var.create_tables == true ? 1 : 0
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
@@ -209,7 +230,12 @@ resource "snowflake_table" "run_metadata" {
   }
 }
 
+locals {
+  run_metadata_table = var.create_tables == true ? snowflake_table.run_metadata[0].name : "RUN_METADATA"
+}
+
 resource "snowflake_table" "ingestion_metadata" {
+  count    = var.create_tables == true ? 1 : 0
   provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
@@ -225,4 +251,8 @@ resource "snowflake_table" "ingestion_metadata" {
     name = "V"
     type = "VARIANT"
   }
+}
+
+locals {
+  ingestion_metadata_table = var.create_tables == true ? snowflake_table.ingestion_metadata[0].name : "INGESTION_METADATA"
 }
