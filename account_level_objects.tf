@@ -44,7 +44,7 @@ resource "snowflake_user" "snowalert" {
 
   # Make sure the name is unique, if prompted with object already exists
   login_name = upper(trimspace(var.snowalert_user_name))
-  name       = local.full_name
+  name       = upper(trimspace(var.snowalert_user_name))
 
   display_name = local.full_name
   email        = var.snowalert_user_email
