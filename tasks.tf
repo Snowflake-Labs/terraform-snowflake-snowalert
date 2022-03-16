@@ -33,3 +33,21 @@ resource "snowflake_task" "snowalert_suppression_merge_task" {
     ignore_changes = [session_parameters, sql_statement]
   }
 }
+
+resource "snowflake_task" "alert_dispatcher_task" {
+  provider = snowflake.admin_role
+
+  warehouse = local.snowalert_warehouse_name
+  database  = local.snowalert_database_name
+  schema    = local.results_schema
+  name      = "ALERT_DISPATCHER"
+
+  schedule      = "USING CRON * * * * * UTC"
+  sql_statement = "CALL ${local.snowalert_database_name}.${local.results_schema}.${snowflake_procedure.alert_dispatcher.name}()"
+  enabled       = true
+
+  // This is a workeraound for a known bug https://github.com/chanzuckerberg/terraform-provider-snowflake/issues/204
+  lifecycle {
+    ignore_changes = [session_parameters, sql_statement]
+  }
+}

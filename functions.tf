@@ -201,3 +201,36 @@ if (OBJ.hasOwnProperty(p)) {
 return ret.join("&")
 javascript
 }
+
+
+resource "snowflake_function" "array_set" {
+  provider = snowflake.alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.results_schema
+  name     = "ARRAY_SET"
+
+  arguments {
+    name = "XS"
+    type = "VARIANT"
+  }
+
+  arguments {
+    name = "I"
+    type = "VARIANT"
+  }
+
+  arguments {
+    name = "X"
+    type = "VARIANT"
+  }
+
+  return_type = "VARIANT"
+  language    = "javascript"
+  statement   = <<javascript
+  XS = XS || []
+  XS[I] = X
+  // map null and undefined value to proper JSON null
+  return Array.from(XS).map(_ => _ == null ? null : _)
+javascript
+}
