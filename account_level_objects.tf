@@ -28,15 +28,6 @@ locals {
   snowalert_database_name = var.snowalert_database_name == true ? snowflake_database.snowalert[0].name : var.snowalert_database_name
 }
 
-locals {
-  first_name = "${upper(trimspace(var.prefix))} Snowalert"
-  last_name  = "User"
-}
-
-locals {
-  full_name = "${local.first_name} ${local.last_name}"
-}
-
 # User
 resource "snowflake_user" "snowalert" {
   count    = var.create_user == true ? 1 : 0
@@ -45,11 +36,7 @@ resource "snowflake_user" "snowalert" {
   # Make sure the name is unique, if prompted with object already exists
   login_name = upper(trimspace(var.snowalert_user_name))
   name       = upper(trimspace(var.snowalert_user_name))
-
-  display_name = local.full_name
-  email        = var.snowalert_user_email
-  first_name   = local.first_name
-  last_name    = local.last_name
+  email      = var.snowalert_user_email
 
   default_warehouse    = local.snowalert_warehouse_name
   default_role         = local.snowalert_role_name
