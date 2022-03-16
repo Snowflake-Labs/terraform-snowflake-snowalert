@@ -7,7 +7,15 @@ resource "snowflake_procedure" "alert_dispatcher" {
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  statement   = templatefile("${path.module}/procedures_js/alert_dispatcher.js", {})
+  statement = templatefile(
+    "${path.module}/procedures_js/alert_dispatcher.js", {
+      results_alerts_table = join(".", [
+        local.snowalert_database_name,
+        local.results_schema,
+        local.alerts_table,
+      ])
+    }
+  )
 }
 
 resource "snowflake_procedure" "alert_merge" {

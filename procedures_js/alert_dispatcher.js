@@ -2,9 +2,23 @@
 
 // library
 function exec(sqlText, binds = []) {
-    let retval = []
+    let rows = []
     const stmnt = snowflake.createStatement({ sqlText, binds })
-    const result = stmnt.execute()
+    let result = null
+    try {
+        result = stmnt.execute()
+    } catch (e) {
+        return {
+            error: {
+                code: e.code,
+                message: e.message,
+                state: e.state,
+            },
+            sqlText: stmnt.getSqlText(),
+            status: stmnt.getStatus(),
+            queryId: stmnt.getQueryId(),
+        }
+    }
     const columnCount = stmnt.getColumnCount()
     const columnNames = []
     for (let i = 1; i < columnCount + 1; i++) {
@@ -16,39 +30,22 @@ function exec(sqlText, binds = []) {
         for (let c of columnNames) {
             o[c] = result.getColumnValue(c)
         }
-        retval.push(o)
+        rows.push(o)
     }
-    return retval
+    return {
+        rows,
+        status: stmnt.getStatus(),
+    }
 }
 
 // business logic
 
-RUN_TABLE = 'results.handled_alerts'
-
-HANDLE_ALERTS = `
-  CREATE TEMP TABLE results.handled_alerts AS
+GET_HANDLERS = `
   SELECT
     id alert_id,
-    ARRAY_AGG(
-      CASE
-        WHEN value['type'] = 'ef-slack'
-        THEN slack_handler(alert, value)
-        WHEN value['type'] = 'ef-jira'
-        THEN jira_handler(alert, value)
-        WHEN value['type'] = 'ef-jira-comment'
-        THEN jira_comment_handler(alert, value)
-        WHEN value['type'] = 'servicenow-create-incident'
-        THEN servicenow_create_incident_handler(alert, value)
-        WHEN value['type'] = 'dev-servicenow-create-incident'
-        THEN dev_servicenow_create_incident_handler(alert, value)
-        WHEN value['type'] = 'ef-smtp'
-        THEN smtp_handler(value)
-        ELSE OBJECT_CONSTRUCT(
-          'error', 'missing handler',
-          'handler', value['type']
-        )
-      END
-    ) handled
+    alert,
+    value['type'] handler_type,
+    value handler_payload
   FROM (
     SELECT
       id,
@@ -66,33 +63,29 @@ HANDLE_ALERTS = `
         IS_OBJECT(handlers)
         OR IS_ARRAY(handlers)
      )
-     LIMIT 1
-  ), LATERAL FLATTEN(input => handlers)
-  WHERE value['type'] IN (
-    'ef-slack',
-    'ef-jira',
-    'ef-jira-comment',
-    'ef-smtp',
-    'servicenow-create-incident',
-    'dev-servicenow-create-incident'
-  )
-  GROUP BY id
+  ),
+  LATERAL FLATTEN(input => handlers)
 `
 
-COUNT_HANDLED = `SELECT COUNT(*) n FROM $${RUN_TABLE}`
+return exec(GET_HANDLERS).rows.map((h) => {
+    const handler_name =
+        h.HANDLER_TYPE.replace(/^ef-/, '').replace(/-/g, '_') + '_handler'
+    const alert = JSON.stringify(h.ALERT)
+    const payload = JSON.stringify(h.HANDLER_PAYLOAD)
+    const alert_id = h.ALERT_ID
 
-HANDLE_ALL = `
-  MERGE INTO results.alerts d
-  USING $${RUN_TABLE} s
-  ON (d.alert_id = s.alert_id)
-  WHEN MATCHED THEN UPDATE SET d.handled=s.handled
-`
+    const result = exec(
+        `
+        UPDATE ${results_alerts_table}
+        SET handled=$${handler_name}(PARSE_JSON(?), PARSE_JSON(?))
+        WHERE alert_id=?
+        `,
+        [alert, payload, alert_id]
+    )
 
-return {
-    handle_alerts: exec(HANDLE_ALERTS),
-    handled:
-        exec(COUNT_HANDLED)[0]['N'] > 0
-            ? exec(HANDLE_ALL)
-            : { 'number of rows updated': 0, 'number of rows inserted': 0 },
-    dropped: exec('DROP TABLE results.handled_alerts'),
-}
+    return {
+        alert_id,
+        handler_name,
+        result,
+    }
+})

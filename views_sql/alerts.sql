@@ -19,4 +19,4 @@ SELECT alert['ALERT_ID']::VARCHAR AS id
     , alert['EVENT_DATA']::VARIANT   AS event_data
     , alert['SEVERITY']::VARCHAR     AS severity
     , alert['HANDLERS']::VARIANT     AS handlers
-FROM ${results_alerts}
+FROM ${results_alerts_table}

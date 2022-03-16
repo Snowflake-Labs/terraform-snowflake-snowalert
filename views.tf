@@ -5,7 +5,11 @@ resource "snowflake_view" "rule_tags" {
   schema   = local.data_schema
   name     = "RULE_TAGS"
 
-  statement  = templatefile("${path.module}/views_sql/rule_tags.sql", {})
+  statement = templatefile(
+    "${path.module}/views_sql/rule_tags.sql", {
+      rules_schema = local.rules_schema
+    }
+  )
   or_replace = true
   is_secure  = false
 }
@@ -21,7 +25,7 @@ resource "snowflake_view" "alerts" {
   statement = templatefile(
     "${path.module}/views_sql/alerts.sql",
     {
-      results_alerts = join(".", [
+      results_alerts_table = join(".", [
         local.snowalert_database_name,
         local.results_schema,
         local.alerts_table,

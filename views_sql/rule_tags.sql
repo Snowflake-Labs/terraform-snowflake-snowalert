@@ -18,6 +18,6 @@ FROM (
             ARRAY_CONSTRUCT()
         ) AS tags
     FROM information_schema.views
-    WHERE table_schema='RULES'
+    WHERE table_schema='${rules_schema}'
 ) AS query_tag_list
 , LATERAL FLATTEN(input => query_tag_list.tags)
