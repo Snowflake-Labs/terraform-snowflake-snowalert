@@ -2,6 +2,9 @@
 
 # _snowalert-tf_
 
+![image](https://user-images.githubusercontent.com/72515998/158665186-36fa7acf-fecc-452c-ae4f-482eddf79b72.png)
+
+
 Terraformed version of [Snowalert](https://github.com/snowflakedb/SnowAlert). It creates the following resources:
 
 1. Database
