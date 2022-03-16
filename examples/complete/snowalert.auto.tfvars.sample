@@ -17,9 +17,6 @@ create_user      = false
 create_role      = false
 create_schemas   = true
 
-data_schema_name    = "DATA"
-rules_schema_name   = "RULES"
-results_schema_name = "RESULTS"
 
 handlers = [
   "slack",
