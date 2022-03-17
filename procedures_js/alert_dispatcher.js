@@ -65,10 +65,10 @@ FROM (
   AND IS_ARRAY(handler_payloads)
 ), LATERAL FLATTEN(input => handler_payloads)
 WHERE alert_time > TIMEADD(MINUTES, -handler_ttl, CURRENT_TIMESTAMP)
-   AND (
-     handled_payload IS NULL
-     OR IS_NULL_VALUE(handled_payload)
-   )
+  AND (
+    handled_payload IS NULL
+    OR IS_NULL_VALUE(handled_payload)
+  )
 ORDER BY handler_ttl
 LIMIT 100
 `
