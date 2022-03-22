@@ -176,19 +176,19 @@ variable "snowalert_warehouse_size" {
 
 variable "alert_merge_schedule" {
   type        = string
-  description = "."
+  description = "Schedule for the alert merge."
   default     = "0 12 * * *"
 }
 
 variable "alert_dispatch_schedule" {
   type        = string
-  description = "."
-  default     = "* * * * * "
+  description = "Schedule for the alert dispatcher task."
+  default     = "* * * * *"
 }
 
 variable "alert_scheduler_schedule" {
   type        = string
-  description = "."
+  description = "Schedule for the alert scheduler task."
   default     = "1/15 * * * *"
 }
 
