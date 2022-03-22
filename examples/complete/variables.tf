@@ -173,3 +173,39 @@ variable "snowalert_warehouse_size" {
   description = "Warehouse size."
   default     = "X-Small"
 }
+
+variable "alert_merge_schedule" {
+  type        = string
+  description = "."
+  default     = "0 12 * * *"
+}
+
+variable "alert_dispatch_schedule" {
+  type        = string
+  description = "."
+  default     = "* * * * * "
+}
+
+variable "alert_scheduler_schedule" {
+  type        = string
+  description = "."
+  default     = "1/15 * * * *"
+}
+
+variable "data_schema_name" {
+  type        = string
+  description = "Schema that has the data tables."
+  default     = "DATA"
+}
+
+variable "rules_schema_name" {
+  type        = string
+  description = "Schemas that has the rules as views."
+  default     = "RULES"
+}
+
+variable "results_schema_name" {
+  type        = string
+  description = ""
+  default     = "RESULTS"
+}

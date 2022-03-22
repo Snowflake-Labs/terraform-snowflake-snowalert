@@ -10,11 +10,11 @@ resource "snowflake_schema" "data" {
   provider = snowflake.admin_role
 
   database = local.snowalert_database_name
-  name     = local.data_schema_name
+  name     = var.data_schema_name
 }
 
 locals {
-  data_schema = var.create_schemas == true ? snowflake_schema.data[0].name : local.data_schema_name
+  data_schema = var.create_schemas == true ? snowflake_schema.data[0].name : var.data_schema_name
 }
 
 resource "snowflake_schema" "rules" {
@@ -22,11 +22,11 @@ resource "snowflake_schema" "rules" {
   provider = snowflake.admin_role
 
   database = local.snowalert_database_name
-  name     = local.rules_schema_name
+  name     = var.rules_schema_name
 }
 
 locals {
-  rules_schema = var.create_schemas == true ? snowflake_schema.rules[0].name : local.rules_schema_name
+  rules_schema = var.create_schemas == true ? snowflake_schema.rules[0].name : var.rules_schema_name
 }
 
 resource "snowflake_schema" "results" {
@@ -34,9 +34,9 @@ resource "snowflake_schema" "results" {
   provider = snowflake.admin_role
 
   database = local.snowalert_database_name
-  name     = local.results_schema_name
+  name     = var.results_schema_name
 }
 
 locals {
-  results_schema = var.create_schemas == true ? snowflake_schema.results[0].name : local.results_schema_name
+  results_schema = var.create_schemas == true ? snowflake_schema.results[0].name : var.results_schema_name
 }

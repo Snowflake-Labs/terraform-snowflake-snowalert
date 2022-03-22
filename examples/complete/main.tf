@@ -13,6 +13,10 @@ module "snowalert" {
   snowalert_user_name      = var.snowalert_user_name
   snowalert_role_name      = var.snowalert_role_name
 
+  alert_merge_schedule     = var.alert_merge_schedule
+  alert_dispatch_schedule  = var.alert_dispatch_schedule
+  alert_scheduler_schedule = var.alert_scheduler_schedule
+
   create_warehouse     = var.create_warehouse
   create_database      = var.create_database
   create_user          = var.create_user
@@ -20,6 +24,10 @@ module "snowalert" {
   create_role          = var.create_role
   create_schemas       = var.create_schemas
   create_tables        = var.create_tables
+
+  data_schema_name    = var.data_schema_name
+  rules_schema_name   = var.rules_schema_name
+  results_schema_name = var.results_schema_name
 
   handlers          = var.handlers
   slack_secrets_arn = var.slack_secrets_arn

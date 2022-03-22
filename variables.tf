@@ -196,6 +196,42 @@ variable "snowalert_warehouse_size" {
   default     = "X-Small"
 }
 
+variable "alert_merge_schedule" {
+  type        = string
+  description = "Warehouse size."
+  default     = "0 12 * * *"
+}
+
+variable "alert_dispatch_schedule" {
+  type        = string
+  description = "Warehouse size."
+  default     = "* * * * * "
+}
+
+variable "alert_scheduler_schedule" {
+  type        = string
+  description = "Warehouse size."
+  default     = "1/15 * * * *"
+}
+
+variable "data_schema_name" {
+  type        = string
+  description = "Schema that has the data tables."
+  default     = "DATA"
+}
+
+variable "rules_schema_name" {
+  type        = string
+  description = "Schemas that has the rules as views."
+  default     = "RULES"
+}
+
+variable "results_schema_name" {
+  type        = string
+  description = ""
+  default     = "RESULTS"
+}
+
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
