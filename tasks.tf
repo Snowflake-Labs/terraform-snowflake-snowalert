@@ -6,13 +6,12 @@ resource "snowflake_task" "snowalert_alert_merge_task" {
   schema    = local.results_schema
   name      = "ALERT_MERGE"
 
-  schedule      = "USING CRON 0 12 * * * UTC"
+  schedule      = "USING CRON ${var.alert_merge_schedule} UTC" # 0 12 * * *
   sql_statement = "CALL ${local.snowalert_database_name}.${local.results_schema}.${snowflake_procedure.alert_merge.name}('30m')"
   enabled       = true
 
-  // This is a workeraound for a known bug https://github.com/chanzuckerberg/terraform-provider-snowflake/issues/204
   lifecycle {
-    ignore_changes = [session_parameters, sql_statement]
+    ignore_changes = [session_parameters]
   }
 }
 
@@ -28,9 +27,8 @@ resource "snowflake_task" "snowalert_suppression_merge_task" {
   sql_statement = "CALL ${local.snowalert_database_name}.${local.results_schema}.${snowflake_procedure.alert_suppressions_runner_without_queries_like.name}()"
   enabled       = true
 
-  // This is a workeraound for a known bug https://github.com/chanzuckerberg/terraform-provider-snowflake/issues/204
   lifecycle {
-    ignore_changes = [session_parameters, sql_statement]
+    ignore_changes = [session_parameters]
   }
 }
 
@@ -42,12 +40,28 @@ resource "snowflake_task" "alert_dispatcher_task" {
   schema    = local.results_schema
   name      = "ALERT_DISPATCHER"
 
-  schedule      = "USING CRON * * * * * UTC"
+  schedule      = "USING CRON ${var.alert_dispatch_schedule} UTC" #  * * * * * 
   sql_statement = "CALL ${local.snowalert_database_name}.${local.results_schema}.${snowflake_procedure.alert_dispatcher.name}()"
   enabled       = true
 
-  // This is a workeraound for a known bug https://github.com/chanzuckerberg/terraform-provider-snowflake/issues/204
   lifecycle {
-    ignore_changes = [session_parameters, sql_statement]
+    ignore_changes = [session_parameters]
+  }
+}
+
+resource "snowflake_task" "alert_scheduler_task" {
+  provider = snowflake.admin_role
+
+  warehouse = local.snowalert_warehouse_name
+  database  = local.snowalert_database_name
+  schema    = local.results_schema
+  name      = "ALERT_SCHEDULER"
+
+  schedule      = "USING CRON ${var.alert_scheduler_schedule} UTC" # 1/15 * * * *
+  sql_statement = "CALL ${local.snowalert_database_name}.${local.results_schema}.${snowflake_procedure.alert_scheduler.name}()"
+  enabled       = true
+
+  lifecycle {
+    ignore_changes = [session_parameters]
   }
 }

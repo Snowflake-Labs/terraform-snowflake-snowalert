@@ -69,6 +69,7 @@ WHERE alert_time > TIMEADD(MINUTES, -handler_ttl, CURRENT_TIMESTAMP)
     handled_payload IS NULL
     OR IS_NULL_VALUE(handled_payload)
   )
+  AND CONTAINS(handler_type, '-')
 ORDER BY handler_ttl
 LIMIT 100
 `
