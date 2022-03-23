@@ -201,6 +201,10 @@ resource "snowflake_procedure" "alert_scheduler" {
       local.snowalert_database_name,
       local.rules_schema,
     ])
+    results_schema = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+    ])
     results_raw_alerts_table = join(".", [
       local.snowalert_database_name,
       local.rules_schema,
