@@ -80,6 +80,7 @@ return exec(GET_HANDLERS).rows.map((h) => {
   const alert = JSON.stringify(h.ALERT)
   const payload = JSON.stringify(h.HANDLER_PAYLOAD)
   const alert_id = h.ALERT_ID
+  const handler_num = h.HANDLER_NUM
 
   const result = exec(
     `UPDATE ${results_alerts_table}
