@@ -2,40 +2,40 @@
 
 // library
 function exec(sqlText, binds = []) {
-    let rows = []
-    const stmnt = snowflake.createStatement({ sqlText, binds })
-    let result = null
-    try {
-        result = stmnt.execute()
-    } catch (e) {
-        return {
-            error: {
-                code: e.code,
-                message: e.message,
-                state: e.state,
-            },
-            sqlText: stmnt.getSqlText(),
-            status: stmnt.getStatus(),
-            queryId: stmnt.getQueryId(),
-        }
-    }
-    const columnCount = stmnt.getColumnCount()
-    const columnNames = []
-    for (let i = 1; i < columnCount + 1; i++) {
-        columnNames.push(stmnt.getColumnName(i))
-    }
-
-    while (result.next()) {
-        let o = {}
-        for (let c of columnNames) {
-            o[c] = result.getColumnValue(c)
-        }
-        rows.push(o)
-    }
+  let rows = []
+  const stmnt = snowflake.createStatement({ sqlText, binds })
+  let result = null
+  try {
+    result = stmnt.execute()
+  } catch (e) {
     return {
-        rows,
-        status: stmnt.getStatus(),
+      error: {
+        code: e.code,
+        message: e.message,
+        state: e.state,
+      },
+      sqlText: stmnt.getSqlText(),
+      status: stmnt.getStatus(),
+      queryId: stmnt.getQueryId(),
     }
+  }
+  const columnCount = stmnt.getColumnCount()
+  const columnNames = []
+  for (let i = 1; i < columnCount + 1; i++) {
+    columnNames.push(stmnt.getColumnName(i))
+  }
+
+  while (result.next()) {
+    let o = {}
+    for (let c of columnNames) {
+      o[c] = result.getColumnValue(c)
+    }
+    rows.push(o)
+  }
+  return {
+    rows,
+    status: stmnt.getStatus(),
+  }
 }
 
 // business logic
@@ -60,7 +60,7 @@ FROM (
     handled,
     alert_time,
     OBJECT_CONSTRUCT(*) alert
-  FROM data.alerts TO DO
+  FROM ${data_alerts_view} TO DO
   WHERE suppressed = FALSE
   AND IS_ARRAY(handler_payloads)
 ), LATERAL FLATTEN(input => handler_payloads)
@@ -75,26 +75,26 @@ LIMIT 100
 `
 
 return exec(GET_HANDLERS).rows.map((h) => {
-    const handler_name =
-        h.HANDLER_TYPE.replace(/^ef-/, '').replace(/-/g, '_') + '_handler'
-    const alert = JSON.stringify(h.ALERT)
-    const payload = JSON.stringify(h.HANDLER_PAYLOAD)
-    const alert_id = h.ALERT_ID
+  const handler_name =
+    h.HANDLER_TYPE.replace(/^ef-/, '').replace(/-/g, '_') + '_handler'
+  const alert = JSON.stringify(h.ALERT)
+  const payload = JSON.stringify(h.HANDLER_PAYLOAD)
+  const alert_id = h.ALERT_ID
 
-    const result = exec(
-        `UPDATE results.alerts
-        SET handled = results.array_set(
+  const result = exec(
+    `UPDATE ${results_alerts_table}
+        SET handled = ${results_array_set_function}(
           handled,
           $${handler_num},
           $${handler_name}(PARSE_JSON(?), PARSE_JSON(?))
         )
         WHERE alert_id=?`,
-        [alert, payload, alert_id]
-    )
+    [alert, payload, alert_id]
+  )
 
-    return {
-        alert_id,
-        handler_name,
-        result,
-    }
+  return {
+    alert_id,
+    handler_name,
+    result,
+  }
 })
