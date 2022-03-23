@@ -5,6 +5,11 @@ resource "snowflake_procedure" "alert_dispatcher" {
   schema   = local.results_schema
   name     = "ALERT_DISPATCHER"
 
+  arguments {
+    name = "HANDLER_TYPE"
+    type = "VARCHAR(16777216)"
+  }
+
   return_type = "VARIANT"
   execute_as  = "CALLER"
   statement = templatefile(
@@ -13,6 +18,16 @@ resource "snowflake_procedure" "alert_dispatcher" {
         local.snowalert_database_name,
         local.results_schema,
         local.alerts_table,
+      ])
+      results_array_set_function = join(".", [
+        local.snowalert_database_name,
+        local.results_schema,
+        snowflake_function.array_set.name,
+      ])
+      data_alerts_view = join(".", [
+        local.snowalert_database_name,
+        local.data_schema,
+        snowflake_view.alerts.name,
       ])
     }
   )
@@ -26,13 +41,25 @@ resource "snowflake_procedure" "alert_merge" {
   name     = "ALERT_MERGE"
 
   arguments {
-    name = "deduplication_offset"
+    name = "DEDUPLICATION_OFFSET"
     type = "VARCHAR"
   }
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  statement   = templatefile("${path.module}/procedures_js/alert_merge.js", {})
+
+  statement = templatefile("${path.module}/procedures_js/alert_merge.js", {
+    results_alerts_table = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+      local.alerts_table,
+    ])
+    results_raw_alerts_merge_stream = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+      snowflake_stream.raw_alerts_merge_stream.name,
+    ])
+  })
 }
 
 resource "snowflake_procedure" "alert_processor" {
@@ -44,7 +71,18 @@ resource "snowflake_procedure" "alert_processor" {
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  statement   = templatefile("${path.module}/procedures_js/alert_processor.js", {})
+  statement = templatefile("${path.module}/procedures_js/alert_processor.js", {
+    results_alerts_table = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+      local.alerts_table,
+    ])
+    data_alerts_view = join(".", [
+      local.snowalert_database_name,
+      local.data_schema,
+      snowflake_view.alerts.name,
+    ])
+  })
 }
 
 resource "snowflake_procedure" "alert_queries_runner_with_time" {
@@ -158,6 +196,7 @@ resource "snowflake_procedure" "alert_scheduler" {
   return_type = "VARIANT"
   execute_as  = "CALLER"
   statement = templatefile("${path.module}/procedures_js/alert_scheduler.js", {
+    rules_schema_name = local.rules_schema
     rules_schema = join(".", [
       local.snowalert_database_name,
       local.rules_schema,
@@ -189,7 +228,21 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  statement   = templatefile("${path.module}/procedures_js/alert_suppressions_runner.js", {})
+  statement = templatefile("${path.module}/procedures_js/alert_suppressions_runner.js", {
+    rules_schema = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+    ])
+    results_schema = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+    ])
+    results_alerts_table = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+      local.alerts_table,
+    ])
+  })
 }
 
 resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" {
@@ -201,7 +254,21 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  statement   = templatefile("${path.module}/procedures_js/alert_suppressions_runner.js", {})
+  statement = templatefile("${path.module}/procedures_js/alert_suppressions_runner.js", {
+    rules_schema = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+    ])
+    results_schema = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+    ])
+    results_alerts_table = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+      local.alerts_table,
+    ])
+  })
 }
 
 resource "snowflake_procedure" "violation_queries_runner" {
@@ -213,7 +280,21 @@ resource "snowflake_procedure" "violation_queries_runner" {
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  statement   = templatefile("${path.module}/procedures_js/violation_queries_runner.js", {})
+  statement = templatefile("${path.module}/procedures_js/violation_queries_runner.js", {
+    rules_schema = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+    ])
+    results_schema = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+    ])
+    results_alerts_table = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+      local.alerts_table,
+    ])
+  })
 }
 
 # --------------------------------

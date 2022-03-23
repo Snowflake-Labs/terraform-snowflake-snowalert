@@ -5,27 +5,27 @@ CORRELATION_PERIOD_MINUTES = CORRELATION_PERIOD_MINUTES || 60
 
 // library
 function exec(sqlText, binds = []) {
-    let retval = []
-    const stmnt = snowflake.createStatement({ sqlText, binds })
-    const result = stmnt.execute()
-    const columnCount = stmnt.getColumnCount()
-    const columnNames = []
-    for (let i = 1; i < columnCount + 1; i++) {
-        columnNames.push(stmnt.getColumnName(i))
-    }
+  let retval = []
+  const stmnt = snowflake.createStatement({ sqlText, binds })
+  const result = stmnt.execute()
+  const columnCount = stmnt.getColumnCount()
+  const columnNames = []
+  for (let i = 1; i < columnCount + 1; i++) {
+    columnNames.push(stmnt.getColumnName(i))
+  }
 
-    while (result.next()) {
-        let o = {}
-        for (let c of columnNames) {
-            o[c] = result.getColumnValue(c)
-        }
-        retval.push(o)
+  while (result.next()) {
+    let o = {}
+    for (let c of columnNames) {
+      o[c] = result.getColumnValue(c)
     }
-    return retval
+    retval.push(o)
+  }
+  return retval
 }
 
 CORRELATE = `
-MERGE INTO results.alerts dst
+MERGE INTO ${results_alerts_table} dst
 USING (
   SELECT
     d.id alert_id_to_update,
@@ -34,8 +34,8 @@ USING (
       d.correlation_id,
       UUID_STRING()
     ) correlation_id
-  FROM data.alerts d -- destination
-  LEFT OUTER JOIN data.alerts p -- potential chain
+  FROM ${data_alerts_view} d -- destination
+  LEFT OUTER JOIN ${data_alerts_view} p -- potential chain
   ON (
     d.id != p.id
     AND (
@@ -72,12 +72,12 @@ WHEN MATCHED THEN UPDATE SET
   correlation_id = src.correlation_id
 `
 var n,
-    results = []
+  results = []
 do {
-    n = exec(CORRELATE)[0]['number of rows updated']
-    results.push(n)
+  n = exec(CORRELATE)[0]['number of rows updated']
+  results.push(n)
 } while (n != 0)
 
 return {
-    ROWS_UPDATED: results,
+  ROWS_UPDATED: results,
 }

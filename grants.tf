@@ -90,14 +90,13 @@ resource "snowflake_stream_grant" "stream_grant_select" {
 
   database_name = local.snowalert_database_name
   schema_name   = local.rules_schema
-  stream_name   = snowflake_stream.raw_alerts_stream.name
+  stream_name   = snowflake_stream.raw_alerts_merge_stream.name
 
   privilege = "SELECT"
   roles     = [local.snowalert_role_name]
 
   with_grant_option = false
 }
-
 
 # ------------------------------------------------------------
 # Archived Grants
