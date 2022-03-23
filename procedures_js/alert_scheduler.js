@@ -59,7 +59,7 @@ return {
   handled: exec(FIND_VIEWS).map((v) => ({
     run_alert_query: exec(
       unindent(`-- create alert query run task
-          CREATE OR REPLACE ${rules_schema}.TASK RUN_ALERT_QUERY_$${v.rule_name}
+          CREATE OR REPLACE ${rules_schema}.RUN_ALERT_QUERY_$${v.rule_name}
           WAREHOUSE=$${WAREHOUSE}
           SCHEDULE='$${v.schedule}'
           AS
