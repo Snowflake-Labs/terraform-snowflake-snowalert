@@ -58,7 +58,7 @@ resource "snowflake_task" "alert_scheduler_task" {
   name      = "ALERT_SCHEDULER"
 
   schedule      = "USING CRON ${var.alert_scheduler_schedule} UTC" # 1/15 * * * *
-  sql_statement = "CALL ${local.snowalert_database_name}.${local.results_schema}.${snowflake_procedure.alert_scheduler.name}()"
+  sql_statement = "CALL ${local.snowalert_database_name}.${local.results_schema}.${snowflake_procedure.alert_scheduler.name}('${local.snowalert_warehouse_name}')"
   enabled       = true
 
   lifecycle {
