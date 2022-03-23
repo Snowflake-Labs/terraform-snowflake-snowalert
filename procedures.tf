@@ -74,7 +74,7 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
   statement = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {
     results_raw_alerts_table = join(".", [
       local.snowalert_database_name,
-      local.rules_schema,
+      local.results_schema,
       local.raw_alerts_table,
     ])
     rules_schema = join(".", [
