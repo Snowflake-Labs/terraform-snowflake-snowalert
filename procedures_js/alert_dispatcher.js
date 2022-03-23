@@ -39,7 +39,6 @@ function exec(sqlText, binds = []) {
 }
 
 // business logic
-
 GET_HANDLERS = `
 SELECT
   id alert_id,
@@ -77,6 +76,7 @@ LIMIT 100
 return exec(GET_HANDLERS).rows.map((h) => {
   const handler_name =
     h.HANDLER_TYPE.replace(/^ef-/, '').replace(/-/g, '_') + '_handler'
+
   const alert = JSON.stringify(h.ALERT)
   const payload = JSON.stringify(h.HANDLER_PAYLOAD)
   const alert_id = h.ALERT_ID
