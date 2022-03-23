@@ -35,32 +35,32 @@ function fillArray(value, len) {
 }
 
 const RUN_ID = Math.random().toString(36).substring(2).toUpperCase()
-const RAW_ALERTS_TABLE = `results.raw_alerts`
+const RAW_ALERTS_TABLE = `${results_raw_alerts_table}`
 
 const CREATE_ALERTS_SQL = `INSERT INTO $${RAW_ALERTS_TABLE}
 SELECT '$${RUN_ID}' run_id
-    , OBJECT_CONSTRUCT(
-        'ALERT_ID', UUID_STRING(),
-        'QUERY_NAME', '$${QUERY_NAME}',
-        'QUERY_ID', IFNULL(QUERY_ID::VARIANT, PARSE_JSON('null')),
-        'ENVIRONMENT', IFNULL(ENVIRONMENT::VARIANT, PARSE_JSON('null')),
-        'SOURCES', IFNULL(SOURCES::VARIANT, PARSE_JSON('null')),
-        'ACTOR', IFNULL(ACTOR::VARIANT, PARSE_JSON('null')),
-        'OBJECT', IFNULL(OBJECT::VARIANT, PARSE_JSON('null')),
-        'ACTION', IFNULL(ACTION::VARIANT, PARSE_JSON('null')),
-        'TITLE', IFNULL(TITLE::VARIANT, PARSE_JSON('null')),
-        'EVENT_TIME', IFNULL(EVENT_TIME::VARIANT, PARSE_JSON('null')),
-        'ALERT_TIME', IFNULL(ALERT_TIME::VARIANT, PARSE_JSON('null')),
-        'DESCRIPTION', IFNULL(DESCRIPTION::VARIANT, PARSE_JSON('null')),
-        'DETECTOR', IFNULL(DETECTOR::VARIANT, PARSE_JSON('null')),
-        'EVENT_DATA', IFNULL(EVENT_DATA::VARIANT, PARSE_JSON('null')),
-        'SEVERITY', IFNULL(SEVERITY::VARIANT, PARSE_JSON('null')),
-        'HANDLERS', IFNULL(OBJECT_CONSTRUCT(*):HANDLERS::VARIANT, PARSE_JSON('null'))
-    ) AS alert
-    , alert_time
-    , event_time
-    , 1 AS counter
-FROM rules.$${QUERY_NAME}
+  , OBJECT_CONSTRUCT(
+      'ALERT_ID', UUID_STRING(),
+      'QUERY_NAME', '$${QUERY_NAME}',
+      'QUERY_ID', IFNULL(QUERY_ID::VARIANT, PARSE_JSON('null')),
+      'ENVIRONMENT', IFNULL(ENVIRONMENT::VARIANT, PARSE_JSON('null')),
+      'SOURCES', IFNULL(SOURCES::VARIANT, PARSE_JSON('null')),
+      'ACTOR', IFNULL(ACTOR::VARIANT, PARSE_JSON('null')),
+      'OBJECT', IFNULL(OBJECT::VARIANT, PARSE_JSON('null')),
+      'ACTION', IFNULL(ACTION::VARIANT, PARSE_JSON('null')),
+      'TITLE', IFNULL(TITLE::VARIANT, PARSE_JSON('null')),
+      'EVENT_TIME', IFNULL(EVENT_TIME::VARIANT, PARSE_JSON('null')),
+      'ALERT_TIME', IFNULL(ALERT_TIME::VARIANT, PARSE_JSON('null')),
+      'DESCRIPTION', IFNULL(DESCRIPTION::VARIANT, PARSE_JSON('null')),
+      'DETECTOR', IFNULL(DETECTOR::VARIANT, PARSE_JSON('null')),
+      'EVENT_DATA', IFNULL(EVENT_DATA::VARIANT, PARSE_JSON('null')),
+      'SEVERITY', IFNULL(SEVERITY::VARIANT, PARSE_JSON('null')),
+      'HANDLERS', IFNULL(OBJECT_CONSTRUCT(*):HANDLERS::VARIANT, PARSE_JSON('null'))
+  ) AS alert
+  , alert_time
+  , event_time
+  , 1 AS counter
+FROM ${rules_schema}.$${QUERY_NAME}
 WHERE event_time BETWEEN $${FROM_TIME_SQL} AND $${TO_TIME_SQL}
 ;`
 

@@ -63,12 +63,12 @@ return {
           WAREHOUSE=$${WAREHOUSE}
           SCHEDULE='$${v.schedule}'
           AS
-          CALL results.alert_queries_runner('$${v.rule_name}', '$${v.lookback}')
+          CALL ${results_alert_queries_runner}('$${v.rule_name}', '$${v.lookback}')
         `)
         )[0]['status'],
         resume_alert_query: exec(
             unindent(`
-          ALTER TASK RUN_ALERT_QUERY_$${v.rule_name} RESUME
+          ALTER TASK ${rules_schema}.RUN_ALERT_QUERY_$${v.rule_name} RESUME
         `)
         )[0]['status'],
     })),

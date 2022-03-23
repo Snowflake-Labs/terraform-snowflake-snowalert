@@ -71,7 +71,17 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  statement   = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {})
+  statement = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {
+    results_raw_alerts_table = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+      local.raw_alerts_table,
+    ])
+    rules_schema = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+    ])
+  })
 }
 
 resource "snowflake_procedure" "alert_queries_runner_without_time" {
@@ -93,7 +103,17 @@ resource "snowflake_procedure" "alert_queries_runner_without_time" {
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  statement   = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {})
+  statement = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {
+    results_raw_alerts_table = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+      local.raw_alerts_table,
+    ])
+    rules_schema = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+    ])
+  })
 }
 
 resource "snowflake_procedure" "alert_queries_runner" {
@@ -110,7 +130,17 @@ resource "snowflake_procedure" "alert_queries_runner" {
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  statement   = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {})
+  statement = templatefile("${path.module}/procedures_js/alert_queries_runner.js", {
+    results_raw_alerts_table = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+      local.raw_alerts_table,
+    ])
+    rules_schema = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+    ])
+  })
 }
 
 resource "snowflake_procedure" "alert_scheduler" {
@@ -127,7 +157,22 @@ resource "snowflake_procedure" "alert_scheduler" {
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
-  statement   = templatefile("${path.module}/procedures_js/alert_scheduler.js", {})
+  statement = templatefile("${path.module}/procedures_js/alert_scheduler.js", {
+    rules_schema = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+    ])
+    results_raw_alerts_table = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+      local.raw_alerts_table,
+    ])
+    results_alert_queries_runner = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+      snowflake_procedure.alert_queries_runner_without_time.name,
+    ])
+  })
 }
 
 resource "snowflake_procedure" "alert_suppressions_runner" {
