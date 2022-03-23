@@ -59,7 +59,7 @@ FROM (
     handled,
     alert_time,
     OBJECT_CONSTRUCT(*) alert
-  FROM ${data_alerts_view} TO DO
+  FROM ${data_alerts_view}
   WHERE suppressed = FALSE
   AND IS_ARRAY(handler_payloads)
 ), LATERAL FLATTEN(input => handler_payloads)
