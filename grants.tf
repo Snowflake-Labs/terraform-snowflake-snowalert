@@ -89,7 +89,7 @@ resource "snowflake_stream_grant" "stream_grant_select" {
   provider = snowflake.alerting_role
 
   database_name = local.snowalert_database_name
-  schema_name   = local.rules_schema
+  schema_name   = local.results_schema
   stream_name   = snowflake_stream.raw_alerts_merge_stream.name
 
   privilege = "SELECT"
