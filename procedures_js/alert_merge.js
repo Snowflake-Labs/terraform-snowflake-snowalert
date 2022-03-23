@@ -5,6 +5,7 @@ DEDUPLICATION_OFFSET = DEDUPLICATION_OFFSET || '90 minutes'
 FROM_TIME_SQL =
   FROM_TIME_SQL || `CURRENT_TIMESTAMP - INTERVAL '$${DEDUPLICATION_OFFSET}'`
 TO_TIME_SQL = TO_TIME_SQL || 'CURRENT_TIMESTAMP'
+
 // library
 function exec(sqlText, binds = []) {
   let retval = []
@@ -83,10 +84,8 @@ WHEN NOT MATCHED
     new_alerts.alert_time,
     new_alerts.event_time
   )
-;
 ;`
 
 return {
-  run_id: RUN_ID,
   create_alerts_result: exec(MERGE_ALERTS)[0],
 }
