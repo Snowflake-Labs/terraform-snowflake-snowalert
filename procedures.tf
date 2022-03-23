@@ -5,11 +5,6 @@ resource "snowflake_procedure" "alert_dispatcher" {
   schema   = local.results_schema
   name     = "ALERT_DISPATCHER"
 
-  arguments {
-    name = "HANDLER_TYPE"
-    type = "VARCHAR(16777216)"
-  }
-
   return_type = "VARIANT"
   execute_as  = "CALLER"
   statement = templatefile(
