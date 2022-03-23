@@ -196,6 +196,7 @@ resource "snowflake_procedure" "alert_scheduler" {
   return_type = "VARIANT"
   execute_as  = "CALLER"
   statement = templatefile("${path.module}/procedures_js/alert_scheduler.js", {
+    rules_schema_name = local.rules_schema
     rules_schema = join(".", [
       local.snowalert_database_name,
       local.rules_schema,

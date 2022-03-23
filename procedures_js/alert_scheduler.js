@@ -51,7 +51,7 @@ SELECT table_name AS "rule_name"
       NULL
   ) AS "lookback"
 FROM information_schema.views
-WHERE table_schema='RULES'
+WHERE table_schema='${rules_schema_name}'
   AND "schedule" IS NOT NULL
 `
 
