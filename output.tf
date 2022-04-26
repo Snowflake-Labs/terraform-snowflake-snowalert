@@ -22,3 +22,8 @@ output "sns_topic_arn" {
   description = "GEFF S3 SNS Topic to use while creating the Snowflake PIPE."
   value       = module.geff_snowalert.sns_topic_arn
 }
+
+output "geff_lambda_sg_ids" {
+  description = "Lambda SG IDs."
+  value       = module.geff_snowalert.geff_lambda_sg_ids
+}
