@@ -90,8 +90,8 @@ return exec(GET_HANDLERS).rows.map((h) => {
           $${handler_num},
           $${handler_name}(PARSE_JSON(?), PARSE_JSON(?))
         )
-        WHERE alert_id=?`,
-    [alert, payload, alert_id]
+        WHERE alert_id=$${alert_id},
+    [alert, payload]
   )
 
   return {

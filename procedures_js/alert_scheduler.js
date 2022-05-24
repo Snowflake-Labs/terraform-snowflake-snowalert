@@ -55,24 +55,57 @@ WHERE table_schema='${rules_schema_name}'
   AND "schedule" IS NOT NULL
 `
 
+function find_tags(v, t) {
+  return exec(
+    unindent(`
+    SELECT *
+    FROM TABLE(
+      INFORMATION_SCHEMA.TAG_REFERENCES(
+        '$${v}',
+        'TABLE'
+      )
+    )
+    WHERE tag_name = '$${t}'
+  `)
+  )
+}
+
 return {
-  handled: exec(FIND_VIEWS).map((v) => ({
-    run_alert_query: exec(
-      unindent(`-- create alert query run task
-          CREATE OR REPLACE TASK ${results_schema}.RUN_ALERT_QUERY_$${v.rule_name}
-          WAREHOUSE=$${WAREHOUSE}
-          SCHEDULE='$${v.schedule}'
-          AS
-          CALL ${results_alert_queries_runner}(
-            '$${v.rule_name}',
-            '$${v.lookback}'
-          )
-        `)
-    )[0]['status'],
-    resume_alert_query: exec(
-      unindent(`
-          ALTER TASK ${results_schema}.RUN_ALERT_QUERY_$${v.rule_name} RESUME
-        `)
-    )[0]['status'],
-  })),
+  scheduled: exec(FIND_VIEWS)
+    .map((v) => ({
+      rule_name: v.rule_name,
+      schedule:
+        (
+          find_tags(
+            `${rules_schema_name}.$${v.rule_name}`,
+            'ALERT_SCHEDULE'
+          )[0] || {}
+        ).TAG_VALUE || v.schedule,
+      lookback: v.lookback,
+    }))
+    // .filter(v => v.schedule != '-')
+    .map((v) => ({
+      schedule: v.schedule,
+      run_alert_query: unindent(`-- create alert query run task
+        CREATE OR REPLACE TASK ${results_schema}.RUN_ALERT_QUERY_$${v.rule_name}
+        WAREHOUSE=$${WAREHOUSE}
+        SCHEDULE='$${v.schedule}'
+        AS
+        CALL ${results_alert_queries_runner}(
+          '$${v.rule_name}',
+          '$${v.lookback}'
+        )
+      `),
+      resume_alert_query: unindent(`
+        ALTER TASK ${results_schema}.RUN_ALERT_QUERY_$${v.rule_name} RESUME
+      `),
+      suspend_alert_query: unindent(`
+        ALTER TASK IF EXISTS ${results_schema}.RUN_ALERT_QUERY_$${v.rule_name} SUSPEND
+      `),
+    }))
+    .map((v) => ({
+      run_alert: v.schedule == '-' ? '-' : exec(v.run_alert_query),
+      resume_alert: v.schedule == '-' ? '-' : exec(v.resume_alert_query),
+      suspend_alert: v.schedule == '-' ? exec(v.suspend_alert_query) : '-',
+    })),
 }
