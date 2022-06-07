@@ -11,7 +11,6 @@ resource "snowflake_view" "rule_tags" {
     }
   )
   or_replace = true
-  is_secure  = false
 }
 
 resource "snowflake_view" "alerts" {
