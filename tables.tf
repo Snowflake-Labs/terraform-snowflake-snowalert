@@ -69,7 +69,7 @@ resource "snowflake_table" "raw_alerts" {
 }
 
 locals {
-  raw_alerts_table = var.create_tables == true ? snowflake_table.raw_alerts[0].name : "RAW_ALERTS"
+  raw_alerts_table = var.create_tables ? snowflake_table.raw_alerts[0].name : "RAW_ALERTS"
 }
 
 resource "snowflake_table" "alerts" {
@@ -142,7 +142,7 @@ resource "snowflake_table" "alerts" {
 }
 
 locals {
-  alerts_table = var.create_tables == true ? snowflake_table.alerts[0].name : "ALERTS"
+  alerts_table = var.create_tables ? snowflake_table.alerts[0].name : "ALERTS"
 }
 
 resource "snowflake_table" "violations" {
@@ -185,7 +185,7 @@ resource "snowflake_table" "violations" {
 }
 
 locals {
-  violations_table = var.create_tables == true ? snowflake_table.violations[0].name : "VIOLATIONS"
+  violations_table = var.create_tables ? snowflake_table.violations[0].name : "VIOLATIONS"
 }
 
 resource "snowflake_table" "query_metadata" {
@@ -208,7 +208,7 @@ resource "snowflake_table" "query_metadata" {
 }
 
 locals {
-  query_metadata_table = var.create_tables == true ? snowflake_table.query_metadata[0].name : "QUERY_METADATA"
+  query_metadata_table = var.create_tables ? snowflake_table.query_metadata[0].name : "QUERY_METADATA"
 }
 
 resource "snowflake_table" "run_metadata" {
@@ -231,7 +231,7 @@ resource "snowflake_table" "run_metadata" {
 }
 
 locals {
-  run_metadata_table = var.create_tables == true ? snowflake_table.run_metadata[0].name : "RUN_METADATA"
+  run_metadata_table = var.create_tables ? snowflake_table.run_metadata[0].name : "RUN_METADATA"
 }
 
 resource "snowflake_table" "ingestion_metadata" {
@@ -254,5 +254,5 @@ resource "snowflake_table" "ingestion_metadata" {
 }
 
 locals {
-  ingestion_metadata_table = var.create_tables == true ? snowflake_table.ingestion_metadata[0].name : "INGESTION_METADATA"
+  ingestion_metadata_table = var.create_tables ? snowflake_table.ingestion_metadata[0].name : "INGESTION_METADATA"
 }
