@@ -1,102 +1,93 @@
 # Account Level - Execute
-resource "snowflake_account_grant" "account_grant" {
-  provider = snowflake.alerting_role
+# resource "snowflake_account_grant" "account_grant" {
+#   provider = snowflake.alerting_role
 
-  roles             = [local.snowalert_role_name]
-  privilege         = "EXECUTE TASK"
-  with_grant_option = false
-}
+#   roles             = [local.snowalert_role_name]
+#   privilege         = "EXECUTE TASK"
+#   with_grant_option = false
+# }
 
 # Database Level - Usage
-resource "snowflake_database_grant" "db_grant" {
-  provider = snowflake.alerting_role
+# resource "snowflake_database_grant" "db_grant" {
+#   provider = snowflake.alerting_role
 
-  database_name = local.snowalert_database_name
+#   database_name = local.snowalert_database_name
 
-  privilege = "USAGE"
-  roles     = [local.snowalert_role_name]
+#   privilege = "USAGE"
+#   roles     = [local.snowalert_role_name]
 
-  with_grant_option = false
-}
+#   with_grant_option = false
+# }
 
 # Schema Level - Usage
-resource "snowflake_schema_grant" "schema_grant_usage" {
-  provider = snowflake.alerting_role
 
-  database_name = local.snowalert_database_name
-
-  privilege = "USAGE"
-  roles     = [local.snowalert_role_name]
-
-  on_future         = true
-  with_grant_option = false
-}
 
 # View Level - Select
-resource "snowflake_view_grant" "view_grant_select" {
-  provider = snowflake.alerting_role
+# resource "snowflake_view_grant" "view_grant_select" {
+#   provider = snowflake.alerting_role
 
-  database_name = local.snowalert_database_name
+#   database_name = local.snowalert_database_name
 
-  privilege = "SELECT"
-  roles     = [local.snowalert_role_name]
+#   privilege = "SELECT"
+#   roles     = [local.snowalert_role_name]
 
-  on_future         = true
-  with_grant_option = false
-}
+#   on_future         = true
+#   with_grant_option = false
+# }
 
 # View Level - references
-resource "snowflake_view_grant" "view_grant_references" {
-  provider = snowflake.alerting_role
+# resource "snowflake_view_grant" "view_grant_references" {
+#   provider = snowflake.alerting_role
 
-  database_name = local.snowalert_database_name
+#   database_name = local.snowalert_database_name
 
-  privilege = "REFERENCES"
-  roles     = [local.snowalert_role_name]
+#   privilege = "REFERENCES"
+#   roles     = [local.snowalert_role_name]
 
-  on_future         = true
-  with_grant_option = false
-}
+#   on_future         = true
+#   with_grant_option = false
+# }
 
 # Table Level - Select
-resource "snowflake_table_grant" "table_grant_select" {
-  provider = snowflake.alerting_role
+# resource "snowflake_table_grant" "table_grant_select" {
+#   provider = snowflake.alerting_role
 
-  database_name = local.snowalert_database_name
+#   database_name = local.snowalert_database_name
 
-  privilege = "SELECT"
-  roles     = [local.snowalert_role_name]
+#   privilege = "SELECT"
+#   roles     = [local.snowalert_role_name]
 
-  on_future         = true
-  with_grant_option = false
-}
+#   on_future         = true
+#   with_grant_option = false
+# }
 
 # Table Level - Insert
-resource "snowflake_table_grant" "table_grant_insert" {
-  provider = snowflake.alerting_role
+# resource "snowflake_table_grant" "table_grant_insert" {
+#   provider = snowflake.alerting_role
 
-  database_name = local.snowalert_database_name
+#   database_name = local.snowalert_database_name
 
-  privilege = "INSERT"
-  roles     = [local.snowalert_role_name]
+#   privilege = "INSERT"
+#   roles     = [local.snowalert_role_name]
 
-  on_future         = true
-  with_grant_option = false
-}
+#   on_future         = true
+#   with_grant_option = false
+# }
 
 # Stream Level - Select
-resource "snowflake_stream_grant" "stream_grant_select" {
-  provider = snowflake.alerting_role
+# resource "snowflake_stream_grant" "stream_grant_select" {
+#   provider = snowflake.alerting_role
 
-  database_name = local.snowalert_database_name
-  schema_name   = local.results_schema
-  stream_name   = snowflake_stream.raw_alerts_merge_stream.name
+#   database_name = local.snowalert_database_name
+#   schema_name   = local.results_schema
+#   stream_name   = snowflake_stream.raw_alerts_merge_stream.name
 
-  privilege = "SELECT"
-  roles     = [local.snowalert_role_name]
+#   privilege = "SELECT"
+#   roles     = [local.snowalert_role_name]
 
-  with_grant_option = false
-}
+#   with_grant_option = false
+# }
+
 
 # ------------------------------------------------------------
 # Archived Grants
