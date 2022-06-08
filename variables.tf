@@ -232,6 +232,12 @@ variable "results_schema_name" {
   default     = "RESULTS"
 }
 
+variable "integration_role" {
+  type        = string
+  description = "Role for creating database level or account level objects."
+  default     = "ACCOUNTADMIN"
+}
+
 variable "admin_role" {
   type        = string
   description = "Role for creating database level or account level objects."
