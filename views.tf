@@ -13,6 +13,19 @@ resource "snowflake_view" "rule_tags" {
   or_replace = true
 }
 
+resource "snowflake_view_grant" "rule_tags_view_ownership" {
+  provider = snowflake.security_admin_role
+
+  database_name = snowflake_database.snowalert.name
+  schema_name   = snowflake_schema.data.name
+  view_name     = snowflake_view.rule_tags.name
+
+  privilege = "OWNERSHIP"
+  roles = [
+    snowflake.alerting_role.role,
+  ]
+}
+
 resource "snowflake_view" "alerts" {
   provider = snowflake.alerting_role
 
@@ -32,6 +45,19 @@ resource "snowflake_view" "alerts" {
     }
   )
   or_replace = true
+}
+
+resource "snowflake_view_grant" "alerts_view_ownership" {
+  provider = snowflake.security_admin_role
+
+  database_name = snowflake_database.snowalert.name
+  schema_name   = snowflake_schema.data.name
+  view_name     = snowflake_view.alerts.name
+
+  privilege = "OWNERSHIP"
+  roles = [
+    snowflake.alerting_role.role,
+  ]
 }
 
 resource "snowflake_view" "violations" {

@@ -1,27 +1,3 @@
-# Account Level - Execute
-# resource "snowflake_account_grant" "account_grant" {
-#   provider = snowflake.alerting_role
-
-#   roles             = [local.snowalert_role_name]
-#   privilege         = "EXECUTE TASK"
-#   with_grant_option = false
-# }
-
-# Database Level - Usage
-# resource "snowflake_database_grant" "db_grant" {
-#   provider = snowflake.alerting_role
-
-#   database_name = local.snowalert_database_name
-
-#   privilege = "USAGE"
-#   roles     = [local.snowalert_role_name]
-
-#   with_grant_option = false
-# }
-
-# Schema Level - Usage
-
-
 # View Level - Select
 # resource "snowflake_view_grant" "view_grant_select" {
 #   provider = snowflake.alerting_role
