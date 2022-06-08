@@ -373,6 +373,18 @@ resource "snowflake_view" "violation_suppression_rule_runs" {
   or_replace = true
 }
 
+resource "snowflake_view" "rule_views_to_titles_map" {
+  provider = snowflake.alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.data_schema
+  name     = "RULE_VIEWS_TO_TITLES_MAP"
+  comment  = "Maps rules views to their titles for easy joining."
+
+  statement  = templatefile("${path.module}/views_sql/rule_views_to_titles_map.sql", {})
+  or_replace = true
+}
+
 locals {
   data_alert_query_rule_runs = join(".", [
     local.snowalert_database_name,
