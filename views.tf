@@ -22,7 +22,7 @@ resource "snowflake_view_grant" "rule_tags_view_ownership" {
 
   privilege = "OWNERSHIP"
   roles = [
-    snowflake.alerting_role.role,
+    data.snowflake_role.alerting_role.id,
   ]
 }
 
@@ -56,7 +56,7 @@ resource "snowflake_view_grant" "alerts_view_ownership" {
 
   privilege = "OWNERSHIP"
   roles = [
-    snowflake.alerting_role.role,
+    data.snowflake_role.alerting_role.id,
   ]
 }
 
