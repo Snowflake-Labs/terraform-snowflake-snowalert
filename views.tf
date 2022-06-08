@@ -21,9 +21,7 @@ resource "snowflake_view_grant" "rule_tags_view_ownership" {
   view_name     = snowflake_view.rule_tags.name
 
   privilege = "OWNERSHIP"
-  roles = [
-    data.snowflake_role.alerting_role.id,
-  ]
+  roles     = [var.alerting_role]
 }
 
 resource "snowflake_view" "alerts" {
@@ -55,9 +53,7 @@ resource "snowflake_view_grant" "alerts_view_ownership" {
   view_name     = snowflake_view.alerts.name
 
   privilege = "OWNERSHIP"
-  roles = [
-    data.snowflake_role.alerting_role.id,
-  ]
+  roles     = [var.alerting_role]
 }
 
 resource "snowflake_view" "violations" {
