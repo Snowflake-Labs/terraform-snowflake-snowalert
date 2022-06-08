@@ -14,7 +14,7 @@ resource "snowflake_view" "rule_tags" {
 }
 
 resource "snowflake_view_grant" "rule_tags_view_ownership" {
-  provider = snowflake.security_admin_role
+  provider = snowflake.admin_role
 
   database_name = snowflake_database.snowalert.name
   schema_name   = snowflake_schema.data.name
@@ -48,7 +48,7 @@ resource "snowflake_view" "alerts" {
 }
 
 resource "snowflake_view_grant" "alerts_view_ownership" {
-  provider = snowflake.security_admin_role
+  provider = snowflake.admin_role
 
   database_name = snowflake_database.snowalert.name
   schema_name   = snowflake_schema.data.name
