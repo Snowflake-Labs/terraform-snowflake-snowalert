@@ -209,3 +209,15 @@ variable "results_schema_name" {
   description = ""
   default     = "RESULTS"
 }
+
+variable "admin_role" {
+  type        = string
+  description = "Role for creating database level or account level objects."
+  default     = "ACCOUNTADMIN"
+}
+
+variable "alerting_role" {
+  type        = string
+  description = "Role for creating schema level objects."
+  default     = "ACCOUNTADMIN"
+}
