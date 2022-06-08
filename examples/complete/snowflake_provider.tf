@@ -9,14 +9,14 @@ provider "snowflake" {
   alias = "api_integration_role"
 
   account = var.snowflake_account
-  role    = var.terraform_role
+  role    = var.integration_role
 }
 
 provider "snowflake" {
   alias = "storage_integration_role"
 
   account = var.snowflake_account
-  role    = var.terraform_role
+  role    = var.integration_role
 }
 
 provider "snowflake" {

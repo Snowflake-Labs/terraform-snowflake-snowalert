@@ -23,12 +23,6 @@ variable "prefix" {
   default     = "example"
 }
 
-variable "terraform_role" {
-  type        = string
-  description = "Role used to create all the snowalert objects."
-  default     = "ACCOUNTADMIN"
-}
-
 variable "snowalert_warehouse_name" {
   type        = string
   description = "Warehouse for snowalert."
@@ -208,6 +202,12 @@ variable "results_schema_name" {
   type        = string
   description = ""
   default     = "RESULTS"
+}
+
+variable "integration_role" {
+  type        = string
+  description = "Role for creating database level or account level objects."
+  default     = "ACCOUNTADMIN"
 }
 
 variable "admin_role" {
