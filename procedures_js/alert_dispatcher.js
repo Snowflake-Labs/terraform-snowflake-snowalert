@@ -85,12 +85,13 @@ return exec(GET_HANDLERS).rows.map((h) => {
 
   const result = exec(
     `UPDATE ${results_alerts_table}
-        SET handled = ${results_array_set_function}(
-          handled,
-          $${handler_num},
-          $${handler_name}(PARSE_JSON(?), PARSE_JSON(?))
-        )
-        WHERE alert_id=$${alert_id},
+    SET handled = ${results_array_set_function}(
+      handled,
+      $${handler_num},
+      $${handler_name}(PARSE_JSON(?), PARSE_JSON(?))
+    )
+    WHERE alert_id=$${alert_id}
+    `,
     [alert, payload]
   )
 
