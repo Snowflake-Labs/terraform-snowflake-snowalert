@@ -13,17 +13,6 @@ resource "snowflake_view" "rule_tags" {
   or_replace = true
 }
 
-resource "snowflake_view_grant" "rule_tags_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.rule_tags.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
-}
-
 resource "snowflake_view" "alerts" {
   provider = snowflake.alerting_role
 
@@ -45,17 +34,6 @@ resource "snowflake_view" "alerts" {
   or_replace = true
 }
 
-resource "snowflake_view_grant" "alerts_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.alerts.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
-}
-
 resource "snowflake_view" "violations" {
   provider = snowflake.alerting_role
 
@@ -75,17 +53,6 @@ resource "snowflake_view" "violations" {
     }
   )
   or_replace = true
-}
-
-resource "snowflake_view_grant" "violations_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.violations.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
 }
 
 resource "snowflake_view" "tags_foj_alerts" {
@@ -112,17 +79,6 @@ resource "snowflake_view" "tags_foj_alerts" {
     }
   )
   or_replace = true
-}
-
-resource "snowflake_view_grant" "tags_foj_alerts_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.tags_foj_alerts.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
 }
 
 resource "snowflake_view" "tags_foj_violations" {
@@ -165,17 +121,6 @@ locals {
   ])
 }
 
-resource "snowflake_view_grant" "tags_foj_violations_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.tags_foj_violations.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
-}
-
 resource "snowflake_view" "alert_queries_runs" {
   provider = snowflake.alerting_role
 
@@ -189,17 +134,6 @@ resource "snowflake_view" "alert_queries_runs" {
     { results_run_metadata = local.results_run_metadata }
   )
   or_replace = true
-}
-
-resource "snowflake_view_grant" "alert_queries_runs_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.alert_queries_runs.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
 }
 
 resource "snowflake_view" "alert_query_rule_runs" {
@@ -217,17 +151,6 @@ resource "snowflake_view" "alert_query_rule_runs" {
   or_replace = true
 }
 
-resource "snowflake_view_grant" "alert_query_rule_runs_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.alert_query_rule_runs.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
-}
-
 resource "snowflake_view" "alert_suppressions_runs" {
   provider = snowflake.alerting_role
 
@@ -241,17 +164,6 @@ resource "snowflake_view" "alert_suppressions_runs" {
     { results_run_metadata = local.results_run_metadata }
   )
   or_replace = true
-}
-
-resource "snowflake_view_grant" "alert_suppressions_runs_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.alert_suppressions_runs.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
 }
 
 resource "snowflake_view" "alert_suppression_rule_runs" {
@@ -269,17 +181,6 @@ resource "snowflake_view" "alert_suppression_rule_runs" {
   or_replace = true
 }
 
-resource "snowflake_view_grant" "alert_suppression_rule_runs_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.alert_suppression_rule_runs.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
-}
-
 resource "snowflake_view" "violation_queries_runs" {
   provider = snowflake.alerting_role
 
@@ -293,17 +194,6 @@ resource "snowflake_view" "violation_queries_runs" {
     { results_run_metadata = local.results_run_metadata }
   )
   or_replace = true
-}
-
-resource "snowflake_view_grant" "violation_queries_runs_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.violation_queries_runs.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
 }
 
 resource "snowflake_view" "violation_query_rule_runs" {
@@ -321,17 +211,6 @@ resource "snowflake_view" "violation_query_rule_runs" {
   or_replace = true
 }
 
-resource "snowflake_view_grant" "violation_query_rule_runs_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.violation_query_rule_runs.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
-}
-
 resource "snowflake_view" "violation_suppressions_runs" {
   provider = snowflake.alerting_role
 
@@ -345,17 +224,6 @@ resource "snowflake_view" "violation_suppressions_runs" {
     { results_run_metadata = local.results_run_metadata }
   )
   or_replace = true
-}
-
-resource "snowflake_view_grant" "violation_suppressions_runs_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.violation_suppressions_runs.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
 }
 
 resource "snowflake_view" "violation_suppression_rule_runs" {
@@ -429,17 +297,6 @@ locals {
   ])
 }
 
-resource "snowflake_view_grant" "violation_suppression_rule_runs_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.violation_suppression_rule_runs.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
-}
-
 resource "snowflake_view" "alert_query_rule_run_errors" {
   provider = snowflake.alerting_role
 
@@ -455,17 +312,6 @@ resource "snowflake_view" "alert_query_rule_run_errors" {
     }
   )
   or_replace = true
-}
-
-resource "snowflake_view_grant" "alert_query_rule_run_errors_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.alert_query_rule_run_errors.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
 }
 
 resource "snowflake_view" "alert_suppression_rule_run_errors" {
@@ -485,17 +331,6 @@ resource "snowflake_view" "alert_suppression_rule_run_errors" {
   or_replace = true
 }
 
-resource "snowflake_view_grant" "alert_suppression_rule_run_errors_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.alert_suppression_rule_run_errors.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
-}
-
 resource "snowflake_view" "violation_query_rule_run_errors" {
   provider = snowflake.alerting_role
 
@@ -511,17 +346,6 @@ resource "snowflake_view" "violation_query_rule_run_errors" {
     }
   )
   or_replace = true
-}
-
-resource "snowflake_view_grant" "violation_query_rule_run_errors_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.violation_query_rule_run_errors.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
 }
 
 resource "snowflake_view" "violation_suppression_rule_run_errors" {
@@ -541,17 +365,6 @@ resource "snowflake_view" "violation_suppression_rule_run_errors" {
   or_replace = true
 }
 
-resource "snowflake_view_grant" "violation_suppression_rule_run_errors_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.violation_suppression_rule_run_errors.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
-}
-
 resource "snowflake_view" "data_connector_run_errors" {
   provider = snowflake.alerting_role
 
@@ -567,15 +380,4 @@ resource "snowflake_view" "data_connector_run_errors" {
     }
   )
   or_replace = true
-}
-
-resource "snowflake_view_grant" "data_connector_run_errors_view_ownership" {
-  provider = snowflake.admin_role
-
-  database_name = local.snowalert_database_name
-  schema_name   = local.data_schema
-  view_name     = snowflake_view.data_connector_run_errors.name
-
-  privilege = "OWNERSHIP"
-  roles     = [var.alerting_role]
 }

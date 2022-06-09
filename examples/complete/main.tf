@@ -43,10 +43,6 @@ module "snowalert" {
   servicenow_secrets_arn = var.servicenow_secrets_arn
   servicenow_api_url     = var.servicenow_api_url
 
-  integration_role = var.integration_role
-  admin_role       = var.admin_role
-  alerting_role    = var.alerting_role
-
   providers = {
     snowflake.api_integration_role     = snowflake.api_integration_role
     snowflake.storage_integration_role = snowflake.storage_integration_role

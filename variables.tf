@@ -232,24 +232,6 @@ variable "results_schema_name" {
   default     = "RESULTS"
 }
 
-variable "integration_role" {
-  type        = string
-  description = "Role for creating database level or account level objects."
-  default     = "ACCOUNTADMIN"
-}
-
-variable "admin_role" {
-  type        = string
-  description = "Role for creating database level or account level objects."
-  default     = "ACCOUNTADMIN"
-}
-
-variable "alerting_role" {
-  type        = string
-  description = "Role for creating schema level objects."
-  default     = "ACCOUNTADMIN"
-}
-
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
