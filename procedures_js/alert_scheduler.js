@@ -1,3 +1,4 @@
+
 // args
 var WAREHOUSE
 
@@ -29,35 +30,25 @@ function unindent(s) {
   return s.replace('\n' + ' '.repeat(min_indent), '\n')
 }
 
+
 // logic
 FIND_VIEWS = String.raw`-- find views with schedules
-SELECT table_name AS "rule_name"
-  , IFF(
-      CONTAINS(view_definition, ' AS schedule'),
-      REGEXP_REPLACE(
-      view_definition,
-      '[\\s\\S]*\'([^\']*)\' AS schedule[\\s\\S]*',
-      '\\1'
-      ),
-      NULL
-  ) AS "schedule"
-  , IFF(
-      CONTAINS(view_definition, ' AS lookback'),
-      REGEXP_REPLACE(
-      view_definition,
-      '[\\s\\S]*\'([^\']*)\' AS lookback[\\s\\S]*',
-      '\\1'
-      ),
-      NULL
-  ) AS "lookback"
-FROM information_schema.views
-WHERE table_schema='${rules_schema_name}'
-  AND "schedule" IS NOT NULL
+SELECT CONCAT(
+    TABLE_CATALOG,
+    '.',
+    TABLE_SCHEMA,
+    '.',
+    TABLE_OWNER
+) as "qualified_view_name"
+FROM SNOWALERT.INFORMATION_SCHEMA.VIEWS
 `
 
+function get_ddl(full_rule_name) {
+    return exec(`SELECT GET_DDL('VIEW', '${full_rule_name}'`)
+}
+
 function find_tags(v, t) {
-  return exec(
-    unindent(`
+  return exec(unindent(`
     SELECT *
     FROM TABLE(
       INFORMATION_SCHEMA.TAG_REFERENCES(
@@ -66,12 +57,21 @@ function find_tags(v, t) {
       )
     )
     WHERE tag_name = '$${t}'
-  `)
-  )
+  `))
 }
 
 return {
   scheduled: exec(FIND_VIEWS)
+    .filter(v => (
+        v.view_definition.toLowerCase().includes('schedule') &&
+        v.view_definition.toLowerCase().includes('lookback')
+    ))
+    .map(v => ({
+        ...v,
+        view_definition: get_ddl(v.qualified_view_name),
+        schedule: v.view_definition.match(),
+        lookback: v.view_definition.match()
+    })
     .map((v) => ({
       rule_name: v.rule_name,
       schedule:
