@@ -44,7 +44,7 @@ FROM SNOWALERT.INFORMATION_SCHEMA.VIEWS
 `
 
 function get_ddl(full_rule_name) {
-    return exec(`SELECT GET_DDL('VIEW', '${full_rule_name}'`)
+    return exec(`SELECT GET_DDL('VIEW', '$${full_rule_name}'`)
 }
 
 function find_tags(v, t) {
@@ -69,8 +69,8 @@ return {
     .map(v => ({
         ...v,
         view_definition: get_ddl(v.qualified_view_name),
-        schedule: v.view_definition.match(),
-        lookback: v.view_definition.match()
+        schedule: v.view_definition.match('<insert_regex_here [\\s\\S]*\'([^\']*)\' AS schedule[\\s\\S]*>'),
+        lookback: v.view_definition.match('<insert_regex_here [\\s\\S]*\'([^\']*)\' AS lookback[\\s\\S]*>')
     })
     .map((v) => ({
       rule_name: v.rule_name,
