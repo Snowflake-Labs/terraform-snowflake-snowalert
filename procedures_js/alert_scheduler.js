@@ -40,7 +40,6 @@ SELECT CONCAT(
 ) as "qualified_view_name"
 FROM SNOWALERT.INFORMATION_SCHEMA.VIEWS
 WHERE table_schema='${rules_schema_name}'
-  AND "schedule" IS NOT NULL
 `
 
 function get_ddl(full_rule_name) {
