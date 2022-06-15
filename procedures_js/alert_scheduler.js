@@ -32,11 +32,11 @@ function unindent(s) {
 // logic
 FIND_VIEWS = String.raw`-- find views with schedules
 SELECT CONCAT(
-    TABLE_CATALOG,
-    '.',
-    TABLE_SCHEMA,
-    '.',
-    TABLE_OWNER
+  TABLE_CATALOG,
+  '.',
+  TABLE_SCHEMA,
+  '.',
+  TABLE_NAME
 ) as "qualified_view_name"
 FROM SNOWALERT.INFORMATION_SCHEMA.VIEWS
 WHERE table_schema='${rules_schema_name}'
