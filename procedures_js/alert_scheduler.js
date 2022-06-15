@@ -44,7 +44,7 @@ WHERE table_schema='${rules_schema_name}'
 
 function get_ddl(full_rule_name) {
   return exec(
-    `SELECT GET_DDL('VIEW', '$${full_rule_name}' AS "view_definition"`
+    `SELECT GET_DDL('VIEW', '$${full_rule_name}') AS "view_definition"`
   )[0].view_definition
 }
 
