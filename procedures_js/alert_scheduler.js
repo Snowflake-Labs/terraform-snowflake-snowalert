@@ -1,4 +1,3 @@
-
 // args
 var WAREHOUSE
 
@@ -30,7 +29,6 @@ function unindent(s) {
   return s.replace('\n' + ' '.repeat(min_indent), '\n')
 }
 
-
 // logic
 FIND_VIEWS = String.raw`-- find views with schedules
 SELECT CONCAT(
@@ -41,14 +39,18 @@ SELECT CONCAT(
     TABLE_OWNER
 ) as "qualified_view_name"
 FROM SNOWALERT.INFORMATION_SCHEMA.VIEWS
+WHERE <schema is rules>
 `
 
 function get_ddl(full_rule_name) {
-    return exec(`SELECT GET_DDL('VIEW', '$${full_rule_name}'`)
+  return exec(
+    `SELECT GET_DDL('VIEW', '$${full_rule_name}' AS "view_definition"`
+  )[0].view_definition
 }
 
 function find_tags(v, t) {
-  return exec(unindent(`
+  return exec(
+    unindent(`
     SELECT *
     FROM TABLE(
       INFORMATION_SCHEMA.TAG_REFERENCES(
@@ -57,21 +59,21 @@ function find_tags(v, t) {
       )
     )
     WHERE tag_name = '$${t}'
-  `))
+  `)
+  )
 }
 
 return {
   scheduled: exec(FIND_VIEWS)
-    .filter(v => (
-        v.view_definition.toLowerCase().includes('schedule') &&
-        v.view_definition.toLowerCase().includes('lookback')
-    ))
-    .map(v => ({
-        ...v,
-        view_definition: get_ddl(v.qualified_view_name),
-        schedule: v.view_definition.match('<insert_regex_here [\\s\\S]*\'([^\']*)\' AS schedule[\\s\\S]*>'),
-        lookback: v.view_definition.match('<insert_regex_here [\\s\\S]*\'([^\']*)\' AS lookback[\\s\\S]*>')
-    })
+    .map((v) => ({
+      ...v,
+      view_definition: get_ddl(v.qualified_view_name),
+    }))
+    .map((v) => ({
+      ...v,
+      schedule: v.view_definition.match(/[\s]*'([^']*)' as schedule[\s]*/gi),
+      lookback: v.view_definition.match(/[\s]*'([^']*)' as lookback[\s]*/gi),
+    }))
     .map((v) => ({
       rule_name: v.rule_name,
       schedule:
@@ -104,8 +106,11 @@ return {
       `),
     }))
     .map((v) => ({
-      run_alert: v.schedule == '-' ? '-' : exec(v.run_alert_query),
-      resume_alert: v.schedule == '-' ? '-' : exec(v.resume_alert_query),
-      suspend_alert: v.schedule == '-' ? exec(v.suspend_alert_query) : '-',
+      create_run_alert_query_task:
+        v.schedule == '-' ? '-' : exec(v.run_alert_query),
+      resume_alert_query_task:
+        v.schedule == '-' ? '-' : exec(v.resume_alert_query),
+      suspend_alert_query_task:
+        v.schedule == '-' ? exec(v.suspend_alert_query) : '-',
     })),
 }
