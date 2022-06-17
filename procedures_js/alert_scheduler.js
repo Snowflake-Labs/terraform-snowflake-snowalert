@@ -31,13 +31,14 @@ function unindent(s) {
 
 // logic
 FIND_VIEWS = String.raw`-- find views with schedules
-SELECT CONCAT(
-  TABLE_CATALOG,
-  '.',
-  TABLE_SCHEMA,
-  '.',
-  TABLE_NAME
-) as "qualified_view_name"
+SELECT table_name AS "rule_name",
+  CONCAT(
+    TABLE_CATALOG,
+    '.',
+    TABLE_SCHEMA,
+    '.',
+    TABLE_NAME
+  ) as "qualified_view_name"
 FROM SNOWALERT.INFORMATION_SCHEMA.VIEWS
 WHERE table_schema='${rules_schema_name}'
 `
@@ -63,6 +64,15 @@ function find_tags(v, t) {
   )
 }
 
+function get_first_regex_match(regex, s) {
+  let match = s.match(regex)
+  if (match !== undefined && match !== null) {
+    return match[1]
+  }
+
+  return null
+}
+
 return {
   scheduled: exec(FIND_VIEWS)
     .map((v) => ({
@@ -71,21 +81,24 @@ return {
     }))
     .map((v) => ({
       ...v,
-      schedule: v.view_definition.match(/[\s]*'([^']*)' as schedule[\s]*/gi),
-      lookback: v.view_definition.match(/[\s]*'([^']*)' as lookback[\s]*/gi),
+      schedule:
+        get_first_regex_match(
+          /[\s]*'([^']*)'[\s]*as[\s]*schedule[\s]*/i,
+          v.view_definition
+        ) || '-',
+      lookback:
+        get_first_regex_match(
+          /[\s]*'([^']*)'[\s]*as[\s]*lookback[\s]*/i,
+          v.view_definition
+        ) || '1d',
     }))
     .map((v) => ({
       rule_name: v.rule_name,
       schedule:
-        (
-          find_tags(
-            `${rules_schema_name}.$${v.rule_name}`,
-            'ALERT_SCHEDULE'
-          )[0] || {}
-        ).TAG_VALUE || v.schedule,
+        (find_tags(`$${v.qualified_view_name}`, 'ALERT_SCHEDULE')[0] || {})
+          .TAG_VALUE || v.schedule,
       lookback: v.lookback,
     }))
-    // .filter(v => v.schedule != '-')
     .map((v) => ({
       schedule: v.schedule,
       run_alert_query: unindent(`-- create alert query run task
