@@ -270,6 +270,43 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
   })
 }
 
+resource "snowflake_procedure" "violation_scheduler" {
+  provider = snowflake.alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.results_schema
+  name     = "VIOLATION_SCHEDULER"
+
+  arguments {
+    name = "warehouse"
+    type = "VARCHAR"
+  }
+
+  return_type = "VARIANT"
+  execute_as  = "CALLER"
+  statement = templatefile("${path.module}/procedures_js/violation_scheduler.js", {
+    rules_schema_name = local.rules_schema
+    rules_schema = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+    ])
+    results_schema = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+    ])
+    # results_raw_violations_table = join(".", [
+    #   local.snowalert_database_name,
+    #   local.rules_schema,
+    #   local.raw_violations_table,
+    # ])
+    results_violation_queries_runner = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+      snowflake_procedure.violation_queries_runner.name,
+    ])
+  })
+}
+
 resource "snowflake_procedure" "violation_queries_runner" {
   provider = snowflake.alerting_role
 
