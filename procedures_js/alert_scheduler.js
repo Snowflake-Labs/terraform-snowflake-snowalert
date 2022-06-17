@@ -31,29 +31,23 @@ function unindent(s) {
 
 // logic
 FIND_VIEWS = String.raw`-- find views with schedules
-SELECT table_name AS "rule_name"
-  , IFF(
-      CONTAINS(view_definition, ' AS schedule'),
-      REGEXP_REPLACE(
-      view_definition,
-      '[\\s\\S]*\'([^\']*)\' AS schedule[\\s\\S]*',
-      '\\1'
-      ),
-      NULL
-  ) AS "schedule"
-  , IFF(
-      CONTAINS(view_definition, ' AS lookback'),
-      REGEXP_REPLACE(
-      view_definition,
-      '[\\s\\S]*\'([^\']*)\' AS lookback[\\s\\S]*',
-      '\\1'
-      ),
-      NULL
-  ) AS "lookback"
-FROM information_schema.views
+SELECT table_name AS "rule_name",
+  CONCAT(
+    TABLE_CATALOG,
+    '.',
+    TABLE_SCHEMA,
+    '.',
+    TABLE_NAME
+  ) as "qualified_view_name"
+FROM SNOWALERT.INFORMATION_SCHEMA.VIEWS
 WHERE table_schema='${rules_schema_name}'
-  AND "schedule" IS NOT NULL
 `
+
+function get_ddl(full_rule_name) {
+  return exec(
+    `SELECT GET_DDL('VIEW', '$${full_rule_name}') AS "view_definition"`
+  )[0].view_definition
+}
 
 function find_tags(v, t) {
   return exec(
@@ -70,20 +64,41 @@ function find_tags(v, t) {
   )
 }
 
+function get_first_regex_match(regex, s) {
+  let match = s.match(regex)
+  if (match !== undefined && match !== null) {
+    return match[1]
+  }
+
+  return null
+}
+
 return {
   scheduled: exec(FIND_VIEWS)
     .map((v) => ({
+      ...v,
+      view_definition: get_ddl(v.qualified_view_name),
+    }))
+    .map((v) => ({
+      ...v,
+      schedule:
+        get_first_regex_match(
+          /[\s]*'([^']*)'[\s]*as[\s]*schedule[\s]*/i,
+          v.view_definition
+        ) || '-',
+      lookback:
+        get_first_regex_match(
+          /[\s]*'([^']*)'[\s]*as[\s]*lookback[\s]*/i,
+          v.view_definition
+        ) || '1d',
+    }))
+    .map((v) => ({
       rule_name: v.rule_name,
       schedule:
-        (
-          find_tags(
-            `${rules_schema_name}.$${v.rule_name}`,
-            'ALERT_SCHEDULE'
-          )[0] || {}
-        ).TAG_VALUE || v.schedule,
+        (find_tags(`$${v.qualified_view_name}`, 'ALERT_SCHEDULE')[0] || {})
+          .TAG_VALUE || v.schedule,
       lookback: v.lookback,
     }))
-    // .filter(v => v.schedule != '-')
     .map((v) => ({
       schedule: v.schedule,
       run_alert_query: unindent(`-- create alert query run task
@@ -104,8 +119,11 @@ return {
       `),
     }))
     .map((v) => ({
-      run_alert: v.schedule == '-' ? '-' : exec(v.run_alert_query),
-      resume_alert: v.schedule == '-' ? '-' : exec(v.resume_alert_query),
-      suspend_alert: v.schedule == '-' ? exec(v.suspend_alert_query) : '-',
+      create_run_alert_query_task:
+        v.schedule == '-' ? '-' : exec(v.run_alert_query),
+      resume_alert_query_task:
+        v.schedule == '-' ? '-' : exec(v.resume_alert_query),
+      suspend_alert_query_task:
+        v.schedule == '-' ? exec(v.suspend_alert_query) : '-',
     })),
 }
