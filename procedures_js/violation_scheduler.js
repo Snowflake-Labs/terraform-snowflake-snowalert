@@ -39,7 +39,7 @@ SELECT table_name AS "rule_name",
     '.',
     TABLE_NAME
   ) as "qualified_view_name"
-FROM SNOWALERT.INFORMATION_SCHEMA.VIEWS
+FROM ${snowalert_database_name}.INFORMATION_SCHEMA.VIEWS
 WHERE table_schema='${rules_schema_name}'
 `
 
