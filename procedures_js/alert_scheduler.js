@@ -39,7 +39,7 @@ SELECT table_name AS "rule_name",
     '.',
     TABLE_NAME
   ) as "qualified_view_name"
-FROM SNOWALERT.INFORMATION_SCHEMA.VIEWS
+FROM INFORMATION_SCHEMA.VIEWS
 WHERE table_schema='${rules_schema_name}'
 `
 
@@ -64,7 +64,7 @@ function find_tags(v, t) {
   )
 }
 
-function get_first_regex_match(regex, s) {
+function get_first_regex_group(regex, s) {
   let match = s.match(regex)
   if (match !== undefined && match !== null) {
     return match[1]
@@ -82,13 +82,13 @@ return {
     .map((v) => ({
       ...v,
       schedule:
-        get_first_regex_match(
-          /[\s]*'([^']*)'[\s]*as[\s]*schedule[\s]*/i,
+        get_first_regex_group(
+          /'([^']*)'\s+as\s+schedule\b/i,
           v.view_definition
         ) || '-',
       lookback:
-        get_first_regex_match(
-          /[\s]*'([^']*)'[\s]*as[\s]*lookback[\s]*/i,
+        get_first_regex_group(
+          /'([^']*)'\s+as\s+lookback\b/i,
           v.view_definition
         ) || '1d',
     }))
@@ -119,11 +119,8 @@ return {
       `),
     }))
     .map((v) => ({
-      create_run_alert_query_task:
-        v.schedule == '-' ? '-' : exec(v.run_alert_query),
-      resume_alert_query_task:
-        v.schedule == '-' ? '-' : exec(v.resume_alert_query),
-      suspend_alert_query_task:
-        v.schedule == '-' ? exec(v.suspend_alert_query) : '-',
+      run_alert: v.schedule == '-' ? '-' : exec(v.run_alert_query),
+      resume_alert: v.schedule == '-' ? '-' : exec(v.resume_alert_query),
+      suspend_alert: v.schedule == '-' ? exec(v.suspend_alert_query) : '-',
     })),
 }
