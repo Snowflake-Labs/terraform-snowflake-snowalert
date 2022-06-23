@@ -97,7 +97,7 @@ return {
       schedule:
         (find_tags(`$${v.qualified_view_name}`, 'ALERT_SCHEDULE')[0] || {})
           .TAG_VALUE || v.schedule,
-      lookback: v.lookback,
+      lookback: v.lookback || '',
     }))
     .map((v) => ({
       schedule: v.schedule,
