@@ -1,7 +1,8 @@
 locals {
-  data_schema_name    = "DATA"
-  rules_schema_name   = "RULES"
-  results_schema_name = "RESULTS"
+  data_schema_name       = "DATA"
+  rules_schema_name      = "RULES"
+  results_schema_name    = "RESULTS"
+  monitoring_schema_name = "MONITORING"
 }
 
 # Schemas
@@ -39,4 +40,16 @@ resource "snowflake_schema" "results" {
 
 locals {
   results_schema = var.create_schemas == true ? snowflake_schema.results[0].name : var.results_schema_name
+}
+
+resource "snowflake_schema" "monitoring" {
+  count    = var.create_schemas == true ? 1 : 0
+  provider = snowflake.admin_role
+
+  database = local.snowalert_database_name
+  name     = var.monitoring_schema_name
+}
+
+locals {
+  monitoring_schema = var.create_schemas == true ? snowflake_schema.monitoring[0].name : var.monitoring_schema_name
 }
