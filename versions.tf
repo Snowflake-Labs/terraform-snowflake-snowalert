@@ -12,10 +12,10 @@ terraform {
       version = "0.32.0"
 
       configuration_aliases = [
-        snowflake.api_integration_role,
-        snowflake.storage_integration_role,
-        snowflake.admin_role,
-        snowflake.alerting_role,
+        snowflake.security_api_integration_role,
+        snowflake.security_storage_integration_role,
+        snowflake.security_admin_role,
+        snowflake.security_alerting_role,
       ]
     }
   }

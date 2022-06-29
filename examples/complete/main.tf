@@ -44,10 +44,10 @@ module "snowalert" {
   servicenow_api_url     = var.servicenow_api_url
 
   providers = {
-    snowflake.api_integration_role     = snowflake.api_integration_role
-    snowflake.storage_integration_role = snowflake.storage_integration_role
-    snowflake.admin_role               = snowflake.admin_role
-    snowflake.alerting_role            = snowflake.alerting_role
-    aws                                = aws
+    snowflake.security_api_integration_role     = snowflake.security_api_integration_role
+    snowflake.security_storage_integration_role = snowflake.security_storage_integration_role
+    snowflake.security_admin_role               = snowflake.security_admin_role
+    snowflake.security_alerting_role            = snowflake.security_alerting_role
+    aws                                         = aws
   }
 }
