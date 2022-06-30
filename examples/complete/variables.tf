@@ -204,6 +204,12 @@ variable "results_schema_name" {
   default     = "RESULTS"
 }
 
+variable "monitoring_schema_name" {
+  type        = string
+  description = ""
+  default     = "MONITORING"
+}
+
 variable "security_integration_role" {
   type        = string
   description = "Role for creating database level or account level objects."
@@ -220,4 +226,28 @@ variable "security_alerting_role" {
   type        = string
   description = "Role for creating schema level objects."
   default     = "ACCOUNTADMIN"
+}
+
+variable "security_ingest_role" {
+  type        = string
+  description = "Role for creating schema level objects."
+  default     = "ACCOUNTADMIN"
+}
+
+variable "security_modeling_role" {
+  type        = string
+  description = "Role for creating schema level objects."
+  default     = "ACCOUNTADMIN"
+}
+
+variable "security_monitoring_role" {
+  type        = string
+  description = "Role for creating schema level objects."
+  default     = "ACCOUNTADMIN"
+}
+
+variable "snowalert_app_role" {
+  type        = string
+  description = "Role for creating schema level objects."
+  default     = "APP_SNOWALERT"
 }

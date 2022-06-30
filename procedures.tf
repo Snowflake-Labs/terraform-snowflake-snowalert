@@ -1,9 +1,10 @@
 resource "snowflake_procedure" "alert_dispatcher" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "ALERT_DISPATCHER"
+  language = "JAVASCRIPT"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
@@ -29,11 +30,12 @@ resource "snowflake_procedure" "alert_dispatcher" {
 }
 
 resource "snowflake_procedure" "alert_merge" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "ALERT_MERGE"
+  language = "JAVASCRIPT"
 
   arguments {
     name = "DEDUPLICATION_OFFSET"
@@ -58,11 +60,12 @@ resource "snowflake_procedure" "alert_merge" {
 }
 
 resource "snowflake_procedure" "alert_processor" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "ALERT_PROCESSOR"
+  language = "JAVASCRIPT"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
@@ -81,11 +84,12 @@ resource "snowflake_procedure" "alert_processor" {
 }
 
 resource "snowflake_procedure" "alert_queries_runner_with_time" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "ALERT_QUERIES_RUNNER"
+  language = "JAVASCRIPT"
 
   arguments {
     name = "query_name"
@@ -118,11 +122,12 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
 }
 
 resource "snowflake_procedure" "alert_queries_runner_without_time" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "ALERT_QUERIES_RUNNER"
+  language = "JAVASCRIPT"
 
   arguments {
     name = "query_name"
@@ -150,11 +155,12 @@ resource "snowflake_procedure" "alert_queries_runner_without_time" {
 }
 
 resource "snowflake_procedure" "alert_queries_runner" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "ALERT_QUERIES_RUNNER"
+  language = "JAVASCRIPT"
 
   arguments {
     name = "query_name"
@@ -177,11 +183,12 @@ resource "snowflake_procedure" "alert_queries_runner" {
 }
 
 resource "snowflake_procedure" "alert_scheduler" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "ALERT_SCHEDULER"
+  language = "JAVASCRIPT"
 
   arguments {
     name = "warehouse"
@@ -214,11 +221,12 @@ resource "snowflake_procedure" "alert_scheduler" {
 }
 
 resource "snowflake_procedure" "alert_suppressions_runner" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "ALERT_SUPPRESSIONS_RUNNER"
+  language = "JAVASCRIPT"
 
   arguments {
     name = "queries_like"
@@ -245,11 +253,12 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
 }
 
 resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "ALERT_SUPPRESSIONS_RUNNER"
+  language = "JAVASCRIPT"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"
@@ -271,11 +280,12 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
 }
 
 resource "snowflake_procedure" "violation_queries_runner" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "VIOLATION_QUERIES_RUNNER"
+  language = "JAVASCRIPT"
 
   return_type = "VARIANT"
   execute_as  = "CALLER"

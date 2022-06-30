@@ -29,6 +29,14 @@ module "snowalert" {
   rules_schema_name   = var.rules_schema_name
   results_schema_name = var.results_schema_name
 
+  security_integration_role = var.security_integration_role
+  security_admin_role       = var.security_admin_role
+  security_alerting_role    = var.security_alerting_role
+  security_ingest_role      = var.security_ingest_role
+  security_modeling_role    = var.security_modeling_role
+  security_monitoring_role  = var.security_monitoring_role
+  snowalert_app_role        = var.snowalert_app_role
+
   handlers          = var.handlers
   slack_secrets_arn = var.slack_secrets_arn
 

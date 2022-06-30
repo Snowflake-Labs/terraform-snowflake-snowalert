@@ -1,6 +1,6 @@
 resource "snowflake_external_function" "servicenow_create_incident" {
   count    = contains(var.handlers, "servicenow") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema

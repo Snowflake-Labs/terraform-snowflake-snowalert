@@ -9,26 +9,26 @@ provider "snowflake" {
   alias = "security_api_integration_role"
 
   account = var.snowflake_account
-  role    = var.integration_role
+  role    = var.security_integration_role
 }
 
 provider "snowflake" {
   alias = "security_storage_integration_role"
 
   account = var.snowflake_account
-  role    = var.integration_role
+  role    = var.security_integration_role
 }
 
 provider "snowflake" {
   alias = "security_admin_role"
 
   account = var.snowflake_account
-  role    = var.admin_role
+  role    = var.security_admin_role
 }
 
 provider "snowflake" {
   alias = "security_alerting_role"
 
   account = var.snowflake_account
-  role    = var.alerting_role
+  role    = var.security_alerting_role
 }
