@@ -1,7 +1,7 @@
 # Warehouse
 resource "snowflake_warehouse" "snowalert" {
   count    = var.create_warehouse == true ? 1 : 0
-  provider = snowflake.admin_role
+  provider = snowflake.security_admin_role
 
   name           = upper(trimspace(var.snowalert_warehouse_name))
   comment        = "Warehouse that will be used for Snowalert."
@@ -18,7 +18,7 @@ locals {
 # Database
 resource "snowflake_database" "snowalert" {
   count    = var.create_database == true ? 1 : 0
-  provider = snowflake.admin_role
+  provider = snowflake.security_admin_role
 
   name    = upper(trimspace(var.snowalert_database_name))
   comment = "Snowalert Database."
@@ -31,7 +31,7 @@ locals {
 # User
 resource "snowflake_user" "snowalert" {
   count    = var.create_user == true ? 1 : 0
-  provider = snowflake.admin_role
+  provider = snowflake.security_admin_role
 
   # Make sure the name is unique, if prompted with object already exists
   login_name = upper(trimspace(var.snowalert_user_name))
@@ -51,7 +51,7 @@ locals {
 # Role
 resource "snowflake_role" "snowalert" {
   count    = var.create_role == true ? 1 : 0
-  provider = snowflake.admin_role
+  provider = snowflake.security_admin_role
 
   name    = upper(trimspace(var.snowalert_role_name))
   comment = "The role that all Snowalert objects are granted to."

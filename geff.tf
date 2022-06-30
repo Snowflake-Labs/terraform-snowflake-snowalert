@@ -17,8 +17,8 @@ module "geff_snowalert" {
   geff_secret_arns   = local.snowalert_secret_arns
 
   providers = {
-    snowflake.api_integration_role     = snowflake.api_integration_role
-    snowflake.storage_integration_role = snowflake.storage_integration_role
+    snowflake.api_integration_role     = snowflake.security_api_integration_role
+    snowflake.storage_integration_role = snowflake.security_storage_integration_role
     aws                                = aws
   }
 }

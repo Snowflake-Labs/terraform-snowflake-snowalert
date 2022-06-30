@@ -29,6 +29,14 @@ module "snowalert" {
   rules_schema_name   = var.rules_schema_name
   results_schema_name = var.results_schema_name
 
+  security_integration_role = var.security_integration_role
+  security_admin_role       = var.security_admin_role
+  security_alerting_role    = var.security_alerting_role
+  security_ingest_role      = var.security_ingest_role
+  security_modeling_role    = var.security_modeling_role
+  security_monitoring_role  = var.security_monitoring_role
+  snowalert_app_role        = var.snowalert_app_role
+
   handlers          = var.handlers
   slack_secrets_arn = var.slack_secrets_arn
 
@@ -44,10 +52,10 @@ module "snowalert" {
   servicenow_api_url     = var.servicenow_api_url
 
   providers = {
-    snowflake.api_integration_role     = snowflake.api_integration_role
-    snowflake.storage_integration_role = snowflake.storage_integration_role
-    snowflake.admin_role               = snowflake.admin_role
-    snowflake.alerting_role            = snowflake.alerting_role
-    aws                                = aws
+    snowflake.security_api_integration_role     = snowflake.security_api_integration_role
+    snowflake.security_storage_integration_role = snowflake.security_storage_integration_role
+    snowflake.security_admin_role               = snowflake.security_admin_role
+    snowflake.security_alerting_role            = snowflake.security_alerting_role
+    aws                                         = aws
   }
 }

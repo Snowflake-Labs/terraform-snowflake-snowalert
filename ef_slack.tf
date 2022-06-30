@@ -1,6 +1,6 @@
 resource "snowflake_external_function" "slack_snowflake" {
   count    = contains(var.handlers, "slack") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -77,7 +77,7 @@ locals {
 
 resource "snowflake_function" "slack_snowflake_chat_post_message" {
   count    = contains(var.handlers, "slack") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   name     = "SLACK_SNOWFLAKE_CHAT_POST_MESSAGE"
   database = local.snowalert_database_name
@@ -117,7 +117,7 @@ locals {
 
 resource "snowflake_function" "slack_handler" {
   count    = contains(var.handlers, "slack") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema

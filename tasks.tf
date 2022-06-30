@@ -1,5 +1,5 @@
 resource "snowflake_task" "snowalert_alert_merge_task" {
-  provider = snowflake.admin_role
+  provider = snowflake.security_admin_role
 
   warehouse = local.snowalert_warehouse_name
   database  = local.snowalert_database_name
@@ -12,7 +12,7 @@ resource "snowflake_task" "snowalert_alert_merge_task" {
 }
 
 resource "snowflake_task" "snowalert_suppression_merge_task" {
-  provider = snowflake.admin_role
+  provider = snowflake.security_admin_role
 
   warehouse = local.snowalert_warehouse_name
   database  = local.snowalert_database_name
@@ -25,7 +25,7 @@ resource "snowflake_task" "snowalert_suppression_merge_task" {
 }
 
 resource "snowflake_task" "alert_dispatcher_task" {
-  provider = snowflake.admin_role
+  provider = snowflake.security_admin_role
 
   warehouse = local.snowalert_warehouse_name
   database  = local.snowalert_database_name
@@ -38,7 +38,7 @@ resource "snowflake_task" "alert_dispatcher_task" {
 }
 
 resource "snowflake_task" "alert_scheduler_task" {
-  provider = snowflake.admin_role
+  provider = snowflake.security_admin_role
 
   warehouse = local.snowalert_warehouse_name
   database  = local.snowalert_database_name

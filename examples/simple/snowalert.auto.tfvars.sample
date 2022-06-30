@@ -1,0 +1,38 @@
+# Required
+snowflake_account = "account_name"
+
+# Optional
+env            = "dev"
+prefix         = "my"
+terraform_role = "ACCOUNTADMIN" # my_org_alerting_rl
+
+snowalert_warehouse_name = "SNOWALERT_WAREHOUSE"
+snowalert_database_name  = "SNOWALERT"
+snowalert_user_name      = "APP_SNOWALERT"
+snowalert_role_name      = "APP_SNOWALERT"
+
+alert_merge_schedule     = "0 12 * * *"   # daily at 12 pm: https://crontab.guru/#0_12_*_*_*
+alert_dispatch_schedule  = "* * * * * "   # every min: https://crontab.guru/#*_*_*_*_*
+alert_scheduler_schedule = "1/15 * * * *" # every 15 mins: https://crontab.guru/#1/15_*_*_*_*
+
+create_warehouse = false
+create_database  = false
+create_user      = false
+create_role      = false
+create_schemas   = true
+
+
+handlers = [
+  "slack",
+  #   "jira",
+  #   "smtp",
+  #   "servicenow",
+]
+
+# Correspoding variables of the specified handlers are required
+slack_secrets_arn = "arn:aws:secretsmanager:us-east-1:111122223333:secret:tutorial/MyFirstSecret-x1y2z3"
+
+# GEFF
+aws_region         = "us-east-1"
+geff_image_version = "latest"
+data_bucket_arns   = []

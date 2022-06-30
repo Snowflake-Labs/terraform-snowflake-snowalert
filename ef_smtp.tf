@@ -1,6 +1,6 @@
 resource "snowflake_external_function" "smtp_send" {
   count    = contains(var.handlers, "smtp") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -71,7 +71,7 @@ locals {
 
 resource "snowflake_function" "smtp_handler" {
   count    = contains(var.handlers, "smtp") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -108,7 +108,7 @@ locals {
 
 resource "snowflake_function" "smtp_handler_1_arg" {
   count    = contains(var.handlers, "smtp") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
