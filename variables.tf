@@ -256,6 +256,13 @@ variable "snowalert_app_role" {
   default     = "APP_SNOWALERT"
 }
 
+variable "arn_format" {
+  type        = string
+  description = "ARN format could be aws or aws-us-gov. Defaults to non-gov."
+  default     = "aws"
+}
+
+
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}

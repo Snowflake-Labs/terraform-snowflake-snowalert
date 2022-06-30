@@ -26,4 +26,8 @@ resource "snowflake_stream" "raw_alerts_merge_stream" {
     local.raw_alerts_table,
   ])
   comment = "A stream to track the diffs on raw_alerts table."
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }

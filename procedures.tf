@@ -27,6 +27,10 @@ resource "snowflake_procedure" "alert_dispatcher" {
       ])
     }
   )
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_procedure" "alert_merge" {
@@ -57,6 +61,10 @@ resource "snowflake_procedure" "alert_merge" {
       snowflake_stream.raw_alerts_merge_stream.name,
     ])
   })
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_procedure" "alert_processor" {
@@ -81,6 +89,10 @@ resource "snowflake_procedure" "alert_processor" {
       snowflake_view.alerts.name,
     ])
   })
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_procedure" "alert_queries_runner_with_time" {
@@ -119,6 +131,10 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
       local.rules_schema,
     ])
   })
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_procedure" "alert_queries_runner_without_time" {
@@ -152,6 +168,10 @@ resource "snowflake_procedure" "alert_queries_runner_without_time" {
       local.rules_schema,
     ])
   })
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_procedure" "alert_queries_runner" {
@@ -180,6 +200,10 @@ resource "snowflake_procedure" "alert_queries_runner" {
       local.rules_schema,
     ])
   })
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_procedure" "alert_scheduler" {
@@ -218,6 +242,10 @@ resource "snowflake_procedure" "alert_scheduler" {
       snowflake_procedure.alert_queries_runner_without_time.name,
     ])
   })
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_procedure" "alert_suppressions_runner" {
@@ -250,6 +278,10 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
       local.alerts_table,
     ])
   })
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" {
@@ -277,6 +309,10 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
       local.alerts_table,
     ])
   })
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_procedure" "violation_queries_runner" {
@@ -304,6 +340,10 @@ resource "snowflake_procedure" "violation_queries_runner" {
       local.alerts_table,
     ])
   })
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 # --------------------------------

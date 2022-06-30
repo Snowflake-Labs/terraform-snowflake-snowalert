@@ -10,6 +10,7 @@ module "geff_snowalert" {
 
   # AWS
   aws_region = local.aws_region
+  arn_format = var.arn_format
 
   # Other config items
   geff_image_version = var.geff_image_version

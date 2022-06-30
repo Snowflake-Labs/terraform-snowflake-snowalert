@@ -73,6 +73,10 @@ resource "snowflake_external_function" "snowalert_jira_api" {
 jira_api: (method, path, body) -> api_response
 https://developer.atlassian.com/cloud/jira/platform/rest/v3/
 COMMENT
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_function" "jira_handler" {
@@ -109,4 +113,8 @@ resource "snowflake_function" "jira_handler" {
       ])
     }
   )
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }

@@ -66,6 +66,10 @@ resource "snowflake_table" "raw_alerts" {
   }
 
   comment = "A raw alerts table."
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -139,6 +143,10 @@ resource "snowflake_table" "alerts" {
     name = "HANDLED"
     type = "VARIANT"
   }
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -182,6 +190,10 @@ resource "snowflake_table" "violations" {
     name = "SUPPRESSION_RULE"
     type = "VARCHAR(16777216)"
   }
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -205,6 +217,10 @@ resource "snowflake_table" "query_metadata" {
     name = "V"
     type = "VARIANT"
   }
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -228,6 +244,10 @@ resource "snowflake_table" "run_metadata" {
     name = "V"
     type = "VARIANT"
   }
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -251,6 +271,10 @@ resource "snowflake_table" "ingestion_metadata" {
     name = "V"
     type = "VARIANT"
   }
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {

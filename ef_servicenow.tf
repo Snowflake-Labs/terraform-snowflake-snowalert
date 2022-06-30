@@ -44,6 +44,10 @@ resource "snowflake_external_function" "servicenow_create_incident" {
   comment = <<COMMENT
 servicenow_create_incident: (payload) -> response
 COMMENT
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {

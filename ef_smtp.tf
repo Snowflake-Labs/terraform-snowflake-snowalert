@@ -59,6 +59,10 @@ resource "snowflake_external_function" "smtp_send" {
   comment = <<COMMENT
 slack_snowflake: (method, path, params) -> response
 COMMENT
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -96,6 +100,10 @@ ${local.smtp_send_function}(
   payload['message_text']
 )
 SQL
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -127,4 +135,8 @@ ${local.smtp_handler_function}(
   payload
 )
 SQL
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }

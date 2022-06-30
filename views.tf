@@ -11,6 +11,10 @@ resource "snowflake_view" "rule_tags" {
     }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "alerts" {
@@ -32,6 +36,10 @@ resource "snowflake_view" "alerts" {
     }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "violations" {
@@ -53,6 +61,10 @@ resource "snowflake_view" "violations" {
     }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "tags_foj_alerts" {
@@ -79,6 +91,10 @@ resource "snowflake_view" "tags_foj_alerts" {
     }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "tags_foj_violations" {
@@ -105,6 +121,10 @@ resource "snowflake_view" "tags_foj_violations" {
     }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -134,6 +154,10 @@ resource "snowflake_view" "alert_queries_runs" {
     { results_run_metadata = local.results_run_metadata }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "alert_query_rule_runs" {
@@ -149,6 +173,10 @@ resource "snowflake_view" "alert_query_rule_runs" {
     { results_query_metadata = local.results_query_metadata }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "alert_suppressions_runs" {
@@ -164,6 +192,10 @@ resource "snowflake_view" "alert_suppressions_runs" {
     { results_run_metadata = local.results_run_metadata }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "alert_suppression_rule_runs" {
@@ -179,6 +211,10 @@ resource "snowflake_view" "alert_suppression_rule_runs" {
     { results_query_metadata = local.results_query_metadata }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "violation_queries_runs" {
@@ -194,6 +230,10 @@ resource "snowflake_view" "violation_queries_runs" {
     { results_run_metadata = local.results_run_metadata }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "violation_query_rule_runs" {
@@ -209,6 +249,10 @@ resource "snowflake_view" "violation_query_rule_runs" {
     { results_query_metadata = local.results_query_metadata }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "violation_suppressions_runs" {
@@ -224,6 +268,10 @@ resource "snowflake_view" "violation_suppressions_runs" {
     { results_run_metadata = local.results_run_metadata }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "violation_suppression_rule_runs" {
@@ -239,6 +287,10 @@ resource "snowflake_view" "violation_suppression_rule_runs" {
     { results_query_metadata = local.results_query_metadata }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "rule_views_to_titles_map" {
@@ -251,6 +303,10 @@ resource "snowflake_view" "rule_views_to_titles_map" {
 
   statement  = templatefile("${path.module}/views_sql/rule_views_to_titles_map.sql", {})
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -312,6 +368,10 @@ resource "snowflake_view" "alert_query_rule_run_errors" {
     }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "alert_suppression_rule_run_errors" {
@@ -329,6 +389,10 @@ resource "snowflake_view" "alert_suppression_rule_run_errors" {
     }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "violation_query_rule_run_errors" {
@@ -346,6 +410,10 @@ resource "snowflake_view" "violation_query_rule_run_errors" {
     }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "violation_suppression_rule_run_errors" {
@@ -363,6 +431,10 @@ resource "snowflake_view" "violation_suppression_rule_run_errors" {
     }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_view" "data_connector_run_errors" {
@@ -380,4 +452,8 @@ resource "snowflake_view" "data_connector_run_errors" {
     }
   )
   or_replace = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }

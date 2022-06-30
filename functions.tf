@@ -23,6 +23,10 @@ resource "snowflake_function" "time_slices_without_tz" {
   return_type     = "TABLE (slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)"
   return_behavior = "IMMUTABLE"
   statement       = templatefile("${path.module}/functions_sql/time_slices_without_tz.sql", {})
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_function" "time_slices_with_tz" {
@@ -50,6 +54,10 @@ resource "snowflake_function" "time_slices_with_tz" {
   return_type     = "TABLE (slice_start TIMESTAMP_LTZ, slice_end TIMESTAMP_LTZ)"
   return_behavior = "IMMUTABLE"
   statement       = templatefile("${path.module}/functions_sql/time_slices_with_tz.sql", {})
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -94,6 +102,10 @@ resource "snowflake_function" "time_slices_before_t_without_tz" {
       data_time_slices_without_tz_function = local.data_time_slices_without_tz_function
     }
   )
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_function" "time_slices_before_t_with_tz" {
@@ -124,6 +136,10 @@ resource "snowflake_function" "time_slices_before_t_with_tz" {
       data_time_slices_with_tz_function = local.data_time_slices_with_tz_function
     }
   )
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_function" "time_slices_before_t_without_time" {
@@ -149,8 +165,11 @@ resource "snowflake_function" "time_slices_before_t_without_time" {
       data_time_slices_without_tz_function = local.data_time_slices_without_tz_function
     }
   )
-}
 
+  depends_on = [
+    module.snowalert_grants
+  ]
+}
 
 resource "snowflake_function" "object_assign" {
   provider = snowflake.security_alerting_role
@@ -174,6 +193,10 @@ resource "snowflake_function" "object_assign" {
   statement   = <<javascript
 return Object.assign(O1, O2)
 javascript
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_function" "urlencode" {
@@ -200,6 +223,10 @@ if (OBJ.hasOwnProperty(p)) {
 }
 return ret.join("&")
 javascript
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 
@@ -233,4 +260,8 @@ resource "snowflake_function" "array_set" {
   // map null and undefined value to proper JSON null
   return Array.from(XS).map(_ => _ == null ? null : _)
 javascript
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
