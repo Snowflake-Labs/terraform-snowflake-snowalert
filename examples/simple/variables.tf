@@ -1,14 +1,26 @@
 # Required Variables
-variable "prefix" {
+variable "snowflake_account" {
   type        = string
-  description = "This will be the prefix used to name the Resources."
+  description = "Snowflake Account."
 }
 
 # Optional Variables
+variable "aws_region" {
+  type        = string
+  description = "Region for the AWS resources."
+  default     = "us-west-2"
+}
+
 variable "env" {
   type        = string
   description = "Dev/Prod/Staging or any other custom environment name."
   default     = "dev"
+}
+
+variable "prefix" {
+  type        = string
+  description = "This will be the prefix used to name the Resources. WARNING: Enter a short prefix in order to prevent name length related restrictions"
+  default     = "example"
 }
 
 variable "snowalert_warehouse_name" {
@@ -35,58 +47,6 @@ variable "snowalert_role_name" {
   default     = "APP_SNOWALERT"
 }
 
-variable "aws_region" {
-  description = "The AWS region in which the AWS infrastructure is created."
-  default     = "us-west-2"
-}
-
-variable "aws_cloudwatch_metric_namespace" {
-  type        = string
-  description = "prefix for CloudWatch Metrics that GEFF writes"
-  default     = "*"
-}
-
-variable "log_retention_days" {
-  description = "Log retention period in days."
-  default     = 0 # Forever
-}
-
-variable "snowflake_integration_user_roles" {
-  type        = list(string)
-  default     = []
-  description = "List of roles to which GEFF infra will GRANT USAGE ON INTEGRATION perms."
-}
-
-variable "deploy_lambda_in_vpc" {
-  type        = bool
-  description = "The security group VPC ID for the lambda function."
-  default     = false
-}
-
-variable "lambda_security_group_ids" {
-  type        = list(string)
-  default     = []
-  description = "The security group IDs for the lambda function."
-}
-
-variable "lambda_subnet_ids" {
-  type        = list(string)
-  default     = []
-  description = "The subnet IDs for the lambda function."
-}
-
-variable "geff_image_version" {
-  type        = string
-  description = "Version of the GEFF docker image."
-  default     = "latest"
-}
-
-variable "data_bucket_arns" {
-  type        = list(string)
-  default     = []
-  description = "List of Bucket ARNs for the s3_reader role to read from."
-}
-
 variable "create_warehouse" {
   type        = bool
   default     = false
@@ -105,12 +65,6 @@ variable "create_user" {
   description = "Flag to create user or not."
 }
 
-variable "snowalert_user_email" {
-  type        = string
-  default     = null
-  description = "Email of the snowalert Snowflake user."
-}
-
 variable "create_role" {
   type        = bool
   default     = false
@@ -127,6 +81,18 @@ variable "create_tables" {
   type        = bool
   default     = false
   description = "Flag to create tables within the module or not."
+}
+
+variable "data_bucket_arns" {
+  type        = list(string)
+  default     = []
+  description = "List of Bucket ARNs for the s3_reader role to read from."
+}
+
+variable "geff_image_version" {
+  type        = string
+  description = "Version of the GEFF docker image."
+  default     = "latest"
 }
 
 variable "handlers" {
@@ -190,6 +156,12 @@ variable "servicenow_api_url" {
   description = "Service Now API URL."
 }
 
+variable "snowalert_user_email" {
+  type        = string
+  default     = null
+  description = "Email of the snowalert Snowflake user."
+}
+
 variable "snowalert_warehouse_size" {
   type        = string
   description = "Warehouse size."
@@ -241,59 +213,41 @@ variable "monitoring_schema_name" {
 variable "security_integration_role" {
   type        = string
   description = "Role for creating database level or account level objects."
-  default     = "SECURITY_INTEGRATION_OWNER_RL"
+  default     = "ACCOUNTADMIN"
 }
 
 variable "security_admin_role" {
   type        = string
   description = "Role for creating database level or account level objects."
-  default     = "SECURITY_ADMIN_RL"
+  default     = "ACCOUNTADMIN"
 }
 
 variable "security_alerting_role" {
   type        = string
   description = "Role for creating schema level objects."
-  default     = "SECURITY_ALERTING_RL"
+  default     = "ACCOUNTADMIN"
 }
 
 variable "security_ingest_role" {
   type        = string
   description = "Role for creating schema level objects."
-  default     = "SECURITY_INGEST_RL"
+  default     = "ACCOUNTADMIN"
 }
 
 variable "security_modeling_role" {
   type        = string
   description = "Role for creating schema level objects."
-  default     = "SECURITY_MODELING_RL"
+  default     = "ACCOUNTADMIN"
 }
 
 variable "security_monitoring_role" {
   type        = string
   description = "Role for creating schema level objects."
-  default     = "SECURITY_MONITORING_RL"
+  default     = "ACCOUNTADMIN"
 }
 
 variable "snowalert_app_role" {
   type        = string
   description = "Role for creating schema level objects."
   default     = "APP_SNOWALERT"
-}
-
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-data "aws_partition" "current" {}
-
-locals {
-  account_id = data.aws_caller_identity.current.account_id
-  aws_region = data.aws_region.current.name
-}
-
-locals {
-  snowalert_secret_arns = flatten([
-    contains(var.handlers, "jira") == true ? [var.jira_secrets_arn] : [],
-    contains(var.handlers, "slack") == true ? [var.slack_secrets_arn] : [],
-    contains(var.handlers, "servicenow") == true ? [var.servicenow_secrets_arn] : [],
-    contains(var.handlers, "smtp") == true ? [var.smtp_secrets_arn] : [],
-  ])
 }
