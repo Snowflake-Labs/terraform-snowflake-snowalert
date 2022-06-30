@@ -30,7 +30,6 @@ module "snowalert" {
   security_ingest_role      = var.security_ingest_role
   security_modeling_role    = var.security_modeling_role
   security_monitoring_role  = var.security_monitoring_role
-  snowalert_app_role        = var.snowalert_app_role
 
   handlers          = var.handlers
   slack_secrets_arn = var.slack_secrets_arn

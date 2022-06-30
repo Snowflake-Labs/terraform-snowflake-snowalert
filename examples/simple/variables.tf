@@ -210,8 +210,3 @@ variable "security_monitoring_role" {
   default     = "ACCOUNTADMIN"
 }
 
-variable "snowalert_app_role" {
-  type        = string
-  description = "Role for creating schema level objects."
-  default     = "APP_SNOWALERT"
-}

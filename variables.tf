@@ -244,12 +244,6 @@ variable "security_monitoring_role" {
   default     = "SECURITY_MONITORING_RL"
 }
 
-variable "snowalert_app_role" {
-  type        = string
-  description = "Role for creating schema level objects."
-  default     = "APP_SNOWALERT"
-}
-
 variable "arn_format" {
   type        = string
   description = "ARN format could be aws or aws-us-gov. Defaults to non-gov."
