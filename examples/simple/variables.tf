@@ -186,30 +186,6 @@ variable "alert_scheduler_schedule" {
   default     = "1/15 * * * *"
 }
 
-variable "data_schema_name" {
-  type        = string
-  description = "Schema that has the data tables."
-  default     = "DATA"
-}
-
-variable "rules_schema_name" {
-  type        = string
-  description = "Schemas that has the rules as views."
-  default     = "RULES"
-}
-
-variable "results_schema_name" {
-  type        = string
-  description = ""
-  default     = "RESULTS"
-}
-
-variable "monitoring_schema_name" {
-  type        = string
-  description = ""
-  default     = "MONITORING"
-}
-
 variable "security_integration_role" {
   type        = string
   description = "Role for creating database level or account level objects."

@@ -13,6 +13,7 @@ module "snowalert" {
   snowalert_user_name      = var.snowalert_user_name
   snowalert_role_name      = var.snowalert_role_name
   snowalert_user_email     = var.snowalert_user_email
+  create_tables            = var.create_tables
 
   handlers          = var.handlers
   slack_secrets_arn = var.slack_secrets_arn
