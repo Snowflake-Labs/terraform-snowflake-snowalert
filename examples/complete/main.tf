@@ -2,32 +2,27 @@ module "snowalert" {
   source = "../../"
 
   # Optional
-  env                      = var.env
-  prefix                   = var.prefix
-  arn_format               = var.arn_format
-  geff_image_version       = var.geff_image_version
+  env    = var.env
+  prefix = var.prefix
+
+  # GEFF
+  aws_region         = var.aws_region
+  arn_format         = var.arn_format
+  geff_image_version = var.geff_image_version
+
   snowalert_warehouse_size = var.snowalert_warehouse_size
   snowflake_integration_user_roles = [
     var.security_alerting_role,
-    var.snowalert_role_name,
   ]
 
   snowalert_warehouse_name = var.snowalert_warehouse_name
   snowalert_database_name  = var.snowalert_database_name
-  snowalert_user_name      = var.snowalert_user_name
-  snowalert_role_name      = var.snowalert_role_name
 
   alert_merge_schedule     = var.alert_merge_schedule
   alert_dispatch_schedule  = var.alert_dispatch_schedule
   alert_scheduler_schedule = var.alert_scheduler_schedule
 
-  create_warehouse     = var.create_warehouse
-  create_database      = var.create_database
-  create_user          = var.create_user
-  snowalert_user_email = var.snowalert_user_email
-  create_role          = var.create_role
-  create_schemas       = var.create_schemas
-  create_tables        = var.create_tables
+  create_tables = var.create_tables
 
   security_integration_role = var.security_integration_role
   security_admin_role       = var.security_admin_role

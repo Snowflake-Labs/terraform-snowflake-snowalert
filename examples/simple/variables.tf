@@ -35,18 +35,6 @@ variable "snowalert_database_name" {
   default     = "SNOWALERT"
 }
 
-variable "snowalert_user_name" {
-  type        = string
-  description = "User used to grant ownership to all Snowalert objects."
-  default     = "APP_SNOWALERT"
-}
-
-variable "snowalert_role_name" {
-  type        = string
-  description = "Role used to grant ownership to all Snowalert objects."
-  default     = "APP_SNOWALERT"
-}
-
 variable "create_warehouse" {
   type        = bool
   default     = false

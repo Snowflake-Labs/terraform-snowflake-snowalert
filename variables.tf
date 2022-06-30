@@ -29,12 +29,6 @@ variable "snowalert_user_name" {
   default     = "APP_SNOWALERT"
 }
 
-variable "snowalert_role_name" {
-  type        = string
-  description = "Role used to grant ownership to all Snowalert objects."
-  default     = "APP_SNOWALERT"
-}
-
 variable "aws_region" {
   description = "The AWS region in which the AWS infrastructure is created."
   default     = "us-west-2"
