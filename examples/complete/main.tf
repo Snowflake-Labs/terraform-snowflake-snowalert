@@ -12,7 +12,9 @@ module "snowalert" {
 
   snowalert_warehouse_size = var.snowalert_warehouse_size
   snowflake_integration_user_roles = [
+    var.security_ingest_role,
     var.security_alerting_role,
+    var.security_modeling_role,
   ]
 
   snowalert_warehouse_name = var.snowalert_warehouse_name
