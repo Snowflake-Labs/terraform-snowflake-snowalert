@@ -1,6 +1,6 @@
 resource "snowflake_table" "raw_alerts" {
   count    = var.create_tables ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database        = local.snowalert_database_name
   schema          = local.results_schema
@@ -66,6 +66,10 @@ resource "snowflake_table" "raw_alerts" {
   }
 
   comment = "A raw alerts table."
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -74,7 +78,7 @@ locals {
 
 resource "snowflake_table" "alerts" {
   count    = var.create_tables ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -139,6 +143,10 @@ resource "snowflake_table" "alerts" {
     name = "HANDLED"
     type = "VARIANT"
   }
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -147,7 +155,7 @@ locals {
 
 resource "snowflake_table" "violations" {
   count    = var.create_tables ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -182,6 +190,10 @@ resource "snowflake_table" "violations" {
     name = "SUPPRESSION_RULE"
     type = "VARCHAR(16777216)"
   }
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -190,7 +202,7 @@ locals {
 
 resource "snowflake_table" "query_metadata" {
   count    = var.create_tables ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -205,6 +217,10 @@ resource "snowflake_table" "query_metadata" {
     name = "V"
     type = "VARIANT"
   }
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -213,7 +229,7 @@ locals {
 
 resource "snowflake_table" "run_metadata" {
   count    = var.create_tables ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -228,6 +244,10 @@ resource "snowflake_table" "run_metadata" {
     name = "V"
     type = "VARIANT"
   }
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -236,7 +256,7 @@ locals {
 
 resource "snowflake_table" "ingestion_metadata" {
   count    = var.create_tables ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -251,6 +271,10 @@ resource "snowflake_table" "ingestion_metadata" {
     name = "V"
     type = "VARIANT"
   }
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {

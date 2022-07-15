@@ -1,5 +1,5 @@
 resource "snowflake_function" "time_slices_without_tz" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -23,10 +23,14 @@ resource "snowflake_function" "time_slices_without_tz" {
   return_type     = "TABLE (slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)"
   return_behavior = "IMMUTABLE"
   statement       = templatefile("${path.module}/functions_sql/time_slices_without_tz.sql", {})
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_function" "time_slices_with_tz" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -50,6 +54,10 @@ resource "snowflake_function" "time_slices_with_tz" {
   return_type     = "TABLE (slice_start TIMESTAMP_LTZ, slice_end TIMESTAMP_LTZ)"
   return_behavior = "IMMUTABLE"
   statement       = templatefile("${path.module}/functions_sql/time_slices_with_tz.sql", {})
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -67,7 +75,7 @@ locals {
 }
 
 resource "snowflake_function" "time_slices_before_t_without_tz" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -94,10 +102,14 @@ resource "snowflake_function" "time_slices_before_t_without_tz" {
       data_time_slices_without_tz_function = local.data_time_slices_without_tz_function
     }
   )
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_function" "time_slices_before_t_with_tz" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -124,10 +136,14 @@ resource "snowflake_function" "time_slices_before_t_with_tz" {
       data_time_slices_with_tz_function = local.data_time_slices_with_tz_function
     }
   )
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_function" "time_slices_before_t_without_time" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -149,11 +165,14 @@ resource "snowflake_function" "time_slices_before_t_without_time" {
       data_time_slices_without_tz_function = local.data_time_slices_without_tz_function
     }
   )
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
-
 resource "snowflake_function" "object_assign" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -174,10 +193,14 @@ resource "snowflake_function" "object_assign" {
   statement   = <<javascript
 return Object.assign(O1, O2)
 javascript
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_function" "urlencode" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -200,11 +223,15 @@ if (OBJ.hasOwnProperty(p)) {
 }
 return ret.join("&")
 javascript
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 
 resource "snowflake_function" "array_set" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -233,4 +260,8 @@ resource "snowflake_function" "array_set" {
   // map null and undefined value to proper JSON null
   return Array.from(XS).map(_ => _ == null ? null : _)
 javascript
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }

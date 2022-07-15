@@ -1,29 +1,29 @@
 output "api_gateway_invoke_url" {
   description = "This is the inferred API Gateway invoke URL which we use as allowed prefixes."
-  value       = module.geff_snowalert.api_gateway_invoke_url
+  value       = length(module.geff_snowalert) >= 1 ? module.geff_snowalert[0].api_gateway_invoke_url : null
 }
 
 output "api_integration_name" {
   description = "Name of API integration"
-  value       = module.geff_snowalert.api_integration_name
+  value       = length(module.geff_snowalert) >= 1 ? module.geff_snowalert[0].api_integration_name : null
 }
 
 output "storage_integration_name" {
   description = "Name of Storage integration"
-  value       = module.geff_snowalert.storage_integration_name
+  value       = length(module.geff_snowalert) >= 1 ? module.geff_snowalert[0].storage_integration_name : null
 }
 
 output "bucket_url" {
   description = "GEFF S3 Bucket URL"
-  value       = module.geff_snowalert.bucket_url
+  value       = length(module.geff_snowalert) >= 1 ? module.geff_snowalert[0].bucket_url : null
 }
 
 output "sns_topic_arn" {
   description = "GEFF S3 SNS Topic to use while creating the Snowflake PIPE."
-  value       = module.geff_snowalert.sns_topic_arn
+  value       = length(module.geff_snowalert) >= 1 ? module.geff_snowalert[0].sns_topic_arn : null
 }
 
 output "geff_lambda_sg_ids" {
   description = "Lambda SG IDs."
-  value       = module.geff_snowalert.geff_lambda_sg_ids
+  value       = length(module.geff_snowalert) >= 1 ? module.geff_snowalert[0].geff_lambda_sg_ids : null
 }

@@ -1,6 +1,6 @@
 resource "snowflake_external_function" "servicenow_create_incident" {
   count    = contains(var.handlers, "servicenow") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -35,8 +35,8 @@ resource "snowflake_external_function" "servicenow_create_incident" {
 
   return_null_allowed       = true
   max_batch_rows            = 1
-  api_integration           = module.geff_snowalert.api_integration_name
-  url_of_proxy_and_resource = "${module.geff_snowalert.api_gateway_invoke_url}${var.env}/https"
+  api_integration           = module.geff_snowalert[0].api_integration_name
+  url_of_proxy_and_resource = "${module.geff_snowalert[0].api_gateway_invoke_url}${var.env}/https"
 
   return_type     = "VARIANT"
   return_behavior = "VOLATILE"
@@ -44,6 +44,10 @@ resource "snowflake_external_function" "servicenow_create_incident" {
   comment = <<COMMENT
 servicenow_create_incident: (payload) -> response
 COMMENT
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {

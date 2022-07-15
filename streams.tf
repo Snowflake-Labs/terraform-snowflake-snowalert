@@ -1,5 +1,5 @@
 # resource "snowflake_stream" "raw_alerts_stream" {
-#   provider = snowflake.alerting_role
+#   provider = snowflake.security_alerting_role
 
 #   database = local.snowalert_database_name
 #   schema   = local.results_schema
@@ -14,7 +14,7 @@
 # }
 
 resource "snowflake_stream" "raw_alerts_merge_stream" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -26,4 +26,8 @@ resource "snowflake_stream" "raw_alerts_merge_stream" {
     local.raw_alerts_table,
   ])
   comment = "A stream to track the diffs on raw_alerts table."
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }

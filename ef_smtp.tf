@@ -1,6 +1,6 @@
 resource "snowflake_external_function" "smtp_send" {
   count    = contains(var.handlers, "smtp") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -50,8 +50,8 @@ resource "snowflake_external_function" "smtp_send" {
 
   return_null_allowed       = true
   max_batch_rows            = 1
-  api_integration           = module.geff_snowalert.api_integration_name
-  url_of_proxy_and_resource = "${module.geff_snowalert.api_gateway_invoke_url}${var.env}/https"
+  api_integration           = module.geff_snowalert[0].api_integration_name
+  url_of_proxy_and_resource = "${module.geff_snowalert[0].api_gateway_invoke_url}${var.env}/https"
 
   return_type     = "VARIANT"
   return_behavior = "VOLATILE"
@@ -59,6 +59,10 @@ resource "snowflake_external_function" "smtp_send" {
   comment = <<COMMENT
 slack_snowflake: (method, path, params) -> response
 COMMENT
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -71,7 +75,7 @@ locals {
 
 resource "snowflake_function" "smtp_handler" {
   count    = contains(var.handlers, "smtp") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -96,6 +100,10 @@ ${local.smtp_send_function}(
   payload['message_text']
 )
 SQL
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -108,7 +116,7 @@ locals {
 
 resource "snowflake_function" "smtp_handler_1_arg" {
   count    = contains(var.handlers, "smtp") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -127,4 +135,8 @@ ${local.smtp_handler_function}(
   payload
 )
 SQL
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }

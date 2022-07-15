@@ -1,6 +1,6 @@
 resource "snowflake_external_function" "slack_snowflake" {
   count    = contains(var.handlers, "slack") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -50,8 +50,8 @@ resource "snowflake_external_function" "slack_snowflake" {
 
   return_null_allowed       = true
   max_batch_rows            = 1
-  api_integration           = module.geff_snowalert.api_integration_name
-  url_of_proxy_and_resource = "${module.geff_snowalert.api_gateway_invoke_url}${var.env}/https"
+  api_integration           = module.geff_snowalert[0].api_integration_name
+  url_of_proxy_and_resource = "${module.geff_snowalert[0].api_gateway_invoke_url}${var.env}/https"
 
   return_type     = "VARIANT"
   return_behavior = "VOLATILE"
@@ -59,6 +59,10 @@ resource "snowflake_external_function" "slack_snowflake" {
   comment = <<COMMENT
 slack_snowflake: (method, path, params) -> response
 COMMENT
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -77,7 +81,7 @@ locals {
 
 resource "snowflake_function" "slack_snowflake_chat_post_message" {
   count    = contains(var.handlers, "slack") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   name     = "SLACK_SNOWFLAKE_CHAT_POST_MESSAGE"
   database = local.snowalert_database_name
@@ -105,6 +109,10 @@ ${local.slack_snowflake_function}(
   ))
 )
 SQL
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 locals {
@@ -117,7 +125,7 @@ locals {
 
 resource "snowflake_function" "slack_handler" {
   count    = contains(var.handlers, "slack") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -141,4 +149,8 @@ ${local.slack_post_message_function}(
   payload['message']
 )
 SQL
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }

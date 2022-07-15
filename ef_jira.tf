@@ -1,6 +1,6 @@
 resource "snowflake_external_function" "snowalert_jira_api" {
   count    = contains(var.handlers, "jira") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -66,18 +66,22 @@ resource "snowflake_external_function" "snowalert_jira_api" {
   return_null_allowed       = true
   return_type               = "VARIANT"
   return_behavior           = "VOLATILE"
-  api_integration           = module.geff_snowalert.api_integration_name
-  url_of_proxy_and_resource = "${module.geff_snowalert.api_gateway_invoke_url}${var.env}/https"
+  api_integration           = module.geff_snowalert[0].api_integration_name
+  url_of_proxy_and_resource = "${module.geff_snowalert[0].api_gateway_invoke_url}${var.env}/https"
 
   comment = <<COMMENT
 jira_api: (method, path, body) -> api_response
 https://developer.atlassian.com/cloud/jira/platform/rest/v3/
 COMMENT
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
 
 resource "snowflake_function" "jira_handler" {
   count    = contains(var.handlers, "jira") == true ? 1 : 0
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   name     = "JIRA_HANDLER"
   database = local.snowalert_database_name
@@ -109,4 +113,8 @@ resource "snowflake_function" "jira_handler" {
       ])
     }
   )
+
+  depends_on = [
+    module.snowalert_grants
+  ]
 }
