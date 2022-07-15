@@ -64,7 +64,7 @@ function find_tags(v, t) {
   )
 }
 
-function get_first_regex_match(regex, s) {
+function get_first_regex_group(regex, s) {
   let match = s.match(regex)
   if (match !== undefined && match !== null) {
     return match[1]
@@ -82,22 +82,16 @@ return {
     .map((v) => ({
       ...v,
       schedule:
-        get_first_regex_match(
-          /[\s]*'([^']*)'[\s]*as[\s]*schedule[\s]*/i,
+        get_first_regex_group(
+          /'([^']*)'\s+as\s+schedule\b/i,
           v.view_definition
         ) || '-',
-      lookback:
-        get_first_regex_match(
-          /[\s]*'([^']*)'[\s]*as[\s]*lookback[\s]*/i,
-          v.view_definition
-        ) || '1d',
     }))
     .map((v) => ({
       rule_name: v.rule_name,
       schedule:
         (find_tags(`$${v.qualified_view_name}`, 'VIOLATION_SCHEDULE')[0] || {})
           .TAG_VALUE || v.schedule,
-      lookback: v.lookback,
     }))
     .map((v) => ({
       schedule: v.schedule,
@@ -108,7 +102,6 @@ return {
         AS
         CALL ${results_violation_queries_runner}(
           '$${v.rule_name}',
-          '$${v.lookback}'
         )
       `),
       resume_violation_query: unindent(`
@@ -119,11 +112,8 @@ return {
       `),
     }))
     .map((v) => ({
-      create_run_violation_query_task:
-        v.schedule == '-' ? '-' : exec(v.run_violation_query),
-      resume_violation_query_task:
-        v.schedule == '-' ? '-' : exec(v.resume_violation_query),
-      suspend_violation_query_task:
-        v.schedule == '-' ? exec(v.suspend_violation_query) : '-',
+      run_violation: v.schedule == '-' ? '-' : exec(v.run_violation_query),
+      resume_violation: v.schedule == '-' ? '-' : exec(v.resume_violation_query),
+      suspend_violation: v.schedule == '-' ? exec(v.suspend_violation_query) : '-',
     })),
 }
