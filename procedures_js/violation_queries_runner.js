@@ -45,42 +45,37 @@ function unindent(s) {
 
 const RUN_ID = Math.random().toString(36).substring(2).toUpperCase()
 
-const insert_violations = exec(
-    "SHOW VIEWS LIKE '%_VIOLATION_QUERY' IN SCHEMA rules"
+const INSERT_VIOLATIONS = `INSERT INTO results.violations (
+  alert_time,
+  id,
+  result
 )
-    .map((v) => v.name)
-    .map((query_name) =>
-        exec(
-            unindent(`
-    INSERT INTO results.violations (alert_time, id, result)
-    SELECT CURRENT_TIMESTAMP()
-      , MD5(TO_JSON(
-          IFNULL(
-            OBJECT_CONSTRUCT(*):IDENTITY,
-            OBJECT_CONSTRUCT(
-                'ENVIRONMENT', IFNULL(OBJECT_CONSTRUCT(*):ENVIRONMENT, PARSE_JSON('null')), 
-                'OBJECT', IFNULL(OBJECT_CONSTRUCT(*):OBJECT, PARSE_JSON('null')),
-                'OWNER', IFNULL(OBJECT_CONSTRUCT(*):OWNER, PARSE_JSON('null')),
-                'TITLE', IFNULL(OBJECT_CONSTRUCT(*):TITLE, PARSE_JSON('null')),
-                'DESCRIPTION', IFNULL(OBJECT_CONSTRUCT(*):DESCRIPTION, PARSE_JSON('null')),
-                'EVENT_DATA', IFNULL(OBJECT_CONSTRUCT(*):EVENT_DATA, PARSE_JSON('null')),
-                'DETECTOR', IFNULL(OBJECT_CONSTRUCT(*):DETECTOR, PARSE_JSON('null')),
-                'SEVERITY', IFNULL(OBJECT_CONSTRUCT(*):SEVERITY, PARSE_JSON('null')),
-                'QUERY_ID', IFNULL(OBJECT_CONSTRUCT(*):QUERY_ID, PARSE_JSON('null')),
-                'QUERY_NAME', '$${query_name}'
-            )
-          )
-        ))
-      , data.object_assign(
-          OBJECT_CONSTRUCT(*),
-          OBJECT_CONSTRUCT('QUERY_NAME', '$${query_name}')
+SELECT CURRENT_TIMESTAMP()
+  , MD5(TO_JSON(
+      IFNULL(
+        OBJECT_CONSTRUCT(*):IDENTITY,
+        OBJECT_CONSTRUCT(
+          'ENVIRONMENT', IFNULL(OBJECT_CONSTRUCT(*):ENVIRONMENT, PARSE_JSON('null')), 
+          'OBJECT', IFNULL(OBJECT_CONSTRUCT(*):OBJECT, PARSE_JSON('null')),
+          'OWNER', IFNULL(OBJECT_CONSTRUCT(*):OWNER, PARSE_JSON('null')),
+          'TITLE', IFNULL(OBJECT_CONSTRUCT(*):TITLE, PARSE_JSON('null')),
+          'DESCRIPTION', IFNULL(OBJECT_CONSTRUCT(*):DESCRIPTION, PARSE_JSON('null')),
+          'EVENT_DATA', IFNULL(OBJECT_CONSTRUCT(*):EVENT_DATA, PARSE_JSON('null')),
+          'DETECTOR', IFNULL(OBJECT_CONSTRUCT(*):DETECTOR, PARSE_JSON('null')),
+          'SEVERITY', IFNULL(OBJECT_CONSTRUCT(*):SEVERITY, PARSE_JSON('null')),
+          'QUERY_ID', IFNULL(OBJECT_CONSTRUCT(*):QUERY_ID, PARSE_JSON('null')),
+          'QUERY_NAME', '$${QUERY_NAME}'
         )
-    FROM rules.$${query_name}
-  `)
-        )
+      )
+    ))
+  , data.object_assign(
+      OBJECT_CONSTRUCT(*),
+      OBJECT_CONSTRUCT('QUERY_NAME', '$${QUERY_NAME}')
     )
+FROM rules.$${QUERY_NAME}
+;`
 
 return {
     run_id: RUN_ID,
-    insert_violations: insert_violations,
+    insert_violations:  exec(INSERT_VIOLATIONS)[0],
 }

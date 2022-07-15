@@ -41,6 +41,7 @@ SELECT table_name AS "rule_name",
   ) as "qualified_view_name"
 FROM INFORMATION_SCHEMA.VIEWS
 WHERE table_schema='${rules_schema_name}'
+  AND table_name NOT LIKE '%_VIOLATION_QUERY' 
 `
 
 function get_ddl(full_rule_name) {
