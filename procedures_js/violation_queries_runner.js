@@ -58,11 +58,10 @@ const insert_violations = exec(
           IFNULL(
             OBJECT_CONSTRUCT(*):IDENTITY,
             OBJECT_CONSTRUCT(
-                'ENVIRONMENT', IFNULL(OBJECT_CONSTRUCT(*):ENVIRONMENT, PARSE_JSON('null')),
+                'ENVIRONMENT', IFNULL(OBJECT_CONSTRUCT(*):ENVIRONMENT, PARSE_JSON('null')), 
                 'OBJECT', IFNULL(OBJECT_CONSTRUCT(*):OBJECT, PARSE_JSON('null')),
                 'OWNER', IFNULL(OBJECT_CONSTRUCT(*):OWNER, PARSE_JSON('null')),
                 'TITLE', IFNULL(OBJECT_CONSTRUCT(*):TITLE, PARSE_JSON('null')),
-                'ALERT_TIME', IFNULL(OBJECT_CONSTRUCT(*):ALERT_TIME, PARSE_JSON('null')),
                 'DESCRIPTION', IFNULL(OBJECT_CONSTRUCT(*):DESCRIPTION, PARSE_JSON('null')),
                 'EVENT_DATA', IFNULL(OBJECT_CONSTRUCT(*):EVENT_DATA, PARSE_JSON('null')),
                 'DETECTOR', IFNULL(OBJECT_CONSTRUCT(*):DETECTOR, PARSE_JSON('null')),
@@ -77,7 +76,6 @@ const insert_violations = exec(
           OBJECT_CONSTRUCT('QUERY_NAME', '$${query_name}')
         )
     FROM rules.$${query_name}
-    WHERE IFF(alert_time IS NOT NULL, alert_time > $${FROM_TIME_SQL}, TRUE)
   `)
         )
     )

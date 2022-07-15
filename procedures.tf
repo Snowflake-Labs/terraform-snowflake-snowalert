@@ -295,11 +295,11 @@ resource "snowflake_procedure" "violation_scheduler" {
       local.snowalert_database_name,
       local.results_schema,
     ])
-    # results_raw_violations_table = join(".", [
-    #   local.snowalert_database_name,
-    #   local.rules_schema,
-    #   local.raw_violations_table,
-    # ])
+    results_violations_table = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+      local.raw_violations_table,
+    ])
     results_violation_queries_runner = join(".", [
       local.snowalert_database_name,
       local.results_schema,
