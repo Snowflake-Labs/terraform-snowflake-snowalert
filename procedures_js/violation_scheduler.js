@@ -75,7 +75,7 @@ function get_first_regex_group(regex, s) {
 
 return {
   scheduled: exec(FIND_VIEWS)
-  .filter((v) => ((find_tags(`$${v.qualified_view_name}`, 'VIOLATION_SCHEDULE')[0] !== null)))
+  .filter((v) => ((find_tags(`$${v.qualified_view_name}`, 'VIOLATION_SCHEDULE')[0] != null)))
   .map((v) => ({
       ...v,
       view_definition: get_ddl(v.qualified_view_name),
@@ -102,7 +102,7 @@ return {
         SCHEDULE='$${v.schedule}'
         AS
         CALL ${results_violation_queries_runner}(
-          '$${v.rule_name}',
+          '$${v.rule_name}'
         )
       `),
       resume_violation_query: unindent(`
