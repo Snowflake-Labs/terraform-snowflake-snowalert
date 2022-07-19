@@ -362,6 +362,11 @@ resource "snowflake_procedure" "violation_queries_runner" {
   name     = "VIOLATION_QUERIES_RUNNER"
   language = "JAVASCRIPT"
 
+  arguments {
+    name = "query_name"
+    type = "VARCHAR"
+  }
+
   return_type = "VARIANT"
   execute_as  = "CALLER"
   statement = templatefile("${path.module}/procedures_js/violation_queries_runner.js", {
