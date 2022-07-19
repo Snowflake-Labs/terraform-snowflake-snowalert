@@ -321,6 +321,7 @@ resource "snowflake_procedure" "violation_scheduler" {
   database = local.snowalert_database_name
   schema   = local.results_schema
   name     = "VIOLATION_SCHEDULER"
+  language = "JAVASCRIPT"
 
   arguments {
     name = "warehouse"
