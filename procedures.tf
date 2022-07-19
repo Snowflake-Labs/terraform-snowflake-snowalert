@@ -316,7 +316,7 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
 }
 
 resource "snowflake_procedure" "violation_scheduler" {
-  provider = snowflake.alerting_role
+  provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
