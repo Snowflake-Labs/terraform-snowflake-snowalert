@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  terraform:
-    name: Terraform
+  terraform_build_complete:
+    name: Terraform Complete
     runs-on: ubuntu-latest
     env:
       SNOWFLAKE_USER: dummy_user
@@ -25,3 +25,22 @@ jobs:
       - name: Terraform Validate
         run: terraform validate -no-color
         working-directory: examples/complete/
+
+  terraform_build_simple:
+    name: Terraform Simple
+    runs-on: ubuntu-latest
+    env:
+      SNOWFLAKE_USER: dummy_user
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+      - name: Terraform Format
+        run: terraform fmt -check -recursive -diff
+      - name: Terraform Init
+        run: terraform init
+        working-directory: examples/simple/
+      - name: Terraform Validate
+        run: terraform validate -no-color
+        working-directory: examples/simple/
