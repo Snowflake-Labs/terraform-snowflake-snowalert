@@ -250,6 +250,11 @@ variable "arn_format" {
   default     = "aws"
 }
 
+variable "jira_api_version" {
+  type        = string
+  description = "Version of the JIRA API to use"
+  default     = "3"
+}
 
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
