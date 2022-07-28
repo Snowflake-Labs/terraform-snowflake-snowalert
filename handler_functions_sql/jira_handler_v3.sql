@@ -1,13 +1,12 @@
 ${jira_api_function}(
     'POST',
-    '/rest/api/${jira_api_version}/issue',
+    '/rest/api/3/issue',
     TO_JSON(
         OBJECT_CONSTRUCT(
             'fields', OBJECT_CONSTRUCT(
                 'labels', ARRAY_CONSTRUCT('SnowAlert'),
                 'assignee', OBJECT_CONSTRUCT(
-                    'accountId',  COALESCE(payload['assignee_account_id'], NULL),
-                    'name',  COALESCE(payload['assignee_email'], NULL)
+                    'accountId',  COALESCE(payload['assignee'], NULL)
                 ),
                 'project', OBJECT_CONSTRUCT(
                     'key', COALESCE(payload['project'], '${default_jira_project}')
