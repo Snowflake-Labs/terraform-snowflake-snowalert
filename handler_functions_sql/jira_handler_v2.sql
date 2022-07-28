@@ -6,7 +6,7 @@ ${jira_api_function}(
             'fields', OBJECT_CONSTRUCT(
                 'labels', ARRAY_CONSTRUCT('SnowAlert'),
                 'assignee', OBJECT_CONSTRUCT(
-                    'name',  COALESCE(payload['assignee_email_address'], NULL),
+                    'name',  COALESCE(payload['assignee_email_address'], NULL)
                 ),
                 'project', OBJECT_CONSTRUCT(
                     'key', COALESCE(payload['project'], '${default_jira_project}')
