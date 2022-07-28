@@ -1,6 +1,6 @@
 ${jira_api_function}(
     'POST',
-    '/rest/api/3/issue',
+    '/rest/api/2/issue',
     TO_JSON(
         OBJECT_CONSTRUCT(
             'fields', OBJECT_CONSTRUCT(
