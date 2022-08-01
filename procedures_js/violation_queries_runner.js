@@ -77,5 +77,5 @@ FROM rules.$${QUERY_NAME}
 
 return {
     run_id: RUN_ID,
-    insert_violations:  exec(INSERT_VIOLATIONS)[0],
+    insert_violations: exec(INSERT_VIOLATIONS)[0],
 }
