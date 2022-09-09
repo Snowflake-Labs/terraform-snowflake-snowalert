@@ -75,7 +75,6 @@ function get_first_regex_group(regex, s) {
 
 return {
   scheduled: exec(FIND_VIEWS)
-    .filter((v) => ((find_tags(`$${v.qualified_view_name}`, 'VIOLATION_SCHEDULE')[0] == null) && !v.qualified_view_name.contains('VIOLATION_QUERY')))
     .map((v) => ({
       ...v,
       view_definition: get_ddl(v.qualified_view_name),
