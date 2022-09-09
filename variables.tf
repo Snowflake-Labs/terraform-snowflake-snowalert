@@ -208,6 +208,12 @@ variable "alert_scheduler_schedule" {
   default     = "1/15 * * * *"
 }
 
+variable "violation_scheduler_schedule" {
+  type        = string
+  description = "Schedule for the violation scheduler task."
+  default     = "1/15 * * * *"
+}
+
 variable "security_integration_role" {
   type        = string
   description = "Role for creating database level or account level objects."

@@ -315,6 +315,45 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
   ]
 }
 
+resource "snowflake_procedure" "violation_scheduler" {
+  provider = snowflake.security_alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.results_schema
+  name     = "VIOLATION_SCHEDULER"
+  language = "JAVASCRIPT"
+
+  arguments {
+    name = "warehouse"
+    type = "VARCHAR"
+  }
+
+  return_type = "VARIANT"
+  execute_as  = "CALLER"
+  statement = templatefile("${path.module}/procedures_js/violation_scheduler.js", {
+    rules_schema_name = local.rules_schema
+    snowalert_database_name = local.snowalert_database_name
+    rules_schema = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+    ])
+    results_schema = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+    ])
+    results_violations_table = join(".", [
+      local.snowalert_database_name,
+      local.rules_schema,
+      local.violations_table,
+    ])
+    results_violation_queries_runner = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+      snowflake_procedure.violation_queries_runner.name,
+    ])
+  })
+}
+
 resource "snowflake_procedure" "violation_queries_runner" {
   provider = snowflake.security_alerting_role
 
@@ -322,6 +361,11 @@ resource "snowflake_procedure" "violation_queries_runner" {
   schema   = local.results_schema
   name     = "VIOLATION_QUERIES_RUNNER"
   language = "JAVASCRIPT"
+
+  arguments {
+    name = "query_name"
+    type = "VARCHAR"
+  }
 
   return_type = "VARIANT"
   execute_as  = "CALLER"

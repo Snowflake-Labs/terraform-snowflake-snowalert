@@ -39,7 +39,7 @@ SELECT table_name AS "rule_name",
     '.',
     TABLE_NAME
   ) as "qualified_view_name"
-FROM INFORMATION_SCHEMA.VIEWS
+FROM ${snowalert_database_name}.INFORMATION_SCHEMA.VIEWS
 WHERE table_schema='${rules_schema_name}'
 `
 
@@ -75,8 +75,8 @@ function get_first_regex_group(regex, s) {
 
 return {
   scheduled: exec(FIND_VIEWS)
-    .filter((v) => ((find_tags(`$${v.qualified_view_name}`, 'VIOLATION_SCHEDULE')[0] == null) && !v.qualified_view_name.contains('VIOLATION_QUERY')))
-    .map((v) => ({
+  .filter((v) => ((find_tags(`$${v.qualified_view_name}`, 'VIOLATION_SCHEDULE')[0] != null)))
+  .map((v) => ({
       ...v,
       view_definition: get_ddl(v.qualified_view_name),
     }))
@@ -87,41 +87,34 @@ return {
           /'([^']*)'\s+as\s+schedule\b/i,
           v.view_definition
         ) || '-',
-      lookback:
-        get_first_regex_group(
-          /'([^']*)'\s+as\s+lookback\b/i,
-          v.view_definition
-        ) || '1d',
     }))
     .map((v) => ({
       rule_name: v.rule_name,
       schedule:
-        (find_tags(`$${v.qualified_view_name}`, 'ALERT_SCHEDULE')[0] || {})
+        (find_tags(`$${v.qualified_view_name}`, 'VIOLATION_SCHEDULE')[0] || {})
           .TAG_VALUE || v.schedule,
-      lookback: v.lookback || '',
     }))
     .map((v) => ({
       schedule: v.schedule,
-      run_alert_query: unindent(`-- create alert query run task
-        CREATE OR REPLACE TASK ${results_schema}.RUN_ALERT_QUERY_$${v.rule_name}
+      run_violation_query: unindent(`-- create violation query run task
+        CREATE OR REPLACE TASK ${results_schema}.RUN_VIOLATION_QUERY_$${v.rule_name}
         WAREHOUSE=$${WAREHOUSE}
         SCHEDULE='$${v.schedule}'
         AS
-        CALL ${results_alert_queries_runner}(
-          '$${v.rule_name}',
-          '$${v.lookback}'
+        CALL ${results_violation_queries_runner}(
+          '$${v.rule_name}'
         )
       `),
-      resume_alert_query: unindent(`
-        ALTER TASK ${results_schema}.RUN_ALERT_QUERY_$${v.rule_name} RESUME
+      resume_violation_query: unindent(`
+        ALTER TASK ${results_schema}.RUN_VIOLATION_QUERY_$${v.rule_name} RESUME
       `),
-      suspend_alert_query: unindent(`
-        ALTER TASK IF EXISTS ${results_schema}.RUN_ALERT_QUERY_$${v.rule_name} SUSPEND
+      suspend_violation_query: unindent(`
+        ALTER TASK IF EXISTS ${results_schema}.RUN_VIOLATION_QUERY_$${v.rule_name} SUSPEND
       `),
     }))
     .map((v) => ({
-      run_alert: v.schedule == '-' ? '-' : exec(v.run_alert_query),
-      resume_alert: v.schedule == '-' ? '-' : exec(v.resume_alert_query),
-      suspend_alert: v.schedule == '-' ? exec(v.suspend_alert_query) : '-',
+      run_violation: v.schedule == '-' ? '-' : exec(v.run_violation_query),
+      resume_violation: v.schedule == '-' ? '-' : exec(v.resume_violation_query),
+      suspend_violation: v.schedule == '-' ? exec(v.suspend_violation_query) : '-',
     })),
 }
