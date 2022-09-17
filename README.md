@@ -4,9 +4,9 @@
 
 ![158665186-36fa7acf-fecc-452c-ae4f-482eddf79b72](https://user-images.githubusercontent.com/72515998/158665593-e80b12df-41e2-4162-a102-895ee3407fe8.png)
 
-SnowAlert is an alerting engine that allows you to write SQL queries that are run on schedule and produce alerts into a table that can optionally be dispatched to slack, JIRA or E-mail. It is collection of Snowflake objects that enable you to write what we call _rules_ as Snowflake views that query tables for interesting events to find those that are alert-worthy that may be deemed as _incidents_. We manage these objects using a Terraform module.
+SnowAlert is an alerting engine that allows you to write SQL queries that are run on schedule and produce alerts into a table that can optionally be dispatched to slack, JIRA or E-mail. It is collection of Snowflake objects that enable you to write what we call _rules_ as Snowflake views that query tables for interesting events to find those that are alertworthy that may then be deemed as _incidents_. We manage these objects in a Terraform module.
 
-It is essentially a Terraformed version of [Snowalert](https://github.com/snowflakedb/SnowAlert). It uses the following Snowflake resources:
+It is essentially a Terraformed version of the [Snowalert](https://github.com/snowflakedb/SnowAlert) project. It uses the following Snowflake resources:
 
 1. Views
 2. Tables
@@ -70,7 +70,7 @@ There are two ways to use existing resources:
 1. _Import them into the module_: In this case, they were managed elsewhere and with the import you can manage them within this module. The first step is to `import` these conditional resources and then run the terraform `plan` and `apply`.
 
 
-### `zsh` Function
+### `zsh` function to set environment variables
 
 zsh function to set appropriate env variables based on which snowflake you want to target with terraform:
 
