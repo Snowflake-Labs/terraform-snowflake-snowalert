@@ -4,17 +4,17 @@
 
 ![158665186-36fa7acf-fecc-452c-ae4f-482eddf79b72](https://user-images.githubusercontent.com/72515998/158665593-e80b12df-41e2-4162-a102-895ee3407fe8.png)
 
-Terraformed version of [Snowalert](https://github.com/snowflakedb/SnowAlert). It creates the following resources:
+SnowAlert is an alerting engine that allows you to write SQL queries that are run on schedule and produce alerts into a table that can optionally be dispatched to slack, JIRA or E-mail. It is collection of Snowflake objects that enable you to write what we call _rules_ as Snowflake views that query tables for interesting events to find those that are alert-worthy that may be deemed as _incidents_. We manage these objects using a Terraform module.
 
-1. Database
-2. Schemas
-3. Role
-4. Future Grants
-5. Task Scheduler, Task Runner and Alert Handler UDFs
+It is essentially a Terraformed version of [Snowalert](https://github.com/snowflakedb/SnowAlert). It uses the following Snowflake resources:
+
+1. Views
+2. Tables
+3. Tasks
+4. UDFs
 6. Procedures
-7. Tasks
 
-This version of Snowalert is implemented fully in Snowflake using Snowflake native objects such as tasks to schedule runs of alerts and dispatch them to external services such as slack, jira and e-mail using Snowflake External Functions with a [GEFF API](https://github.com/Snowflake-Labs/geff) backend.
+This version of Snowalert is implemented fully in Snowflake using the above Snowflake native objects to schedule runs of alerts and dispatch them to external services such as slack, JIRA and e-mail using Snowflake External Functions with a [GEFF API](https://github.com/Snowflake-Labs/geff) backend.
 
 ### `snowalert.auto.tfvars` Inputs File
 
@@ -54,7 +54,7 @@ terraform plan -out=snowalert.plan # Use the .auto.tfvars file in the same dir
 terraform apply snowalert.plan
 ```
 
-### Importing Resources
+### Importing Existing Snowflake Resources
 
 This module is designed to work with the following existing resources:
 
@@ -69,7 +69,6 @@ There are two ways to use existing resources:
 1. _Provide them as inputs_: In this case, they're managed elsewhere and the names of the resources are input as strings through the tfvars file.
 1. _Import them into the module_: In this case, they were managed elsewhere and with the import you can manage them within this module. The first step is to `import` these conditional resources and then run the terraform `plan` and `apply`.
 
-NOTE: The
 
 ### `zsh` Function
 
