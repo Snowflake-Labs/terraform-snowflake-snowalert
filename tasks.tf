@@ -1,13 +1,13 @@
-resource "snowflake_task" "snowalert_alert_merge_task" {
+resource "snowflake_task" "snowalert_alerts_merge_task" {
   provider = snowflake.security_alerting_role
 
   warehouse = local.snowalert_warehouse_name
   database  = local.snowalert_database_name
   schema    = local.results_schema
-  name      = "ALERT_MERGE"
+  name      = "ALERTS_MERGE"
 
   schedule      = "USING CRON ${var.alert_merge_schedule} UTC"
-  sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alert_merge.name}('30m')"
+  sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alerts_merge.name}('30m')"
   enabled       = true
 
   depends_on = [
