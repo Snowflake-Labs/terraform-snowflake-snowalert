@@ -251,7 +251,7 @@ variable "security_monitoring_role" {
 }
 
 variable "warehouse_external_roles" {
-  type        = list(any)
+  type        = list(string)
   description = "List of additional roles that need SnowAlert warehouse usage permissions."
   default     = []
 }
