@@ -6,7 +6,7 @@ resource "snowflake_task" "snowalert_alerts_merge_task" {
   schema    = local.results_schema
   name      = "ALERTS_MERGE"
 
-  schedule      = "USING CRON ${var.alert_merge_schedule} UTC"
+  schedule      = "USING CRON ${var.alerts_merge_schedule} UTC"
   sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alerts_merge.name}('30m')"
   enabled       = true
 
