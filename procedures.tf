@@ -33,12 +33,12 @@ resource "snowflake_procedure" "alert_dispatcher" {
   ]
 }
 
-resource "snowflake_procedure" "alert_merge" {
+resource "snowflake_procedure" "alerts_merge" {
   provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
-  name     = "ALERT_MERGE"
+  name     = "ALERTS_MERGE"
   language = "JAVASCRIPT"
 
   arguments {
@@ -49,7 +49,7 @@ resource "snowflake_procedure" "alert_merge" {
   return_type = "VARIANT"
   execute_as  = "CALLER"
 
-  statement = templatefile("${path.module}/procedures_js/alert_merge.js", {
+  statement = templatefile("${path.module}/procedures_js/alerts_merge.js", {
     results_alerts_table = join(".", [
       local.snowalert_database_name,
       local.results_schema,
