@@ -20,7 +20,7 @@ module "snowalert" {
   snowalert_warehouse_name = var.snowalert_warehouse_name
   snowalert_database_name  = var.snowalert_database_name
 
-  alert_merge_schedule     = var.alert_merge_schedule
+  alerts_merge_schedule    = var.alerts_merge_schedule
   alert_dispatch_schedule  = var.alert_dispatch_schedule
   alert_scheduler_schedule = var.alert_scheduler_schedule
 

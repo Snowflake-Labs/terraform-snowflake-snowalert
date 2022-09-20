@@ -190,7 +190,7 @@ variable "snowalert_warehouse_size" {
   default     = "X-Small"
 }
 
-variable "alert_merge_schedule" {
+variable "alerts_merge_schedule" {
   type        = string
   description = "Schedule for the alert merge."
   default     = "0 12 * * *"
