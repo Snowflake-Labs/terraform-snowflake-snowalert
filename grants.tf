@@ -9,6 +9,7 @@ module "snowalert_grants" {
   security_modeling_role   = var.security_modeling_role
   security_monitoring_role = var.security_monitoring_role
   app_snowalert_role       = var.snowalert_user_name
+  warehouse_external_roles = var.warehouse_external_roles
 
   # Schemas
   data_schema_name       = local.data_schema

@@ -250,6 +250,12 @@ variable "security_monitoring_role" {
   default     = "SECURITY_MONITORING_RL"
 }
 
+variable "warehouse_external_roles" {
+  type        = list(string)
+  description = "List of additional roles that need SnowAlert warehouse usage permissions."
+  default     = []
+}
+
 variable "arn_format" {
   type        = string
   description = "ARN format could be aws or aws-us-gov. Defaults to non-gov."
