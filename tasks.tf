@@ -23,7 +23,7 @@ resource "snowflake_task" "snowalert_suppression_merge_task" {
   schema    = local.results_schema
   name      = "SUPPRESSION_MERGE"
 
-  after         = snowflake_task.snowalert_alerts_merge_task.name
+  after         = [snowflake_task.snowalert_alerts_merge_task.name]
   sql_statement = "CALL ${local.snowalert_database_name}.${local.results_schema}.${snowflake_procedure.alert_suppressions_runner_without_queries_like.name}()"
   enabled       = true
 
