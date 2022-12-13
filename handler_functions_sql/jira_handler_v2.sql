@@ -15,24 +15,26 @@ ${jira_api_function}(
                     'name', COALESCE(payload['issue_type'], '${default_jira_issue_type}')
                 ),
                 'summary', alert['TITLE']::STRING,
-                'description', '|| Field || Value ||\r\n'
-                || '|| Alert ID || ' || alert['ID']::STRING || ' ||\r\n'
-                || '|| Query ID || ' || alert['QUERY_ID']::STRING || ' ||\r\n'
-                || '|| Query Name || ' || alert['QUERY_NAME']::STRING || ' ||\r\n'
-                || '|| Environment || ' || alert['ENVIRONMENT']::STRING || ' ||\r\n'
-                || '|| Sources || ' || alert['SOURCES']::STRING || ' ||\r\n'
-                || '|| Categories || ' || COALESCE(alert['CATEGORIES']::STRING, '-') || ' ||\r\n'
-                || '|| Actor || ' || alert['ACTOR']::STRING || ' ||\r\n'
-                || '|| Object || ' || alert['OBJECT']::STRING || ' ||\r\n'
-                || '|| Action || ' || alert['ACTION']::STRING || ' ||\r\n'
-                || '|| Title || ' || alert['TITLE']::STRING || ' ||\r\n'
-                || '|| Event Time || ' || alert['EVENT_TIME']::STRING || ' ||\r\n'
-                || '|| Alert Time || ' || alert['ALERT_TIME']::STRING || ' ||\r\n'
-                || '|| Detector || ' || alert['DETECTOR']::STRING || ' ||\r\n'
-                || '|| Severity || ' || alert['SEVERITY']::STRING || ' ||\r\n'
-                || '|| Description || ' || alert['DESCRIPTION']::STRING || ' ||\r\n'
-                || '|| Event Data || ' || alert['EVENT_DATA']::STRING || ' ||\r\n'
-
+                'description', ${json_beautify_function}(TO_JSON(
+                    OBJECT_CONSTRUCT(
+                        'Alert ID', alert['ID']::STRING,
+                        'Query ID', alert['QUERY_ID']::STRING,
+                        'Query Name', alert['QUERY_NAME']::STRING,
+                        'Environment', alert['ENVIRONMENT']::STRING,
+                        'Sources', alert['SOURCES']::STRING,
+                        'Categories', COALESCE(alert['CATEGORIES']::STRING, '-'),
+                        'Actor', alert['ACTOR']::STRING,
+                        'Object', alert['OBJECT']::STRING,
+                        'Action', alert['ACTION']::STRING,
+                        'Title', alert['TITLE']::STRING,
+                        'Event Time', alert['EVENT_TIME']::STRING,
+                        'Alert Time', alert['ALERT_TIME']::STRING,
+                        'Detector', alert['DETECTOR']::STRING,
+                        'Severity', alert['SEVERITY']::STRING,
+                        'Description', alert['DESCRIPTION']::STRING,
+                        'Event Data', alert['EVENT_DATA']::STRING
+                    ), 4)
+                )
             )
         )
     ),

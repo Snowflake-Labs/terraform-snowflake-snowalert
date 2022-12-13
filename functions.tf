@@ -265,3 +265,62 @@ javascript
     module.snowalert_grants
   ]
 }
+
+resource "snowflake_function" "json_beautify_with_indent" {
+  provider = snowflake.security_alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.data_schema
+  name     = "JSON_BEAUTIFY"
+
+  arguments {
+    name = "STR"
+    type = "STRING"
+  }
+
+  arguments {
+    name = "INDENT"
+    type = "DOUBLE"
+  }
+
+  return_type = "STRING"
+  language    = "javascript"
+  statement   = <<javascript
+try {
+  return JSON.stringify(JSON.parse(STR), null, INDENT);
+} catch (err) {
+  return STR
+}
+javascript
+
+  depends_on = [
+    module.snowalert_grants
+  ]
+}
+
+resource "snowflake_function" "json_beautify_without_indent" {
+  provider = snowflake.security_alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.data_schema
+  name     = "JSON_BEAUTIFY"
+
+  arguments {
+    name = "STR"
+    type = "STRING"
+  }
+
+  return_type = "STRING"
+  language    = "javascript"
+  statement = <<javascript
+${join(".", [
+  local.snowalert_database_name,
+  local.data_schema,
+  snowflake_function.json_beautify_with_indent.name,
+])}.(STR, 2)
+javascript
+
+depends_on = [
+  module.snowalert_grants
+]
+}

@@ -112,6 +112,11 @@ resource "snowflake_function" "jira_handler" {
         local.results_schema,
         snowflake_external_function.snowalert_jira_api[0].name,
       ])
+      json_beautify_function = join(".", [
+        local.snowalert_database_name,
+        local.data_schema,
+        snowflake_function.json_beautify_with_indent.name,
+      ])
     }
   )
 
