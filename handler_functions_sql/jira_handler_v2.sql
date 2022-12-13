@@ -15,7 +15,7 @@ ${jira_api_function}(
                     'name', COALESCE(payload['issue_type'], '${default_jira_issue_type}')
                 ),
                 'summary', alert['TITLE']::STRING,
-                'description', ${json_beautify_function}(
+                'description', '```' || ${json_beautify_function}(
                     TO_JSON(
                         OBJECT_CONSTRUCT(
                             'Alert ID', alert['ID']::STRING,
@@ -35,8 +35,9 @@ ${jira_api_function}(
                             'Description', alert['DESCRIPTION']::STRING,
                             'Event Data', alert['EVENT_DATA']::STRING
                         )
-                    ), 4
-                )
+                    ),
+                    4
+                ) || '```'
             )
         )
     ),
