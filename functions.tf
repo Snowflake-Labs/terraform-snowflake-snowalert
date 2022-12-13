@@ -312,11 +312,15 @@ resource "snowflake_function" "json_beautify_without_indent" {
 
   return_type = "STRING"
   language    = "javascript"
-  statement   = <<javascript
-${local.snowalert_database_name}.${local.data_schema}.${snowflake_function.json_beautify_with_indent}(STR, 2)
+  statement = <<javascript
+${join(".", [
+  local.snowalert_database_name,
+  local.data_schema,
+  snowflake_function.json_beautify_with_indent.name,
+])}.(STR, 2)
 javascript
 
-  depends_on = [
-    module.snowalert_grants
-  ]
+depends_on = [
+  module.snowalert_grants
+]
 }
