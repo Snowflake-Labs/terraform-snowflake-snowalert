@@ -1,5 +1,5 @@
 module "snowalert_grants" {
-  source = "git@github.com:Snowflake-Labs/terraform-snowflake-snowalert-rbac.git?ref=v0.2.0"
+  source = "git@github.com:Snowflake-Labs/terraform-snowflake-snowalert-rbac.git?ref=v0.2.1"
 
   snowalert_warehouse_name = var.snowalert_warehouse_name
   snowalert_database_name  = var.snowalert_database_name
@@ -16,6 +16,8 @@ module "snowalert_grants" {
   rules_schema_name      = local.rules_schema
   results_schema_name    = local.results_schema
   monitoring_schema_name = local.monitoring_schema
+
+  enable_multiple_grants = var.enable_multiple_grants
 
   providers = {
     snowflake.security_admin_role = snowflake.security_admin_role

@@ -268,6 +268,12 @@ variable "jira_api_version" {
   default     = "3"
 }
 
+variable "enable_multiple_grants" {
+  type        = bool
+  description = "Allow grants outside of the terraform-snowflake-snowalert-rbac module"
+  default     = true
+}
+
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
