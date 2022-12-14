@@ -33,7 +33,7 @@ ${jira_api_function}(
                             'Detector', alert['DETECTOR']::STRING,
                             'Severity', alert['SEVERITY']::STRING,
                             'Description', alert['DESCRIPTION']::STRING,
-                            'Event Data', TO_JSON(OBJECT_CONSTRUCT(alert['EVENT_DATA']::STRING))
+                            'Event Data', TO_JSON(PARSE_JSON(alert['EVENT_DATA']::STRING))
                         )
                     ),
                     4
