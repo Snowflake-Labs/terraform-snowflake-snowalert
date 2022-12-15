@@ -15,7 +15,7 @@ ${jira_api_function}(
                     'name', COALESCE(payload['issue_type'], '${default_jira_issue_type}')
                 ),
                 'summary', alert['TITLE']::STRING,
-                'description', '{code}' || ${json_beautify_function}(
+                'description', '*ALERT DATA*:\r\n{code}' || ${json_beautify_function}(
                     TO_JSON(
                         OBJECT_CONSTRUCT(
                             'Alert ID', alert['ID']::STRING,
@@ -32,12 +32,11 @@ ${jira_api_function}(
                             'Alert Time', alert['ALERT_TIME']::STRING,
                             'Detector', alert['DETECTOR']::STRING,
                             'Severity', alert['SEVERITY']::STRING,
-                            'Description', alert['DESCRIPTION']::STRING,
-                            'Event Data', alert['EVENT_DATA']::STRING
+                            'Description', alert['DESCRIPTION']::STRING
                         )
                     ),
                     4
-                ) || '{code}'
+                ) || '{code}\r\n\r\n' || '*EVENT DATA*:\r\n{code}' || alert['EVENT_DATA']::STRING || '{code}'
             )
         )
     ),
