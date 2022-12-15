@@ -36,7 +36,10 @@ ${jira_api_function}(
                         )
                     ),
                     4
-                ) || '{code}\r\n\r\n' || '*EVENT DATA*:\r\n{code}' || alert['EVENT_DATA']::STRING || '{code}'
+                ) || '{code}\r\n\r\n'
+                || '*EVENT DATA*:\r\n{code}'
+                || ${json_beautify_function}(alert['EVENT_DATA']::STRING, 4)
+                || '{code}\r\n'
             )
         )
     ),
