@@ -27,3 +27,23 @@ output "geff_lambda_sg_ids" {
   description = "Lambda SG IDs."
   value       = length(module.geff_snowalert) >= 1 ? module.geff_snowalert[0].geff_lambda_sg_ids : null
 }
+
+output "alert_query_rule_run_errors" {
+  description = ""
+  value       = snowflake_view.alert_query_rule_run_errors.name
+}
+
+output "alert_suppression_rule_run_errors" {
+  description = ""
+  value       = snowflake_view.alert_suppression_rule_run_errors.name
+}
+
+output "violation_query_rule_run_errors" {
+  description = ""
+  value       = snowflake_view.violation_query_rule_run_errors.name
+}
+
+output "violation_suppression_rule_run_errors" {
+  description = ""
+  value       = snowflake_view.violation_suppression_rule_run_errors.name
+}
