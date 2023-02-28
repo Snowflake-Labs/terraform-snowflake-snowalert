@@ -9,22 +9,22 @@ resource "snowflake_external_function" "snowalert_jira_api" {
   # Function arguments
   arg {
     name = "METHOD"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   arg {
     name = "PATH"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   arg {
     name = "BODY"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   arg {
     name = "QUERYSTRING"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   # Function headers
