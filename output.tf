@@ -47,3 +47,8 @@ output "violation_suppression_rule_run_errors_view" {
   description = "Violation suppression rule run errors table."
   value       = snowflake_view.violation_suppression_rule_run_errors.name
 }
+
+output "urlencode_function" {
+  description = "Function to urlencode a given variant object."
+  value       = snowflake_function.urlencode.name
+}
