@@ -159,7 +159,7 @@ resource "snowflake_function" "time_slices_before_t_without_time" {
     type = "NUMBER"
   }
 
-  return_type = "TABLE ( slice_start TIMESTAMP, slice_end TIMESTAMP )"
+  return_type = "TABLE (slice_start TIMESTAMP_NTZ, slice_end TIMESTAMP_NTZ)"
   statement = templatefile(
     "${path.module}/functions_sql/time_slices_before_t_without_time.sql", {
       data_time_slices_without_tz_function = local.data_time_slices_without_tz_function
@@ -275,15 +275,15 @@ resource "snowflake_function" "json_beautify_with_indent" {
 
   arguments {
     name = "STR"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
   arguments {
     name = "INDENT"
-    type = "DOUBLE"
+    type = "FLOAT"
   }
 
-  return_type = "STRING"
+  return_type = "VARCHAR"
   language    = "javascript"
   statement   = <<javascript
 try {
@@ -307,10 +307,10 @@ resource "snowflake_function" "json_beautify_without_indent" {
 
   arguments {
     name = "STR"
-    type = "STRING"
+    type = "VARCHAR"
   }
 
-  return_type = "STRING"
+  return_type = "VARCHAR"
   language    = "javascript"
   statement = <<javascript
 ${join(".", [

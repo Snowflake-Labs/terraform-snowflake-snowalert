@@ -167,6 +167,11 @@ resource "snowflake_table" "violations" {
   }
 
   column {
+    name = "ID"
+    type = "VARCHAR(16777216)"
+  }
+
+  column {
     name = "ALERT_TIME"
     type = "TIMESTAMP_LTZ(9)"
   }
@@ -183,11 +188,6 @@ resource "snowflake_table" "violations" {
 
   column {
     name = "SUPPRESSION_RULE"
-    type = "VARCHAR(16777216)"
-  }
-
-  column {
-    name = "ID"
     type = "VARCHAR(16777216)"
   }
 
