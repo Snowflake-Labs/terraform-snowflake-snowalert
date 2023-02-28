@@ -229,6 +229,20 @@ javascript
   ]
 }
 
+resource "snowflake_function_grant" "urlencode" {
+  provider = snowflake.security_alerting_role
+
+  database_name = local.snowalert_database_name
+  schema_name   = local.data_schema
+  function_name = "URLENCODE"
+
+  argument_data_types = ["VARIANT"]
+  privilege           = "USAGE"
+  roles = [
+    var.security_ingest_role,
+    var.security_modeling_role,
+  ]
+}
 
 resource "snowflake_function" "array_set" {
   provider = snowflake.security_alerting_role
