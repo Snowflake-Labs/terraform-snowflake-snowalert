@@ -1,7 +1,6 @@
-// args
-var CORRELATION_PERIOD_MINUTES
+const CORRELATION_PERIOD_MINUTES = -60
 
-CORRELATION_PERIOD_MINUTES = CORRELATION_PERIOD_MINUTES || 60
+var alert_correlation_result = []
 
 // library
 function exec(sqlText, binds = []) {
@@ -24,60 +23,82 @@ function exec(sqlText, binds = []) {
   return retval
 }
 
-CORRELATE = `
-MERGE INTO ${results_alerts_table} dst
-USING (
-  SELECT
-    d.id alert_id_to_update,
-    COALESCE(
-      p.correlation_id,
-      d.correlation_id,
-      UUID_STRING()
-    ) correlation_id
-  FROM ${data_alerts_view} d -- destination
-  LEFT OUTER JOIN ${data_alerts_view} p -- potential chain
-  ON (
-    d.id != p.id
-    AND (
-      d.alert_time > p.alert_time
-      OR (
-        d.alert_time = p.alert_time
-        AND d.id > p.id
-      )
-    )
-    AND p.alert_time > d.alert_time - INTERVAL '1 hour'
-    AND p.correlation_id IS NOT NULL
-    AND p.actor = d.actor
-    AND (
-      p.object = d.object
-      OR p.action = d.action
-    )
-  )
-  WHERE d.suppressed = FALSE
-    AND d.alert_time > CURRENT_TIMESTAMP - INTERVAL '$${CORRELATION_PERIOD_MINUTES} minutes'
-  QUALIFY 1=ROW_NUMBER() OVER (
-      PARTITION BY d.id  -- one update per destination id
-      ORDER BY -- most recent wins
-        p.alert_time DESC, p.id DESC
-    )
-) src
-ON (
-  dst.alert:ALERT_ID = src.alert_id_to_update
-  AND (
-    dst.correlation_id IS NULL
-    OR dst.correlation_id != src.correlation_id
-  )
-)
-WHEN MATCHED THEN UPDATE SET
-  correlation_id = src.correlation_id
+GET_CORRELATED_ALERT = `
+SELECT *
+FROM results.alerts
+WHERE alert:ACTOR = ?
+  AND (alert:OBJECT::STRING = ? OR alert:ACTION::STRING = ?)
+  AND correlation_id IS NOT NULL
+  AND NOT IS_NULL_VALUE(alert:ACTOR)
+  AND suppressed = FALSE
+  AND event_time > DATEADD(minutes, $${CORRELATION_PERIOD_MINUTES}, ?)
+ORDER BY event_time DESC
+LIMIT 1
 `
-var n,
-  results = []
-do {
-  n = exec(CORRELATE)[0]['number of rows updated']
-  results.push(n)
-} while (n != 0)
 
-return {
-  ROWS_UPDATED: results,
+function generate_uuid() {
+  GENERATE_UUID = `SELECT UUID_STRING()`
+  return exec(GENERATE_UUID)[0][['UUID_STRING()']]
 }
+
+function get_correlation_id(alert) {
+  if (
+    alert['ACTOR'] == undefined ||
+    alert['OBJECT'] == undefined ||
+    alert['ACTION'] == undefined ||
+    alert['EVENT_TIME'] == undefined
+  ) {
+    return generate_uuid()
+  } else {
+    actor = alert['ACTOR']
+    object = alert['OBJECT']
+    action = alert['ACTION']
+    time = alert['EVENT_TIME']
+
+    if (object instanceof Array) {
+      o = '","'.join(object)
+      object = `'["$${o}"]'`
+    }
+    if (action instanceof Array) {
+      o = '","'.join(action)
+      object = `'["$${o}"]'`
+    }
+  }
+
+  try {
+    match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])
+  } catch (e) {
+    match = []
+  }
+  correlation_id =
+    match.length > 0 && 'CORRELATION_ID' in match[0]
+      ? match[0]['CORRELATION_ID']
+      : generate_uuid()
+
+  return correlation_id
+}
+
+GET_ALERTS_WITHOUT_CORREALTION_ID = `SELECT *
+FROM results.alerts
+WHERE correlation_id IS NULL
+  AND suppressed = FALSE
+  AND alert_time > DATEADD(hour, -2, CURRENT_TIMESTAMP())`
+
+UNCORRELATED_ALERTS = exec(GET_ALERTS_WITHOUT_CORREALTION_ID)
+
+UPDATE_ALERT_CORRELATION_ID = `
+UPDATE results.alerts
+SET correlation_id=?
+WHERE alert:EVENT_TIME > DATEADD(minutes, $${CORRELATION_PERIOD_MINUTES}, ?)
+  AND alert:ALERT_ID=?
+`
+for (const x of UNCORRELATED_ALERTS) {
+  alert_body = x['ALERT']
+  alert_id = alert_body['ALERT_ID']
+  correlation_id = get_correlation_id(alert_body)
+  event_time = alert_body['EVENT_TIME']
+  alert_correlation_result.push(
+    exec(UPDATE_ALERT_CORRELATION_ID, [correlation_id, event_time, alert_id])
+  )
+}
+return { alert_correlation_result: alert_correlation_result }
