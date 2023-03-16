@@ -43,10 +43,10 @@ function generate_uuid() {
 
 function get_correlation_id(alert) {
   if (
-    alert['ACTOR'] == undefined ||
-    alert['OBJECT'] == undefined ||
-    alert['ACTION'] == undefined ||
-    alert['EVENT_TIME'] == undefined
+    'ACTOR' in alert == false ||
+    'OBJECT' in alert == false ||
+    'ACTION' in alert == false ||
+    'EVENT_TIME' in alert == false
   ) {
     return generate_uuid()
   } else {
@@ -56,11 +56,11 @@ function get_correlation_id(alert) {
     time = alert['EVENT_TIME']
 
     if (object instanceof Array) {
-      o = '","'.join(object)
+      o = object.join('","')
       object = `'["$${o}"]'`
     }
     if (action instanceof Array) {
-      o = '","'.join(action)
+      o = object.join('","')
       object = `'["$${o}"]'`
     }
   }
