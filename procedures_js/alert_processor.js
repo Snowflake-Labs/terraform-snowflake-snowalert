@@ -90,15 +90,18 @@ SET correlation_id = ?
 WHERE alert:EVENT_TIME > DATEADD(minutes, $${CORRELATION_PERIOD_MINUTES}, ?)
   AND alert:ALERT_ID = ?
 `
+
 UNCORRELATED_ALERTS = exec(GET_ALERTS_WITHOUT_CORREALTION_ID)
 
 for (const x of UNCORRELATED_ALERTS) {
-  alert_body = x
-  alert_id = alert_body['ALERT_ID']
+  alert_body = x['ALERT']
   correlation_id = get_correlation_id(alert_body)
   event_time = String(alert_body['EVENT_TIME'])
+  alert_id = alert_body['ALERT_ID']
+
   alert_correlation_result.push(
     exec(UPDATE_ALERT_CORRELATION_ID, [correlation_id, event_time, alert_id])
   )
 }
+
 return { alert_correlation_result: alert_correlation_result }
