@@ -83,11 +83,6 @@ resource "snowflake_procedure" "alert_processor" {
       local.results_schema,
       local.alerts_table,
     ])
-    data_alerts_view = join(".", [
-      local.snowalert_database_name,
-      local.data_schema,
-      snowflake_view.alerts.name,
-    ])
   })
 
   depends_on = [

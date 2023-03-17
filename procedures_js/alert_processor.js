@@ -25,7 +25,7 @@ function exec(sqlText, binds = []) {
 
 GET_CORRELATED_ALERT = `
 SELECT *
-FROM results.alerts
+FROM ${results_alerts_table}
 WHERE alert:ACTOR = ?
   AND (alert:OBJECT::STRING = ? OR alert:ACTION::STRING = ?)
   AND correlation_id IS NOT NULL
@@ -78,14 +78,15 @@ function get_correlation_id(alert) {
   return correlation_id
 }
 
-GET_ALERTS_WITHOUT_CORREALTION_ID = `SELECT *
-FROM results.alerts
+GET_ALERTS_WITHOUT_CORREALTION_ID = `
+SELECT *
+FROM ${results_alerts_table}
 WHERE correlation_id IS NULL
   AND suppressed = FALSE
   AND alert_time > DATEADD(hour, -2, CURRENT_TIMESTAMP())`
 
 UPDATE_ALERT_CORRELATION_ID = `
-UPDATE results.alerts
+UPDATE ${results_alerts_table}
 SET correlation_id = ?
 WHERE alert:EVENT_TIME > DATEADD(minutes, $${CORRELATION_PERIOD_MINUTES}, ?)
   AND alert:ALERT_ID = ?
