@@ -83,7 +83,8 @@ SELECT *
 FROM ${results_alerts_table}
 WHERE correlation_id IS NULL
   AND suppressed = FALSE
-  AND alert_time > DATEADD(hour, -2, CURRENT_TIMESTAMP())`
+  AND alert_time > DATEADD(hour, -2, CURRENT_TIMESTAMP())
+`
 
 UPDATE_ALERT_CORRELATION_ID = `
 UPDATE ${results_alerts_table}
