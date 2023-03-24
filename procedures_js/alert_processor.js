@@ -71,7 +71,7 @@ function get_correlation_id(alert) {
   match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])[0]
 
   correlation_id =
-    match.length > 0 && 'CORRELATION_ID' in match
+    match && 'CORRELATION_ID' in match
       ? match['CORRELATION_ID']
       : generate_uuid()
 
