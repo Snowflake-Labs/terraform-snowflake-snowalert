@@ -75,6 +75,11 @@ resource "snowflake_procedure" "alert_processor" {
   name     = "ALERT_PROCESSOR"
   language = "JAVASCRIPT"
 
+  arguments {
+    name = "correlation_period_minutes"
+    type = "NUMBER"
+  }
+
   return_type = "VARIANT"
   execute_as  = "CALLER"
   statement = templatefile("${path.module}/procedures_js/alert_processor.js", {
