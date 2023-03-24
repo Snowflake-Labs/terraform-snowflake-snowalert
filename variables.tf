@@ -196,6 +196,12 @@ variable "alerts_merge_schedule" {
   default     = "0 12 * * *"
 }
 
+variable "alert_processor_schedule" {
+  type        = string
+  description = "Schedule for the alert processor task."
+  default     = "0 * * * *"
+}
+
 variable "alert_dispatch_schedule" {
   type        = string
   description = "Schedule for the alert dispatcher task."

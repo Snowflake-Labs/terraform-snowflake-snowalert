@@ -77,7 +77,7 @@ resource "snowflake_procedure" "alert_processor" {
 
   arguments {
     name = "correlation_period_minutes"
-    type = "NUMBER"
+    type = "VARCHAR"
   }
 
   return_type = "VARIANT"
