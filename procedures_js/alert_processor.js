@@ -1,4 +1,7 @@
-const CORRELATION_PERIOD_MINUTES = -60
+//args
+var CORRELATION_PERIOD_MINUTES
+
+CORRELATION_PERIOD_MINUTES = CORRELATION_PERIOD_MINUTES || -60
 
 var alert_correlation_result = []
 
@@ -49,30 +52,27 @@ function get_correlation_id(alert) {
     'EVENT_TIME' in alert == false
   ) {
     return generate_uuid()
-  } else {
-    actor = alert['ACTOR']
-    object = alert['OBJECT']
-    action = alert['ACTION']
-    time = alert['EVENT_TIME']
-
-    if (object instanceof Array) {
-      o = object.join('","')
-      object = `'["$${o}"]'`
-    }
-    if (action instanceof Array) {
-      o = object.join('","')
-      object = `'["$${o}"]'`
-    }
   }
 
-  try {
-    match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])
-  } catch (e) {
-    match = []
+  actor = alert['ACTOR']
+  object = alert['OBJECT']
+  action = alert['ACTION']
+  time = alert['EVENT_TIME']
+
+  if (object instanceof Array) {
+    o = object.join('","')
+    object = `'["$${o}"]'`
   }
+  if (action instanceof Array) {
+    o = action.join('","')
+    action = `'["$${o}"]'`
+  }
+
+  match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])
+
   correlation_id =
-    match.length > 0 && 'CORRELATION_ID' in match[0]
-      ? match[0]['CORRELATION_ID']
+    match.length > 0 && 'CORRELATION_ID' in match
+      ? match['CORRELATION_ID']
       : generate_uuid()
 
   return correlation_id
