@@ -68,7 +68,7 @@ function get_correlation_id(alert) {
     action = `'["$${o}"]'`
   }
 
-  match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])
+  match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])[0]
 
   correlation_id =
     match.length > 0 && 'CORRELATION_ID' in match
