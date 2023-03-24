@@ -1,8 +1,6 @@
 //args
 var CORRELATION_PERIOD_MINUTES
 
-CORRELATION_PERIOD_MINUTES = CORRELATION_PERIOD_MINUTES || -60
-
 var alert_correlation_result = []
 
 // library
