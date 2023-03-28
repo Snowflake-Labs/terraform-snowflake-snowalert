@@ -12,7 +12,7 @@ snowalert_user_name      = "APP_SNOWALERT"
 snowalert_role_name      = "APP_SNOWALERT"
 
 alerts_merge_schedule     = "0 12 * * *"   # daily at 12 pm: https://crontab.guru/#0_12_*_*_*
-alert_processor_schedule  = "0 * * * * "   # every hour: https://crontab.guru/#0_*_*_*_*
+alert_processor_schedule  = "* * * * * "   # every hour: https://crontab.guru/#0_*_*_*_*
 alert_dispatch_schedule  = "* * * * * "   # every min: https://crontab.guru/#*_*_*_*_*
 alert_scheduler_schedule = "1/15 * * * *" # every 15 mins: https://crontab.guru/#1/15_*_*_*_*
 
