@@ -67,7 +67,30 @@ resource "snowflake_procedure" "alerts_merge" {
   ]
 }
 
-resource "snowflake_procedure" "alert_processor" {
+resource "snowflake_procedure" "alert_processor_with_default_correlation_period" {
+  provider = snowflake.security_alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.results_schema
+  name     = "ALERT_PROCESSOR"
+  language = "JAVASCRIPT"
+
+  return_type = "VARIANT"
+  execute_as  = "CALLER"
+  statement = templatefile("${path.module}/procedures_js/alert_processor.js", {
+    results_alerts_table = join(".", [
+      local.snowalert_database_name,
+      local.results_schema,
+      local.alerts_table,
+    ])
+  })
+
+  depends_on = [
+    module.snowalert_grants
+  ]
+}
+
+resource "snowflake_procedure" "alert_processor_with_custom_correlation_period" {
   provider = snowflake.security_alerting_role
 
   database = local.snowalert_database_name

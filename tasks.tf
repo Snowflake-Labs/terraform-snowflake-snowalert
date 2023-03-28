@@ -42,7 +42,7 @@ resource "snowflake_task" "alert_processor_task" {
   name      = "ALERT_PROCESSOR"
 
   schedule      = "USING CRON ${var.alert_processor_schedule} UTC"
-  sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alert_processor.name}('-60')"
+  sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alert_processor_with_default_correlation_period.name}()"
   enabled       = true
 
   depends_on = [

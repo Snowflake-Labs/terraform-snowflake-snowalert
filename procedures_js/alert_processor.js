@@ -1,6 +1,8 @@
 //args
 var CORRELATION_PERIOD_MINUTES
 
+CORRELATION_PERIOD_MINUTES = CORRELATION_PERIOD_MINUTES || -60
+
 var alert_correlation_result = []
 
 // library
@@ -25,7 +27,7 @@ function exec(sqlText, binds = []) {
 }
 
 GET_CORRELATED_ALERT = `
-SELECT *
+SELECT correlation_id
 FROM ${results_alerts_table}
 WHERE alert:ACTOR = ?
   AND (alert:OBJECT::STRING = ? OR alert:ACTION::STRING = ?)
@@ -42,7 +44,7 @@ function generate_uuid() {
   return exec(GENERATE_UUID)[0][['UUID_STRING()']]
 }
 
-function get_correlation_id(alert) {
+function find_related_correlation_id(alert) {
   if (
     'ACTOR' in alert == false ||
     'OBJECT' in alert == false ||
@@ -66,14 +68,9 @@ function get_correlation_id(alert) {
     action = `'["$${o}"]'`
   }
 
-  match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])[0]
+  match = exec(GET_CORRELATED_ALERT, [actor, object, action, time]) || {}
 
-  correlation_id =
-    match && 'CORRELATION_ID' in match
-      ? match['CORRELATION_ID']
-      : generate_uuid()
-
-  return correlation_id
+  return match['CORRELATION_ID'] || generate_uuid()
 }
 
 GET_ALERTS_WITHOUT_CORREALTION_ID = `
@@ -86,16 +83,14 @@ WHERE correlation_id IS NULL
 
 UPDATE_ALERT_CORRELATION_ID = `
 UPDATE ${results_alerts_table}
-SET correlation_id = ?
+SET correlation_id = COLLATE(?, UUID_STRING())
 WHERE alert:EVENT_TIME > DATEADD(minutes, $${CORRELATION_PERIOD_MINUTES}, ?)
   AND alert:ALERT_ID = ?
 `
 
-UNCORRELATED_ALERTS = exec(GET_ALERTS_WITHOUT_CORREALTION_ID)
-
-for (const x of UNCORRELATED_ALERTS) {
-  alert_body = x['ALERT']
-  correlation_id = get_correlation_id(alert_body)
+for (const row of exec(GET_ALERTS_WITHOUT_CORREALTION_ID)) {
+  alert_body = row['ALERT']
+  correlation_id = find_related_correlation_id(alert_body)
   event_time = String(alert_body['EVENT_TIME'])
   alert_id = alert_body['ALERT_ID']
 
@@ -104,4 +99,4 @@ for (const x of UNCORRELATED_ALERTS) {
   )
 }
 
-return { alert_correlation_result: alert_correlation_result }
+return { alert_correlation_result }
