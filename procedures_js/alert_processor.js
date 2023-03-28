@@ -83,7 +83,7 @@ WHERE correlation_id IS NULL
 
 UPDATE_ALERT_CORRELATION_ID = `
 UPDATE ${results_alerts_table}
-SET correlation_id = COLLATE(?, UUID_STRING())
+SET correlation_id = COALESCE(?, UUID_STRING())
 WHERE alert:EVENT_TIME > DATEADD(minutes, $${CORRELATION_PERIOD_MINUTES}, ?)
   AND alert:ALERT_ID = ?
 `
