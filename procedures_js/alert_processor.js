@@ -41,7 +41,7 @@ LIMIT 1
 
 function generate_uuid() {
   GENERATE_UUID = `SELECT UUID_STRING()`
-  return exec(GENERATE_UUID)[0][['UUID_STRING()']]
+  return exec(GENERATE_UUID)[0]['UUID_STRING()']
 }
 
 function find_related_correlation_id(alert) {
