@@ -68,7 +68,7 @@ function find_related_correlation_id(alert) {
     action = `'["$${o}"]'`
   }
 
-  match = exec(GET_CORRELATED_ALERT, [actor, object, action, time]) || {}
+  match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])[0] || {}
 
   return match['CORRELATION_ID'] || generate_uuid()
 }
