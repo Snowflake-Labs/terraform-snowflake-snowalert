@@ -73,7 +73,7 @@ function find_related_correlation_id(alert) {
   return match['CORRELATION_ID'] || generate_uuid()
 }
 
-GET_ALERTS_WITHOUT_CORREALTION_ID = `
+GET_ALERTS_WITHOUT_CORRELATION_ID = `
 SELECT *
 FROM ${results_alerts_table}
 WHERE correlation_id IS NULL
@@ -88,7 +88,7 @@ WHERE alert:EVENT_TIME > DATEADD(minutes, $${CORRELATION_PERIOD_MINUTES}, ?)
   AND alert:ALERT_ID = ?
 `
 
-for (const row of exec(GET_ALERTS_WITHOUT_CORREALTION_ID)) {
+for (const row of exec(GET_ALERTS_WITHOUT_CORRELATION_ID)) {
   alert_body = row['ALERT']
   correlation_id = find_related_correlation_id(alert_body)
   event_time = String(alert_body['EVENT_TIME'])
