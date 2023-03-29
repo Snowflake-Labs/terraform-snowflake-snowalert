@@ -61,11 +61,11 @@ function find_related_correlation_id(alert) {
 
   if (object instanceof Array) {
     o = object.join('","')
-    object = `'["$${o}"]'`
+    object = `["$${o}"]`
   }
   if (action instanceof Array) {
     o = action.join('","')
-    action = `'["$${o}"]'`
+    action = `["$${o}"]`
   }
 
   match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])[0] || {}
