@@ -94,9 +94,14 @@ for (const row of exec(GET_ALERTS_WITHOUT_CORRELATION_ID)) {
   event_time = String(alert_body['EVENT_TIME'])
   alert_id = alert_body['ALERT_ID']
 
-  alert_correlation_result.push(
-    exec(UPDATE_ALERT_CORRELATION_ID, [correlation_id, event_time, alert_id])
-  )
+  alert_correlation_result.push({
+    alert_id: alert_id,
+    alert_correlation_result: exec(UPDATE_ALERT_CORRELATION_ID, [
+      correlation_id,
+      event_time,
+      alert_id,
+    ]),
+  })
 }
 
-return { alert_correlation_result }
+return alert_correlation_result
