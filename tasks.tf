@@ -41,7 +41,7 @@ resource "snowflake_task" "alert_processor_task" {
   schema    = local.results_schema
   name      = "ALERT_PROCESSOR"
 
-  schedule      = "USING CRON ${var.alert_processor_schedule} UTC"
+  after         = [snowflake_task.snowalert_suppression_merge_task.name]
   sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alert_processor_with_default_correlation_period.name}()"
   enabled       = true
 
