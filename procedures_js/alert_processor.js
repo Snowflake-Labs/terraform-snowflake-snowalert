@@ -3,7 +3,7 @@ var CORRELATION_PERIOD_MINUTES
 
 CORRELATION_PERIOD_MINUTES = CORRELATION_PERIOD_MINUTES || -60
 
-var alert_correlation_result = []
+var alert_correlation_result_array = []
 
 // library
 function exec(sqlText, binds = []) {
@@ -94,7 +94,7 @@ for (const row of exec(GET_ALERTS_WITHOUT_CORRELATION_ID)) {
   event_time = String(alert_body['EVENT_TIME'])
   alert_id = alert_body['ALERT_ID']
 
-  alert_correlation_result.push({
+  alert_correlation_result_array.push({
     alert_id: alert_id,
     alert_correlation_result: exec(UPDATE_ALERT_CORRELATION_ID, [
       correlation_id,
@@ -104,4 +104,4 @@ for (const row of exec(GET_ALERTS_WITHOUT_CORRELATION_ID)) {
   })
 }
 
-return alert_correlation_result
+return alert_correlation_result_array
