@@ -32,6 +32,25 @@ resource "snowflake_task" "snowalert_suppression_merge_task" {
   ]
 }
 
+
+resource "snowflake_task" "alert_processor_task" {
+  provider = snowflake.security_alerting_role
+
+  warehouse = local.snowalert_warehouse_name
+  database  = local.snowalert_database_name
+  schema    = local.results_schema
+  name      = "ALERT_PROCESSOR"
+
+  after         = [snowflake_task.snowalert_suppression_merge_task.name]
+  sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alert_processor_with_default_correlation_period.name}()"
+  enabled       = true
+
+  depends_on = [
+    module.snowalert_grants
+  ]
+}
+
+
 resource "snowflake_task" "alert_dispatcher_task" {
   provider = snowflake.security_alerting_role
 
