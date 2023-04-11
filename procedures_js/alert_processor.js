@@ -51,7 +51,7 @@ function find_related_correlation_id(alert) {
     'ACTION' in alert == false ||
     'EVENT_TIME' in alert == false
   ) {
-    return generate_uuid()
+    return null
   }
 
   actor = alert['ACTOR']
@@ -70,7 +70,7 @@ function find_related_correlation_id(alert) {
 
   match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])[0] || {}
 
-  return match['CORRELATION_ID'] || generate_uuid()
+  return match['CORRELATION_ID'] || null
 }
 
 GET_ALERTS_WITHOUT_CORRELATION_ID = `
