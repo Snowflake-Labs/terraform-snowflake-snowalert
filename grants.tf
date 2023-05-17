@@ -1,5 +1,5 @@
 module "snowalert_grants" {
-  source = "git@github.com:Snowflake-Labs/terraform-snowflake-snowalert-rbac.git?ref=v0.2.3"
+  source = "git@github.com:Snowflake-Labs/terraform-snowflake-snowalert-rbac.git?ref=v0.2.4"
 
   snowalert_warehouse_name = var.snowalert_warehouse_name
   snowalert_database_name  = var.snowalert_database_name
