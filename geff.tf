@@ -1,6 +1,7 @@
 module "geff_snowalert" {
   count  = length(var.handlers) > 0 ? 1 : 0
-  source = "git::https://github.com/Snowflake-Labs/terraform-snowflake-api-integration-with-geff-aws.git?ref=v0.3.6"
+  source = "Snowflake-Labs/api-integration-with-geff-aws/snowflake"
+  version = "0.3.6"
 
   # Required
   prefix = var.prefix
