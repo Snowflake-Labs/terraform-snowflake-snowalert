@@ -1,6 +1,7 @@
 module "geff_snowalert" {
   count  = length(var.handlers) > 0 ? 1 : 0
   source = "Snowflake-Labs/api-integration-with-geff-aws/snowflake"
+  version = "0.3.6"
 
   # Required
   prefix = var.prefix
