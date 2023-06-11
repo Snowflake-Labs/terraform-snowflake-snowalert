@@ -8,6 +8,11 @@ resource "snowflake_external_function" "smtp_send" {
 
   # Function arguments
   arg {
+    name = "SENDER_EMAIL"
+    type = "STRING"
+  }
+
+  arg {
     name = "RECIPIENT_EMAIL"
     type = "STRING"
   }
@@ -30,22 +35,22 @@ resource "snowflake_external_function" "smtp_send" {
 
   header {
     name  = "sender-email"
-    value = var.smtp_driver_from_email_address
-  }
-
-  header {
-    name  = "recipient-email"
     value = "{0}"
   }
 
   header {
-    name  = "subject"
+    name  = "recipient-email"
     value = "{1}"
   }
 
   header {
-    name  = "text"
+    name  = "subject"
     value = "{2}"
+  }
+
+  header {
+    name  = "text"
+    value = "{3}"
   }
 
   return_null_allowed       = true
@@ -64,6 +69,8 @@ COMMENT
     module.snowalert_grants
   ]
 }
+
+resource "snowflake_function" "email_handler"
 
 locals {
   smtp_send_function = contains(var.handlers, "smtp") == true ? join(".", [
@@ -95,6 +102,7 @@ resource "snowflake_function" "smtp_handler" {
   return_type = "VARIANT"
   statement   = <<SQL
 ${local.smtp_send_function}(
+  COALESEC(payload['sender_email'], ${var.smtp_driver_from_email_address})
   payload['recipient'],
   payload['subject'],
   payload['message_text']
