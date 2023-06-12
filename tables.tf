@@ -65,11 +65,6 @@ resource "snowflake_table" "raw_alerts" {
     type = "VARIANT"
   }
 
-  column {
-    name = "CORRELATION_PERIOD"
-    type = "NUMBER(38,0)"
-  }
-
   comment = "A raw alerts table."
 
   depends_on = [
