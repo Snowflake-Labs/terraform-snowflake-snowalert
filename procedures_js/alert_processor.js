@@ -34,7 +34,7 @@ WHERE alert:ACTOR = ?
   AND correlation_id IS NOT NULL
   AND NOT IS_NULL_VALUE(alert:ACTOR)
   AND suppressed = FALSE
-  AND event_time > ? - INTERVAL COALESCE(alert:CORRELATION_PERIOD, $${CORRELATION_PERIOD_MINUTES})
+  AND event_time > IFF(alert:CORRELATION_PERIOD IS NOT NULL, ? - INTERVAL alert:CORRELATION_PERIOD, ? - INTERVAL $${CORRELATION_PERIOD_MINUTES})
 ORDER BY event_time DESC
 LIMIT 1
 `
@@ -63,7 +63,8 @@ function find_related_correlation_id(alert) {
     action = `["$${o}"]`
   }
 
-  match = exec(GET_CORRELATED_ALERT, [actor, object, action, time])[0] || {}
+  match =
+    exec(GET_CORRELATED_ALERT, [actor, object, action, time, time])[0] || {}
 
   return match['CORRELATION_ID'] || null
 }
@@ -79,7 +80,7 @@ WHERE correlation_id IS NULL
 UPDATE_ALERT_CORRELATION_ID = `
 UPDATE ${results_alerts_table}
 SET correlation_id = COALESCE(?, UUID_STRING())
-WHERE alert:EVENT_TIME > ? - INTERVAL COALESCE(alert:CORRELATION_PERIOD, $${CORRELATION_PERIOD_MINUTES})
+WHERE alert:EVENT_TIME > IFF(alert:CORRELATION_PERIOD IS NOT NULL, ? - INTERVAL alert:CORRELATION_PERIOD, ? - INTERVAL $${CORRELATION_PERIOD_MINUTES})
   AND alert:ALERT_ID = ?
 `
 
@@ -93,6 +94,7 @@ for (const row of exec(GET_ALERTS_WITHOUT_CORRELATION_ID)) {
     alert_id: alert_id,
     alert_correlation_result: exec(UPDATE_ALERT_CORRELATION_ID, [
       correlation_id,
+      event_time,
       event_time,
       alert_id,
     ]),
