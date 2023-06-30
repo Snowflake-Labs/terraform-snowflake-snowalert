@@ -153,6 +153,7 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
       local.snowalert_database_name,
       local.rules_schema,
     ])
+    rules_schema_name = local.rules_schema
   })
 
   depends_on = [
