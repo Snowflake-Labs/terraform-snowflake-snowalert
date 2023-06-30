@@ -37,9 +37,9 @@ function fillArray(value, len) {
 function ifColumnExists(column_name) {
   column = exec(
     `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-     WHERE TABLE_SCHEMA = ${rules_schema_name} 
-       AND TABLE_NAME = $${QUERY_NAME}
-       AND COLUMN_NAME = $${column_name}`
+     WHERE TABLE_SCHEMA = '${rules_schema_name}'
+       AND TABLE_NAME = '$${QUERY_NAME}'
+       AND COLUMN_NAME = '$${column_name}'`
   )
 
   if (column == column_name) {
