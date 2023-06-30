@@ -77,7 +77,7 @@ SELECT '$${RUN_ID}' run_id
       'EVENT_DATA', IFNULL(EVENT_DATA::VARIANT, PARSE_JSON('null')),
       'SEVERITY', IFNULL(SEVERITY::VARIANT, PARSE_JSON('null')),
       'HANDLERS', IFNULL(OBJECT_CONSTRUCT(*):HANDLERS::VARIANT, PARSE_JSON('null')),
-      ifColumnExists('CORRELATION_PERIOD')
+      $${ifColumnExists('CORRELATION_PERIOD')}
   ) AS alert
   , alert_time
   , event_time
