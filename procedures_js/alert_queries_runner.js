@@ -37,13 +37,13 @@ function fillArray(value, len) {
 function ifColumnExists(column_name) {
   column = exec(
     `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-     WHERE TABLE_SCHEMA = ${rules_schema} 
+     WHERE TABLE_SCHEMA = ${rules_schema_name} 
        AND TABLE_NAME = $${QUERY_NAME}
        AND COLUMN_NAME = $${column_name}`
   )
 
   if (column == column_name) {
-    return `'CORRELATION_PERIOD', IFNULL(CORRELATION_PERIOD::VARIANT, PARSE_JSON('null')),`
+    return `,'CORRELATION_PERIOD', IFNULL(CORRELATION_PERIOD::VARIANT, PARSE_JSON('null')),`
   } else {
     return ''
   }
@@ -76,7 +76,7 @@ SELECT '$${RUN_ID}' run_id
       'DETECTOR', IFNULL(DETECTOR::VARIANT, PARSE_JSON('null')),
       'EVENT_DATA', IFNULL(EVENT_DATA::VARIANT, PARSE_JSON('null')),
       'SEVERITY', IFNULL(SEVERITY::VARIANT, PARSE_JSON('null')),
-      'HANDLERS', IFNULL(OBJECT_CONSTRUCT(*):HANDLERS::VARIANT, PARSE_JSON('null')),
+      'HANDLERS', IFNULL(OBJECT_CONSTRUCT(*):HANDLERS::VARIANT, PARSE_JSON('null'))
       $${ifColumnExists('CORRELATION_PERIOD')}
   ) AS alert
   , alert_time
