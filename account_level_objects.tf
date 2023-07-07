@@ -1,7 +1,7 @@
 # Warehouse
 resource "snowflake_warehouse" "snowalert" {
   count    = var.create_warehouse == true ? 1 : 0
-  provider = snowflake.security_admin_role
+  provider = snowflake.admin_role
 
   name           = upper(trimspace(var.snowalert_warehouse_name))
   comment        = "Warehouse that will be used for Snowalert."
@@ -18,7 +18,7 @@ locals {
 # Database
 resource "snowflake_database" "snowalert" {
   count    = var.create_database == true ? 1 : 0
-  provider = snowflake.security_admin_role
+  provider = snowflake.admin_role
 
   name    = upper(trimspace(var.snowalert_database_name))
   comment = "Snowalert Database."

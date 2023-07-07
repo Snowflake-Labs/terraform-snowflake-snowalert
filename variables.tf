@@ -214,40 +214,40 @@ variable "violation_scheduler_schedule" {
   default     = "1/15 * * * *"
 }
 
-variable "security_integration_role" {
+variable "integration_role" {
   type        = string
   description = "Role for creating database level or account level objects."
-  default     = "SECURITY_INTEGRATION_OWNER_RL"
+  default     = "INTEGRATION_OWNER_RL"
 }
 
-variable "security_admin_role" {
+variable "admin_role" {
   type        = string
   description = "Role for creating database level or account level objects."
-  default     = "SECURITY_ADMIN_RL"
+  default     = "ADMIN_RL"
 }
 
-variable "security_alerting_role" {
+variable "alerting_role" {
   type        = string
   description = "Role for creating schema level objects."
-  default     = "SECURITY_ALERTING_RL"
+  default     = "ALERTING_RL"
 }
 
-variable "security_ingest_role" {
+variable "ingest_role" {
   type        = string
   description = "Role for creating schema level objects."
-  default     = "SECURITY_INGEST_RL"
+  default     = "INGEST_RL"
 }
 
-variable "security_modeling_role" {
+variable "modeling_role" {
   type        = string
   description = "Role for creating schema level objects."
-  default     = "SECURITY_MODELING_RL"
+  default     = "MODELING_RL"
 }
 
-variable "security_monitoring_role" {
+variable "monitoring_role" {
   type        = string
   description = "Role for creating schema level objects."
-  default     = "SECURITY_MONITORING_RL"
+  default     = "MONITORING_RL"
 }
 
 variable "warehouse_external_roles" {

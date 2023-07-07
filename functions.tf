@@ -1,5 +1,5 @@
 resource "snowflake_function" "time_slices_without_tz" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -30,7 +30,7 @@ resource "snowflake_function" "time_slices_without_tz" {
 }
 
 resource "snowflake_function" "time_slices_with_tz" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -75,7 +75,7 @@ locals {
 }
 
 resource "snowflake_function" "time_slices_before_t_without_tz" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -109,7 +109,7 @@ resource "snowflake_function" "time_slices_before_t_without_tz" {
 }
 
 resource "snowflake_function" "time_slices_before_t_with_tz" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -143,7 +143,7 @@ resource "snowflake_function" "time_slices_before_t_with_tz" {
 }
 
 resource "snowflake_function" "time_slices_before_t_without_time" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -172,7 +172,7 @@ resource "snowflake_function" "time_slices_before_t_without_time" {
 }
 
 resource "snowflake_function" "object_assign" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -200,7 +200,7 @@ javascript
 }
 
 resource "snowflake_function" "urlencode" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -230,7 +230,7 @@ javascript
 }
 
 resource "snowflake_function_grant" "urlencode" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database_name = local.snowalert_database_name
   schema_name   = local.data_schema
@@ -239,13 +239,13 @@ resource "snowflake_function_grant" "urlencode" {
   argument_data_types = ["VARIANT"]
   privilege           = "USAGE"
   roles = [
-    var.security_ingest_role,
-    var.security_modeling_role,
+    var.ingest_role,
+    var.modeling_role,
   ]
 }
 
 resource "snowflake_function" "array_set" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -281,7 +281,7 @@ javascript
 }
 
 resource "snowflake_function" "json_beautify_with_indent" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema
@@ -313,7 +313,7 @@ javascript
 }
 
 resource "snowflake_function" "json_beautify_without_indent" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema

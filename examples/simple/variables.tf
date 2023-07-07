@@ -174,37 +174,37 @@ variable "alert_scheduler_schedule" {
   default     = "1/15 * * * *"
 }
 
-variable "security_integration_role" {
+variable "integration_role" {
   type        = string
   description = "Role for creating database level or account level objects."
   default     = "ACCOUNTADMIN"
 }
 
-variable "security_admin_role" {
+variable "admin_role" {
   type        = string
   description = "Role for creating database level or account level objects."
   default     = "ACCOUNTADMIN"
 }
 
-variable "security_alerting_role" {
+variable "alerting_role" {
   type        = string
   description = "Role for creating schema level objects."
   default     = "ACCOUNTADMIN"
 }
 
-variable "security_ingest_role" {
+variable "ingest_role" {
   type        = string
   description = "Role for creating schema level objects."
   default     = "ACCOUNTADMIN"
 }
 
-variable "security_modeling_role" {
+variable "modeling_role" {
   type        = string
   description = "Role for creating schema level objects."
   default     = "ACCOUNTADMIN"
 }
 
-variable "security_monitoring_role" {
+variable "monitoring_role" {
   type        = string
   description = "Role for creating schema level objects."
   default     = "ACCOUNTADMIN"

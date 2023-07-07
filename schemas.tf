@@ -8,7 +8,7 @@ locals {
 # Schemas
 resource "snowflake_schema" "data" {
   count    = var.create_schemas == true ? 1 : 0
-  provider = snowflake.security_admin_role
+  provider = snowflake.admin_role
 
   database = local.snowalert_database_name
   name     = local.data_schema_name
@@ -20,7 +20,7 @@ locals {
 
 resource "snowflake_schema" "rules" {
   count    = var.create_schemas == true ? 1 : 0
-  provider = snowflake.security_admin_role
+  provider = snowflake.admin_role
 
   database = local.snowalert_database_name
   name     = local.rules_schema_name
@@ -32,7 +32,7 @@ locals {
 
 resource "snowflake_schema" "results" {
   count    = var.create_schemas == true ? 1 : 0
-  provider = snowflake.security_admin_role
+  provider = snowflake.admin_role
 
   database = local.snowalert_database_name
   name     = local.results_schema_name
@@ -44,7 +44,7 @@ locals {
 
 resource "snowflake_schema" "monitoring" {
   count    = var.create_schemas == true ? 1 : 0
-  provider = snowflake.security_admin_role
+  provider = snowflake.admin_role
 
   database = local.snowalert_database_name
   name     = local.monitoring_schema_name
