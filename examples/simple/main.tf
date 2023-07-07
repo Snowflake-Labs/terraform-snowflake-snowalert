@@ -9,12 +9,13 @@ module "snowalert" {
   snowalert_user_email = var.snowalert_user_email
   create_tables        = var.create_tables
   handlers             = var.handlers
+  slack_secrets_arn    = var.slack_secrets_arn
 
   providers = {
-    snowflake.security_api_integration_role     = snowflake.security_api_integration_role
-    snowflake.security_storage_integration_role = snowflake.security_storage_integration_role
-    snowflake.security_admin_role               = snowflake.security_admin_role
-    snowflake.security_alerting_role            = snowflake.security_alerting_role
-    aws                                         = aws
+    snowflake.api_integration_role     = snowflake.api_integration_role
+    snowflake.storage_integration_role = snowflake.storage_integration_role
+    snowflake.admin_role               = snowflake.admin_role
+    snowflake.alerting_role            = snowflake.alerting_role
+    aws                                = aws
   }
 }

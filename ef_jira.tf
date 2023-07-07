@@ -1,6 +1,6 @@
 resource "snowflake_external_function" "snowalert_jira_api" {
   count    = contains(var.handlers, "jira") == true ? 1 : 0
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -82,7 +82,7 @@ COMMENT
 
 resource "snowflake_function" "jira_handler" {
   count    = contains(var.handlers, "jira") == true ? 1 : 0
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   name     = "JIRA_HANDLER"
   database = local.snowalert_database_name

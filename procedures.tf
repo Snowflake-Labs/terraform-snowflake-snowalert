@@ -1,5 +1,5 @@
 resource "snowflake_procedure" "alert_dispatcher" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -34,7 +34,7 @@ resource "snowflake_procedure" "alert_dispatcher" {
 }
 
 resource "snowflake_procedure" "alerts_merge" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -68,7 +68,7 @@ resource "snowflake_procedure" "alerts_merge" {
 }
 
 resource "snowflake_procedure" "alert_processor_with_default_correlation_period" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -91,7 +91,7 @@ resource "snowflake_procedure" "alert_processor_with_default_correlation_period"
 }
 
 resource "snowflake_procedure" "alert_processor_with_custom_correlation_period" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -119,7 +119,7 @@ resource "snowflake_procedure" "alert_processor_with_custom_correlation_period" 
 }
 
 resource "snowflake_procedure" "alert_queries_runner_with_time" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -161,7 +161,7 @@ resource "snowflake_procedure" "alert_queries_runner_with_time" {
 }
 
 resource "snowflake_procedure" "alert_queries_runner_without_time" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -198,7 +198,7 @@ resource "snowflake_procedure" "alert_queries_runner_without_time" {
 }
 
 resource "snowflake_procedure" "alert_queries_runner" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -230,7 +230,7 @@ resource "snowflake_procedure" "alert_queries_runner" {
 }
 
 resource "snowflake_procedure" "alert_scheduler" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -272,7 +272,7 @@ resource "snowflake_procedure" "alert_scheduler" {
 }
 
 resource "snowflake_procedure" "alert_suppressions_runner" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -308,7 +308,7 @@ resource "snowflake_procedure" "alert_suppressions_runner" {
 }
 
 resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -339,7 +339,7 @@ resource "snowflake_procedure" "alert_suppressions_runner_without_queries_like" 
 }
 
 resource "snowflake_procedure" "violation_scheduler" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema
@@ -378,7 +378,7 @@ resource "snowflake_procedure" "violation_scheduler" {
 }
 
 resource "snowflake_procedure" "violation_queries_runner" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.results_schema

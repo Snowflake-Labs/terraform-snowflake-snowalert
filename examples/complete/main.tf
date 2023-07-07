@@ -12,9 +12,9 @@ module "snowalert" {
 
   snowalert_warehouse_size = var.snowalert_warehouse_size
   snowflake_integration_user_roles = [
-    var.security_ingest_role,
-    var.security_alerting_role,
-    var.security_modeling_role,
+    var.ingest_role,
+    var.alerting_role,
+    var.modeling_role,
   ]
 
   snowalert_warehouse_name = var.snowalert_warehouse_name
@@ -26,12 +26,12 @@ module "snowalert" {
 
   create_tables = var.create_tables
 
-  security_integration_role = var.security_integration_role
-  security_admin_role       = var.security_admin_role
-  security_alerting_role    = var.security_alerting_role
-  security_ingest_role      = var.security_ingest_role
-  security_modeling_role    = var.security_modeling_role
-  security_monitoring_role  = var.security_monitoring_role
+  integration_role = var.integration_role
+  admin_role       = var.admin_role
+  alerting_role    = var.alerting_role
+  ingest_role      = var.ingest_role
+  modeling_role    = var.modeling_role
+  monitoring_role  = var.monitoring_role
 
   handlers          = var.handlers
   slack_secrets_arn = var.slack_secrets_arn
@@ -48,10 +48,10 @@ module "snowalert" {
   servicenow_api_url     = var.servicenow_api_url
 
   providers = {
-    snowflake.security_api_integration_role     = snowflake.security_api_integration_role
-    snowflake.security_storage_integration_role = snowflake.security_storage_integration_role
-    snowflake.security_admin_role               = snowflake.security_admin_role
-    snowflake.security_alerting_role            = snowflake.security_alerting_role
-    aws                                         = aws
+    snowflake.api_integration_role     = snowflake.api_integration_role
+    snowflake.storage_integration_role = snowflake.storage_integration_role
+    snowflake.admin_role               = snowflake.admin_role
+    snowflake.alerting_role            = snowflake.alerting_role
+    aws                                = aws
   }
 }
