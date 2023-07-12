@@ -338,3 +338,39 @@ depends_on = [
   module.snowalert_grants
 ]
 }
+
+resource "snowflake_function" "convert_time_period_to_seconds" {
+  provider = snowflake.security_alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.data_schema
+  name     = "CONVERT_TIME_PERIOD_TO_SECONDS"
+
+  arguments {
+      name = "PERIOD"
+      type = "VARCHAR"
+  }
+
+  return_type = "FLOAT"
+  language    = "javascript"
+  statement   = <<javascript
+var value = parseInt(PERIOD.match(/\\d+/)[0]);
+var unit = PERIOD.toLowerCase().match(/[a-z]/)[0];
+switch(unit) {
+  case 'm':
+    value *= 60;
+    break;
+  case 'h':
+    value *= 3600;
+    break;
+  case 'd':
+    value *= 86400;
+    break;
+}
+return value;
+javascript
+
+  depends_on = [
+    module.snowalert_grants
+  ]
+}

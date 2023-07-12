@@ -83,6 +83,11 @@ resource "snowflake_procedure" "alert_processor_with_default_correlation_period"
       local.results_schema,
       local.alerts_table,
     ])
+    data_convert_time_period_to_seconds_function = join(".", [
+      local.snowalert_database_name,
+      local.data_schema,
+      snowflake_function.convert_time_period_to_seconds.name,
+    ])
   })
 
   depends_on = [
@@ -110,6 +115,11 @@ resource "snowflake_procedure" "alert_processor_with_custom_correlation_period" 
       local.snowalert_database_name,
       local.results_schema,
       local.alerts_table,
+    ])
+    data_convert_time_period_to_seconds_function = join(".", [
+      local.snowalert_database_name,
+      local.data_schema,
+      snowflake_function.convert_time_period_to_seconds.name,
     ])
   })
 

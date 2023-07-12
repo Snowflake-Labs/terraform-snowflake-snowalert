@@ -29,18 +29,12 @@ function exec(sqlText, binds = []) {
 GET_CORRELATED_ALERT = `
 SELECT correlation_id
 FROM ${results_alerts_table}
-WHERE alert:ACTOR = :1
-  AND (alert:OBJECT::STRING = :2 OR alert:ACTION::STRING = :3)
+WHERE alert:ACTOR = ?
+  AND (alert:OBJECT::STRING = ? OR alert:ACTION::STRING = ?)
   AND correlation_id IS NOT NULL
   AND NOT IS_NULL_VALUE(alert:ACTOR)
   AND suppressed = FALSE
-  AND event_time >  
-      CASE REGEXP_SUBSTR(LOWER(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}')), '[a-z]')
-        WHEN 's' THEN DATEADD(seconds, - TO_NUMBER(REGEXP_SUBSTR(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}'), '\\\\d+')), :4)
-        WHEN 'm' THEN DATEADD(minutes, - TO_NUMBER(REGEXP_SUBSTR(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}'), '\\\\d+')), :4)
-        WHEN 'h' THEN DATEADD(hours, - TO_NUMBER(REGEXP_SUBSTR(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}'), '\\\\d+')), :4)
-        WHEN 'd' THEN DATEADD(days, - TO_NUMBER(REGEXP_SUBSTR(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}'), '\\\\d+')), :4)
-      END
+  AND event_time > DATEADD(seconds, - ${data_convert_time_period_to_seconds_function}(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}')), ?)
 ORDER BY event_time DESC
 LIMIT 1
 `
@@ -84,15 +78,9 @@ WHERE correlation_id IS NULL
 
 UPDATE_ALERT_CORRELATION_ID = `
 UPDATE ${results_alerts_table}
-SET correlation_id = COALESCE(:1, UUID_STRING())
-WHERE alert:EVENT_TIME >
-      CASE REGEXP_SUBSTR(LOWER(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}')), '[a-z]')
-        WHEN 's' THEN DATEADD(seconds, - TO_NUMBER(REGEXP_SUBSTR(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}'), '\\\\d+')), :2)
-        WHEN 'm' THEN DATEADD(minutes, - TO_NUMBER(REGEXP_SUBSTR(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}'), '\\\\d+')), :2)
-        WHEN 'h' THEN DATEADD(hours, - TO_NUMBER(REGEXP_SUBSTR(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}'), '\\\\d+')), :2)
-        WHEN 'd' THEN DATEADD(days, - TO_NUMBER(REGEXP_SUBSTR(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}'), '\\\\d+')), :2)
-      END
-  AND alert:ALERT_ID = :3
+SET correlation_id = COALESCE(?, UUID_STRING())
+WHERE alert:EVENT_TIME > DATEADD(seconds, - ${data_convert_time_period_to_seconds_function}(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}')), ?)
+  AND alert:ALERT_ID = ?
 `
 
 for (const row of exec(GET_ALERTS_WITHOUT_CORRELATION_ID)) {

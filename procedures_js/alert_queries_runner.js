@@ -34,19 +34,8 @@ function fillArray(value, len) {
   return arr
 }
 
-function ifColumnExists(column_name) {
-  column = exec(
-    `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-     WHERE TABLE_SCHEMA = '${rules_schema_name}'
-       AND TABLE_NAME = '$${QUERY_NAME}'
-       AND COLUMN_NAME = '$${column_name}'`
-  )
-
-  if (column == column_name) {
-    return `,'CORRELATION_PERIOD', IFNULL(CORRELATION_PERIOD::VARIANT, PARSE_JSON('null')),`
-  } else {
-    return ''
-  }
+function defaultNullReference(columnAndType) {
+  return `IFNULL(OBJECT_CONSTRUCT(*):` + columnAndType + `, PARSE_JSON('null'))`
 }
 
 const RUN_ID = Math.random().toString(36).substring(2).toUpperCase()
@@ -77,7 +66,9 @@ SELECT '$${RUN_ID}' run_id
       'EVENT_DATA', IFNULL(EVENT_DATA::VARIANT, PARSE_JSON('null')),
       'SEVERITY', IFNULL(SEVERITY::VARIANT, PARSE_JSON('null')),
       'HANDLERS', IFNULL(OBJECT_CONSTRUCT(*):HANDLERS::VARIANT, PARSE_JSON('null'))
-      $${ifColumnExists('CORRELATION_PERIOD')}
+      'CORRELATION_PERIOD', $${defaultNullReference(
+        'CORRELATION_PERIOD::VARIANT'
+      )}
   ) AS alert
   , alert_time
   , event_time
