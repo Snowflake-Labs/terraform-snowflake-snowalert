@@ -354,7 +354,7 @@ resource "snowflake_function" "convert_time_period_to_seconds" {
   return_type = "FLOAT"
   language    = "javascript"
   statement   = <<javascript
-var value = parseInt(PERIOD.match(/\\d+/)[0]);
+var value = parseInt(PERIOD.match(/\d+/)[0]);
 var unit = PERIOD.toLowerCase().match(/[a-z]/)[0];
 switch(unit) {
   case 'm':
