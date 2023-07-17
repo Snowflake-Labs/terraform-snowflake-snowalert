@@ -356,18 +356,12 @@ resource "snowflake_function" "convert_time_period_to_seconds" {
   statement   = <<javascript
 var value = parseInt(PERIOD.match(/\d+/)[0]);
 var unit = PERIOD.toLowerCase().match(/[a-z]/)[0];
-switch(unit) {
-  case 'm':
-    value *= 60;
-    break;
-  case 'h':
-    value *= 3600;
-    break;
-  case 'd':
-    value *= 86400;
-    break;
-}
-return value;
+return value * (
+  unit == 'm' ? 60 :
+  unit == 'h' ? 60*60 :
+  unit == 'd' ? 60*60*24 :
+  1
+)
 javascript
 
   depends_on = [
