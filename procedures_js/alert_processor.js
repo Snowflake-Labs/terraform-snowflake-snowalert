@@ -1,7 +1,7 @@
 //args
 var CORRELATION_PERIOD_MINUTES
 
-CORRELATION_PERIOD_MINUTES = CORRELATION_PERIOD_MINUTES || -60
+CORRELATION_PERIOD_MINUTES = CORRELATION_PERIOD_MINUTES || '60 minutes'
 
 var alert_correlation_result_array = []
 
@@ -34,7 +34,11 @@ WHERE alert:ACTOR = ?
   AND correlation_id IS NOT NULL
   AND NOT IS_NULL_VALUE(alert:ACTOR)
   AND suppressed = FALSE
-  AND event_time > DATEADD(minutes, $${CORRELATION_PERIOD_MINUTES}, ?)
+  AND event_time > DATEADD(
+    seconds,
+    - ${data_convert_time_period_to_seconds_function}(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}')),
+    ?
+  )
 ORDER BY event_time DESC
 LIMIT 1
 `
@@ -79,7 +83,11 @@ WHERE correlation_id IS NULL
 UPDATE_ALERT_CORRELATION_ID = `
 UPDATE ${results_alerts_table}
 SET correlation_id = COALESCE(?, UUID_STRING())
-WHERE alert:EVENT_TIME > DATEADD(minutes, $${CORRELATION_PERIOD_MINUTES}, ?)
+WHERE alert:EVENT_TIME > DATEADD(
+    seconds, 
+    - ${data_convert_time_period_to_seconds_function}(COALESCE(alert:CORRELATION_PERIOD, '$${CORRELATION_PERIOD_MINUTES}')), 
+    ?
+  )
   AND alert:ALERT_ID = ?
 `
 

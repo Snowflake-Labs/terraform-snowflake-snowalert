@@ -34,6 +34,10 @@ function fillArray(value, len) {
   return arr
 }
 
+function defaultNullReference(columnAndType) {
+  return `IFNULL(OBJECT_CONSTRUCT(*):` + columnAndType + `, PARSE_JSON('null'))`
+}
+
 const RUN_ID = Math.random().toString(36).substring(2).toUpperCase()
 const RAW_ALERTS_TABLE = `${results_raw_alerts_table}`
 
@@ -61,7 +65,10 @@ SELECT '$${RUN_ID}' run_id
       'DETECTOR', IFNULL(DETECTOR::VARIANT, PARSE_JSON('null')),
       'EVENT_DATA', IFNULL(EVENT_DATA::VARIANT, PARSE_JSON('null')),
       'SEVERITY', IFNULL(SEVERITY::VARIANT, PARSE_JSON('null')),
-      'HANDLERS', IFNULL(OBJECT_CONSTRUCT(*):HANDLERS::VARIANT, PARSE_JSON('null'))
+      'HANDLERS', $${defaultNullReference('HANDLERS::VARIANT')},
+      'CORRELATION_PERIOD', $${defaultNullReference(
+        'CORRELATION_PERIOD::VARIANT'
+      )}
   ) AS alert
   , alert_time
   , event_time

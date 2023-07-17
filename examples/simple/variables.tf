@@ -153,7 +153,7 @@ variable "snowalert_user_email" {
 variable "snowalert_warehouse_size" {
   type        = string
   description = "Warehouse size."
-  default     = "X-Small"
+  default     = "XSMALL"
 }
 
 variable "alerts_merge_schedule" {
