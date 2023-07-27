@@ -340,7 +340,7 @@ depends_on = [
 }
 
 resource "snowflake_function" "convert_time_period_to_seconds" {
-  provider = snowflake.security_alerting_role
+  provider = snowflake.alerting_role
 
   database = local.snowalert_database_name
   schema   = local.data_schema

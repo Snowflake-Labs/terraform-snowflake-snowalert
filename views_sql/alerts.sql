@@ -15,6 +15,8 @@ SELECT alert['ALERT_ID']::VARCHAR AS id
     , alert['ACTION']::VARCHAR       AS action
     , alert['TITLE']::VARCHAR        AS title
     , alert['DESCRIPTION']::VARCHAR  AS description
+    , alert['ENTITIES']::VARIANT     AS entities
+    , alert['TAGS']::VARIANT         AS tags
     , alert['DETECTOR']::VARCHAR     AS detector
     , alert['EVENT_DATA']::VARIANT   AS event_data
     , alert['SEVERITY']::VARCHAR     AS severity
