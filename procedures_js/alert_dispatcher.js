@@ -64,8 +64,7 @@ FROM (
   WHERE suppressed = FALSE
   AND IS_ARRAY(handler_payloads)
 ), LATERAL FLATTEN(input => handler_payloads)
-WHERE alert_time > TIMEADD(MINUTES, -handler_ttl, CURRENT_TIMESTAMP)
-  AND (
+WHERE (
     handled_payload IS NULL
     OR IS_NULL_VALUE(handled_payload)
   )
@@ -81,19 +80,26 @@ return exec(GET_HANDLERS).rows.map((h) => {
   const alert = JSON.stringify(h.ALERT)
   const payload = JSON.stringify(h.HANDLER_PAYLOAD)
   const alert_id = h.ALERT_ID
+  const alert_time = JSON.stringify(h.ALERT_TIME)
   const handler_num = h.HANDLER_NUM
+  const handler_ttl = h.HANLDER_TTL
 
   const result = exec(
-    `UPDATE ${results_alerts_table}
-    SET handled = ${results_array_set_function}(
-      handled,
-      $${handler_num},
-      $${handler_name}(PARSE_JSON(?), PARSE_JSON(?))
-    )
-    WHERE alert_id=?
-    `,
-    [alert, payload, alert_id]
+  `UPDATE ${results_alerts_table}
+  SET handled = ${results_array_set_function}(
+    handled,
+    $${handler_num},
+    CASE
+      WHEN $${alert_time} > TIMEADD(MINUTES, -$${handler_ttl}, CURRENT_TIMESTAMP)
+      THEN OBJECT_CONSTRUCT('success', FALSE, 'details', 'Alert TTL expired.')
+      ELSE $${handler_name}(PARSE_JSON(?), PARSE_JSON(?))
+    END
   )
+  WHERE alert_id=?
+  `,
+  [alert, payload, alert_id, alert_time, handler_ttl]
+);
+
 
   return {
     alert_id,
