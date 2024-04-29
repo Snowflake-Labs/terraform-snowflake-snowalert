@@ -80,7 +80,7 @@ return exec(GET_HANDLERS).rows.map((h) => {
   const alert = JSON.stringify(h.ALERT)
   const payload = JSON.stringify(h.HANDLER_PAYLOAD)
   const alert_id = h.ALERT_ID
-  const alert_time = JSON.stringify(h.ALERT_TIME)
+  const alert_time = h.ALERT_TIME
   const handler_num = h.HANDLER_NUM
   const handler_ttl = h.HANLDER_TTL
 
@@ -97,7 +97,7 @@ return exec(GET_HANDLERS).rows.map((h) => {
   )
   WHERE alert_id=?
   `,
-  [alert, payload, alert_id, alert_time, handler_ttl]
+  [alert, payload, alert_id]
 );
 
 
