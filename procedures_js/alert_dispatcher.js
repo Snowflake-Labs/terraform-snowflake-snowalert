@@ -86,18 +86,18 @@ return exec(GET_HANDLERS).rows.map((h) => {
 
   const result = exec(
   `UPDATE ${results_alerts_table}
-  SET handled = ${results_array_set_function}(
-    handled,
-    $${handler_num},
-    CASE
-      WHEN ? < TIMEADD(MINUTES, -$${handler_ttl}, CURRENT_TIMESTAMP)
-      THEN OBJECT_CONSTRUCT('success', FALSE, 'details', 'Alert TTL expired.')
-      ELSE $${handler_name}(PARSE_JSON(?), PARSE_JSON(?))
-    END
-  )
-  WHERE alert_id=?
-  `,
-  [alert_time, alert, payload, alert_id]
+    SET handled = ${results_array_set_function}(
+      handled,
+      $${handler_num},
+      CASE
+        WHEN ? < TIMEADD(MINUTES, -$${handler_ttl}, CURRENT_TIMESTAMP)
+        THEN OBJECT_CONSTRUCT('success', FALSE, 'details', 'Alert TTL expired.')
+        ELSE $${handler_name}(PARSE_JSON(?), PARSE_JSON(?))
+      END
+    )
+    WHERE alert_id=?
+    `,
+    [alert_time, alert, payload, alert_id]
 );
 
 
