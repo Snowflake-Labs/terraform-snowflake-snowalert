@@ -85,7 +85,7 @@ return exec(GET_HANDLERS).rows.map((h) => {
   const handler_ttl = h.HANLDER_TTL
 
   const result = exec(
-  `UPDATE ${results_alerts_table}
+    `UPDATE ${results_alerts_table}
     SET handled = ${results_array_set_function}(
       handled,
       $${handler_num},
