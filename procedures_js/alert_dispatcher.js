@@ -82,22 +82,22 @@ return exec(GET_HANDLERS).rows.map((h) => {
   const alert_id = h.ALERT_ID
   const alert_time = h.ALERT_TIME
   const handler_num = h.HANDLER_NUM
-  const handler_ttl = h.HANLDER_TTL
+  const handler_ttl = h.HANDLER_TTL
+  const ttlExpired = new Date(alert_time).getTime() < Date.now() - handler_ttl * 60000;
+
+  const handledContional = ttlExpired ? 'OBJECT_CONSTRUCT(\'success\', FALSE, \'details\', \'Alert TTL expired.\')' : '$${handler_name}(PARSE_JSON(?), PARSE_JSON(?))';
+  const binds = ttlExpired ? [alert_id] : [alert, payload, alert_id];
 
   const result = exec(
     `UPDATE ${results_alerts_table}
     SET handled = ${results_array_set_function}(
       handled,
       $${handler_num},
-      CASE
-        WHEN ? < TIMEADD(MINUTES, -$${handler_ttl}, CURRENT_TIMESTAMP)
-        THEN OBJECT_CONSTRUCT('success', FALSE, 'details', 'Alert TTL expired.')
-        ELSE $${handler_name}(PARSE_JSON(?), PARSE_JSON(?))
-      END
+      $${handledContional}
     )
     WHERE alert_id=?
     `,
-    [alert_time, alert, payload, alert_id]
+    binds
 );
 
 
