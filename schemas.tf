@@ -39,7 +39,6 @@ resource "snowflake_schema" "results" {
 }
 
 resource "snowflake_object_parameter" "results_schema_suspend_task_after_num_failures" {
-  count    = var.create_schemas == true ? 1 : 0
   provider = snowflake.admin_role
 
   key         = "SUSPEND_TASK_AFTER_NUM_FAILURES"
