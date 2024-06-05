@@ -1,5 +1,5 @@
 resource "snowflake_table" "raw_alerts_tables" {
-  count    = var.create_tables ? 2 : 0
+  count    = var.create_tables ? var.alert_shards_count : 0
   provider = snowflake.alerting_role
 
   database        = local.snowalert_database_name

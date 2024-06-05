@@ -274,6 +274,11 @@ variable "enable_multiple_grants" {
   default     = true
 }
 
+variable "alert_shards_count" {
+  type    = number
+  default = 2
+}
+
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
