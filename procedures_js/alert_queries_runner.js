@@ -26,6 +26,10 @@ function exec(sqlText, binds = []) {
   return retval
 }
 
+function randInt(n) {
+  return Math.floor(Math.random()*n)
+}
+
 function fillArray(value, len) {
   const arr = []
   for (var i = 0; i < len; i++) {
@@ -39,7 +43,7 @@ function defaultNullReference(columnAndType) {
 }
 
 const RUN_ID = Math.random().toString(36).substring(2).toUpperCase()
-const RAW_ALERTS_TABLE = `${results_raw_alerts_table}`
+const RAW_ALERTS_TABLE = `${results_raw_alerts_table}_${randInt(${alert_shards_count})}`
 
 const CREATE_ALERTS_SQL = `INSERT INTO $${RAW_ALERTS_TABLE} (
   run_id,

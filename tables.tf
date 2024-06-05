@@ -1,10 +1,10 @@
-resource "snowflake_table" "raw_alerts" {
-  count    = var.create_tables ? 1 : 0
+resource "snowflake_table" "raw_alerts_tables" {
+  count    = var.create_tables ? var.alert_shards_count : 0
   provider = snowflake.alerting_role
 
   database        = local.snowalert_database_name
   schema          = local.results_schema
-  name            = "RAW_ALERTS"
+  name            = "RAW_ALERTS_${count.index}"
   change_tracking = true
 
   column {
