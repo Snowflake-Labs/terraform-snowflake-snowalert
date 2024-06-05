@@ -54,8 +54,7 @@ resource "snowflake_view" "raw_alerts" {
   )
 
   depends_on = [
-    local.raw_alerts_0,
-    local.raw_alerts_1
+    local.raw_alerts_tables
   ]
 }
 
