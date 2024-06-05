@@ -274,6 +274,12 @@ variable "enable_multiple_grants" {
   default     = true
 }
 
+variable "enable_alert_processor" {
+  type        = bool
+  description = "Enable the alert processor for alert correlation"
+  default     = true
+}
+
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}

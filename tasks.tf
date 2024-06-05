@@ -43,7 +43,7 @@ resource "snowflake_task" "alert_processor_task" {
 
   after         = [snowflake_task.snowalert_suppression_merge_task.name]
   sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alert_processor_with_default_correlation_period.name}()"
-  enabled       = true
+  enabled       = var.enable_alert_processor
 
   depends_on = [
     module.snowalert_grants
