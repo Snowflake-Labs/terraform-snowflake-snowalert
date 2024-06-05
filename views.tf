@@ -50,7 +50,7 @@ resource "snowflake_view" "raw_alerts" {
   name     = "RAW_ALERTS"
   comment  = "joins raw alert shards"
 
-  statement = "TABLE raw_alerts_0 UNION ALL TABLE raw_alerts_1"
+  statement = join(" UNION ALL ", [for table in [for i in range(var.table_count) : "raw_alerts_${i}"] : "TABLE ${table}"])
 
   depends_on = [
     local.raw_alerts_tables
