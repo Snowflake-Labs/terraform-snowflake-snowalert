@@ -1,10 +1,10 @@
-resource "snowflake_table" "raw_alerts_0" {
-  count    = var.create_tables ? 1 : 0
+resource "snowflake_table" "raw_alerts_tables" {
+  count    = var.create_tables ? 2 : 0
   provider = snowflake.alerting_role
 
   database        = local.snowalert_database_name
   schema          = local.results_schema
-  name            = "RAW_ALERTS"
+  name            = "RAW_ALERTS_${count.index}"
   change_tracking = true
 
   column {
@@ -71,81 +71,6 @@ resource "snowflake_table" "raw_alerts_0" {
     module.snowalert_grants
   ]
 }
-
-resource "snowflake_table" "raw_alerts_1" {
-  count    = var.create_tables ? 1 : 0
-  provider = snowflake.alerting_role
-
-  database        = local.snowalert_database_name
-  schema          = local.results_schema
-  name            = "RAW_ALERTS"
-  change_tracking = true
-
-  column {
-    name = "RUN_ID"
-    type = "VARCHAR(256)"
-  }
-
-  column {
-    name = "ALERT"
-    type = "VARIANT"
-  }
-
-  column {
-    name = "ALERT_TIME"
-    type = "TIMESTAMP_LTZ(9)"
-  }
-
-  column {
-    name = "EVENT_TIME"
-    type = "TIMESTAMP_LTZ(9)"
-  }
-
-  column {
-    name = "TICKET"
-    type = "VARCHAR(16777216)"
-  }
-
-  column {
-    name = "SUPPRESSED"
-    type = "BOOLEAN"
-  }
-
-  column {
-    name = "SUPPRESSION_RULE"
-    type = "VARCHAR(16777216)"
-
-    default {
-      constant = 1
-    }
-  }
-
-  column {
-    name = "COUNTER"
-    type = "NUMBER(38,0)"
-
-    default {
-      constant = 1
-    }
-  }
-
-  column {
-    name = "CORRELATION_ID"
-    type = "VARCHAR(16777216)"
-  }
-
-  column {
-    name = "HANDLED"
-    type = "VARIANT"
-  }
-
-  comment = "A raw alerts table."
-
-  depends_on = [
-    module.snowalert_grants
-  ]
-}
-
 
 locals {
   raw_alerts_table = var.create_tables ? snowflake_table.raw_alerts[0].name : "RAW_ALERTS"
