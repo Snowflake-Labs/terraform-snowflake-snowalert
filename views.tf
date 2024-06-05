@@ -51,7 +51,6 @@ resource "snowflake_view" "raw_alerts" {
   comment  = "joins raw alert shards"
 
   statement = "TABLE raw_alerts_0 UNION ALL TABLE raw_alerts_1"
-  )
 
   depends_on = [
     local.raw_alerts_tables
