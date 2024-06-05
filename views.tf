@@ -42,6 +42,23 @@ resource "snowflake_view" "alerts" {
   ]
 }
 
+resource "snowflake_view" "raw_alerts" {
+  provider = snowflake.alerting_role
+
+  database = local.snowalert_database_name
+  schema   = local.results_schema
+  name     = "RAW_ALERTS"
+  comment  = "joins raw alert shards"
+
+  statement = "TABLE raw_alerts_0 UNION ALL TABLE raw_alerts_1"
+  )
+
+  depends_on = [
+    local.raw_alerts_0,
+    local.raw_alerts_1
+  ]
+}
+
 resource "snowflake_view" "violations" {
   provider = snowflake.alerting_role
 
