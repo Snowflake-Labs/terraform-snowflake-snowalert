@@ -14,7 +14,11 @@ It is essentially a Terraformed version of the [Snowalert](https://github.com/sn
 4. UDFs
 6. Procedures
 
-This version of Snowalert is implemented fully in Snowflake using the above Snowflake native objects to schedule runs of alerts and dispatch them to external services such as slack, JIRA and e-mail using Snowflake External Functions with a [GEFF API](https://github.com/Snowflake-Labs/geff) backend.
+This version of SnowAlert is implemented fully in Snowflake using the above Snowflake native objects to schedule runs of alerts and dispatch them to external services such as slack, JIRA and e-mail using Snowflake External Functions with a [GEFF API](https://github.com/Snowflake-Labs/geff) backend.
+
+Most of these objects are orchestrated via Terraform or by each other (e.g. the alert scheduler Task creates `run_alert_query_*` tasks).
+
+[![SnowAlert architecture](./architechture.png)](https://lucid.app/lucidchart/3422e48f-b048-495d-89d7-5642e7c37dd0/edit?viewport_loc=-139%2C-1221%2C3116%2C1821%2C0_0&invitationId=inv_918487f3-3a86-4059-9255-48ef7792b4bf)
 
 ### `snowalert.auto.tfvars` Inputs File
 
