@@ -4,17 +4,13 @@
 
 ![158665186-36fa7acf-fecc-452c-ae4f-482eddf79b72](https://user-images.githubusercontent.com/72515998/158665593-e80b12df-41e2-4162-a102-895ee3407fe8.png)
 
-SnowAlert is an alerting engine that allows you to write SQL queries that are run on schedule and produce alerts into a table that can optionally be dispatched to slack, JIRA or E-mail. It is collection of Snowflake objects that enable you to write what we call _rules_ as Snowflake views that query tables for interesting events to find those that are alertworthy that may then be deemed as _incidents_. We manage these objects in a Terraform module.
+SnowAlert is an alerting and violations platform that allows you to write SQL queries to run on a schedule and handlers that dispatch them to Slack, Jira, or other RPC endpoints. It is collection of Snowflake objects that enable you to write what we call _rules_ as Snowflake views that query tables for security-relevant events, suppress the ones that are expected, and dispatch the rest for human review. We manage these objects in a Terraform module.
 
-It is essentially a Terraformed version of the [Snowalert](https://github.com/snowflakedb/SnowAlert) project. It uses the following Snowflake resources:
+Details of the implementation are at [docs.snowalert.com](https://docs.snowalert.com/).
 
-1. Views
-2. Tables
-3. Tasks
-4. UDFs
-6. Procedures
+This is a partial re-implementation of the [Snowalert](https://github.com/snowflakedb/SnowAlert) project using Snowflake-native resources like Tasks, User Defined Functions, Procedures, and External Functions.
 
-This version of Snowalert is implemented fully in Snowflake using the above Snowflake native objects to schedule runs of alerts and dispatch them to external services such as slack, JIRA and e-mail using Snowflake External Functions with a [GEFF API](https://github.com/Snowflake-Labs/geff) backend.
+It communicates with remote RPC's using Snowflake External Functions with a [GEFF API](https://github.com/Snowflake-Labs/geff) backend.
 
 ### `snowalert.auto.tfvars` Inputs File
 
