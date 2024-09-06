@@ -8,7 +8,7 @@ SnowAlert is an alerting and violations platform that allows you to write SQL qu
 
 Details of the implementation are at [docs.snowalert.com](https://docs.snowalert.com/).
 
-This is a partial re-implementation of the [Snowalert](https://github.com/snowflakedb/SnowAlert) project using Snowflake-native resources like Tasks, User Defined Functions, Procedures, and External Functions.
+This is a partial re-implementation of the original [SnowAlert](https://github.com/snowflakedb/SnowAlert) project using Snowflake-native resources like Tasks, User Defined Functions, Procedures, and External Functions.
 
 It communicates with remote RPC's using Snowflake External Functions with a [GEFF API](https://github.com/Snowflake-Labs/geff) backend.
 
