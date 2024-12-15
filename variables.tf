@@ -117,6 +117,12 @@ variable "create_schemas" {
   description = "Flag to create schemas within the module or not."
 }
 
+variable "use_managed_schema" {
+  type        = bool
+  default     = true
+  description = "Flag to create schemas within the module or not."
+}
+
 variable "create_tables" {
   type        = bool
   default     = false
@@ -256,12 +262,6 @@ variable "warehouse_external_roles" {
   default     = []
 }
 
-variable "arn_format" {
-  type        = string
-  description = "ARN format could be aws or aws-us-gov. Defaults to non-gov."
-  default     = "aws"
-}
-
 variable "jira_api_version" {
   type        = string
   description = "Version of the JIRA API to use"
@@ -287,9 +287,7 @@ data "aws_partition" "current" {}
 locals {
   account_id = data.aws_caller_identity.current.account_id
   aws_region = data.aws_region.current.name
-}
 
-locals {
   snowalert_secret_arns = flatten([
     contains(var.handlers, "jira") == true ? [var.jira_secrets_arn] : [],
     contains(var.handlers, "slack") == true ? [var.slack_secrets_arn] : [],

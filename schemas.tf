@@ -24,6 +24,8 @@ resource "snowflake_schema" "rules" {
 
   database = local.snowalert_database_name
   name     = local.rules_schema_name
+
+  is_managed = var.use_managed_schema
 }
 
 locals {
@@ -36,6 +38,8 @@ resource "snowflake_schema" "results" {
 
   database = local.snowalert_database_name
   name     = local.results_schema_name
+
+  is_managed = var.use_managed_schema
 }
 
 resource "snowflake_object_parameter" "results_schema_suspend_task_after_num_failures" {
@@ -61,6 +65,8 @@ resource "snowflake_schema" "monitoring" {
 
   database = local.snowalert_database_name
   name     = local.monitoring_schema_name
+
+  is_managed = var.use_managed_schema
 }
 
 locals {
