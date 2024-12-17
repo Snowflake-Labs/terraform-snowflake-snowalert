@@ -242,6 +242,10 @@ resource "snowflake_function_grant" "urlencode" {
     var.ingest_role,
     var.modeling_role,
   ]
+
+  depends_on = [
+    snowflake_function.urlencode,
+  ]
 }
 
 resource "snowflake_function" "array_set" {
