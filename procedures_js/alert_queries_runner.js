@@ -26,6 +26,25 @@ function exec(sqlText, binds = []) {
   return retval
 }
 
+// Simple retry mechanism for handling table locks
+function execWithRetry(sqlText, binds = [], maxRetries = 5) {
+  let attempt = 0;
+  
+  while (attempt <= maxRetries) {
+    try {
+      return exec(sqlText, binds);
+    } catch (e) {
+      attempt++;
+      if (attempt > maxRetries) throw e;
+      
+      // Exponential backoff with jitter
+      const baseDelayMs = 1000;
+      const delay = baseDelayMs * Math.pow(2, attempt - 1) + Math.floor(Math.random() * 500);
+      snowflake.execute({ sqlText: `CALL SYSTEM$WAIT(${delay})` });
+    }
+  }
+}
+
 function fillArray(value, len) {
   const arr = []
   for (var i = 0; i < len; i++) {
@@ -81,5 +100,5 @@ WHERE event_time BETWEEN $${FROM_TIME_SQL} AND $${TO_TIME_SQL}
 
 return {
   run_id: RUN_ID,
-  create_alerts_result: exec(CREATE_ALERTS_SQL)[0],
+  create_alerts_result: execWithRetry(CREATE_ALERTS_SQL)[0],
 }
