@@ -26,7 +26,6 @@ function exec(sqlText, binds = []) {
   return retval
 }
 
-// Simple retry mechanism for handling table locks
 function execWithRetry(sqlText, binds = [], maxRetries = 5) {
   let attempt = 0;
   
