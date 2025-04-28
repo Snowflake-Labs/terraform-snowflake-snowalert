@@ -39,7 +39,7 @@ function execWithRetry(sqlText, binds = [], maxRetries = 5) {
       // Exponential backoff with jitter
       const baseDelayMs = 1000;
       const delay = baseDelayMs * Math.pow(2, attempt - 1) + Math.floor(Math.random() * 500);
-      exec(`CALL SYSTEM$WAIT(${delay})`);
+      exec(`CALL SYSTEM$WAIT(${delay/1000})`);
     }
   }
 }
