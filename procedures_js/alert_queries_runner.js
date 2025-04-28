@@ -26,20 +26,22 @@ function exec(sqlText, binds = []) {
   return retval
 }
 
-function execWithRetry(sqlText, binds = [], maxRetries = 5) {
-  let attempt = 0;
+function execWithRetry(sqlText, binds = [], maxAttempts = 5) {
+  let attempt = 1;
   
-  while (attempt <= maxRetries) {
+  while (attempt <= maxAttempts) {
     try {
       return exec(sqlText, binds);
     } catch (e) {
       attempt++;
-      if (attempt > maxRetries) throw e;
+      if (attempt > maxAttempts) throw e;
       
       // Exponential backoff with jitter
       const baseDelayMs = 1000;
-      const delay = baseDelayMs * Math.pow(2, attempt - 1) + Math.floor(Math.random() * 500);
-      exec(`CALL SYSTEM$WAIT(${delay/1000})`);
+      const delayMs = baseDelayMs * Math.pow(2, attempt - 1) + Math.floor(Math.random() * 500);
+      const waitSeconds = Math.ceil(delayMs / 1000); 
+
+      exec(`CALL SYSTEM$WAIT(${waitSeconds})`);
     }
   }
 }
