@@ -26,6 +26,26 @@ function exec(sqlText, binds = []) {
   return retval
 }
 
+function execWithRetry(sqlText, binds = [], maxAttempts = 5) {
+  let attempt = 0;
+  
+  while (attempt <= maxAttempts) {
+    try {
+      return exec(sqlText, binds);
+    } catch (e) {
+      attempt++;
+      if (attempt > maxAttempts) throw e;
+      
+      // Exponential backoff with jitter
+      const baseDelayMs = 1000;
+      const delayMs = baseDelayMs * Math.pow(2, attempt - 1) + Math.floor(Math.random() * 500);
+      const waitSeconds = Math.ceil(delayMs / 1000); 
+
+      exec(`CALL SYSTEM$WAIT(${waitSeconds})`);
+    }
+  }
+}
+
 function fillArray(value, len) {
   const arr = []
   for (var i = 0; i < len; i++) {
@@ -81,5 +101,5 @@ WHERE event_time BETWEEN $${FROM_TIME_SQL} AND $${TO_TIME_SQL}
 
 return {
   run_id: RUN_ID,
-  create_alerts_result: exec(CREATE_ALERTS_SQL)[0],
+  create_alerts_result: execWithRetry(CREATE_ALERTS_SQL)[0],
 }
