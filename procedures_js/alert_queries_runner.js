@@ -27,7 +27,7 @@ function exec(sqlText, binds = []) {
 }
 
 function execWithRetry(sqlText, binds = [], maxAttempts = 5) {
-  let attempt = 1;
+  let attempt = 0;
   
   while (attempt <= maxAttempts) {
     try {
