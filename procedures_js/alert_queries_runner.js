@@ -41,7 +41,7 @@ function execWithRetry(sqlText, binds = [], maxAttempts = 5) {
       const delayMs = baseDelayMs * Math.pow(2, attempt - 1) + Math.floor(Math.random() * 500);
       const waitSeconds = Math.ceil(delayMs / 1000); 
 
-      exec(`CALL SYSTEM$WAIT(${waitSeconds})`);
+      exec(`CALL SYSTEM$WAIT($${waitSeconds})`);
     }
   }
 }
