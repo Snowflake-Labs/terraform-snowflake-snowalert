@@ -62,9 +62,11 @@ SELECT CURRENT_TIMESTAMP()
         )
       )
     ))
-  , data.object_assign(
+  , OBJECT_INSERT(
       OBJECT_CONSTRUCT(*),
-      OBJECT_CONSTRUCT('QUERY_NAME', '$${QUERY_NAME}')
+      'QUERY_NAME',
+      '$${QUERY_NAME}',
+      TRUE
     )
 FROM rules.$${QUERY_NAME}
 ;`
