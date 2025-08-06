@@ -280,6 +280,13 @@ variable "enable_alert_processor" {
   default     = true
 }
 
+variable "enable_alert_tasks" {
+  type        = bool
+  description = "Enable SnowAlert tasks."
+  default     = true
+}
+
+
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}

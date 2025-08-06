@@ -8,7 +8,7 @@ resource "snowflake_task" "snowalert_alerts_merge_task" {
 
   schedule      = "USING CRON ${var.alerts_merge_schedule} UTC"
   sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alerts_merge.name}('30m')"
-  enabled       = true
+  enabled       = var.enable_alert_tasks
 
   depends_on = [
     module.snowalert_grants
@@ -25,7 +25,7 @@ resource "snowflake_task" "snowalert_suppression_merge_task" {
 
   after         = [snowflake_task.snowalert_alerts_merge_task.name]
   sql_statement = "CALL ${local.snowalert_database_name}.${local.results_schema}.${snowflake_procedure.alert_suppressions_runner_without_queries_like.name}()"
-  enabled       = true
+  enabled       = var.enable_alert_tasks
 
   depends_on = [
     module.snowalert_grants
@@ -43,7 +43,7 @@ resource "snowflake_task" "alert_processor_task" {
 
   after         = [snowflake_task.snowalert_suppression_merge_task.name]
   sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alert_processor_with_default_correlation_period.name}()"
-  enabled       = var.enable_alert_processor
+  enabled       = alltrue([var.enable_alert_processor, var.enable_alert_tasks])
 
   depends_on = [
     module.snowalert_grants
@@ -61,7 +61,7 @@ resource "snowflake_task" "alert_dispatcher_task" {
 
   schedule      = "USING CRON ${var.alert_dispatch_schedule} UTC"
   sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alert_dispatcher.name}()"
-  enabled       = true
+  enabled       = var.enable_alert_tasks
 
   depends_on = [
     module.snowalert_grants
@@ -78,7 +78,7 @@ resource "snowflake_task" "alert_scheduler_task" {
 
   schedule      = "USING CRON ${var.alert_scheduler_schedule} UTC"
   sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.alert_scheduler.name}('${local.snowalert_warehouse_name}')"
-  enabled       = true
+  enabled       = var.enable_alert_tasks
 
   depends_on = [
     module.snowalert_grants
@@ -95,7 +95,7 @@ resource "snowflake_task" "violation_scheduler_task" {
 
   schedule      = "USING CRON ${var.violation_scheduler_schedule} UTC"
   sql_statement = "CALL ${local.results_schema}.${snowflake_procedure.violation_scheduler.name}('${local.snowalert_warehouse_name}')"
-  enabled       = true
+  enabled       = var.enable_alert_tasks
 
   depends_on = [
     module.snowalert_grants
